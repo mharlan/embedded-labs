@@ -1,0 +1,125 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               15-Feb-11     21:07:31     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -model=S -nomodsect -regvar -noreduceopt -debug -peephole
+                           A     3    ; -localcse -optsize -const=ROM -alias -fastcall 
+                           A     4    	FILE	"..\MAIN.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT ROM_TEXT
+00000000                   A     7    L__0:
+00000000 48656C6C          A     8    	DB	"Hello World from ZNEO"
+00000004 6F20576F 
+00000008 726C6420 
+0000000C 66726F6D 
+00000010 205A4E45 4F 
+00000015 00                A     9    	DB	0
+                           A    10    	SEGMENT CODE
+                           A    11    ;    1	/*
+                           A    12    ;    2		Author: Matthew Harlan
+                           A    13    ;    3		Email:  mharlan@gwmail.gwu.edu
+                           A    14    ;    4		Class:  CSCI-4415
+                           A    15    ;    5		Date: 	2/14/2011
+                           A    16    ;    6		Lab:    1
+                           A    17    ;    7	
+                           A    18    ;    8		Description: "Hello World from ZNEO" scrolls across the LEDs on startup.
+                           A    19    ;    9		Pressing buttons changes what is displayed on the LEDs.
+                           A    20    ;   10	
+                           A    21    ;   11		Button 1 Once: Uptime in seconds
+                           A    22    ;   12		Button 1 Twice: Uptime in milliseconds
+                           A    23    ;   13		Button 2 Once: PI to 8 digits
+                           A    24    ;   14		Button 2 Twice: Uptime in seconds in hex
+                           A    25    ;   15		Button 3 Once: "Hello World"
+                           A    26    ;   16		Button 3 Twice: "Matthew Harlan CSCI 4415"
+                           A    27    ;   17	
+                           A    28    ;   18		Other files: buttons.c buttons.h LED.c LED.h LED_interrupts.c LED_interrupts.h main.c m
+                           A    29    ;   19	
+                           A    30    ;   20		Compile: None.
+                           A    31    ;   21	
+                           A    32    ;   22		Problems: I intially tried to do this with multiple interrupts and timers. I had troubl
+                           A    33    ;   23		the other timer interrupt to trigger. Switching it over to one timer was conceptually d
+                           A    34    ;   24		but once I got it all setup it made a lot more sense for this situation.
+                           A    35    ;   25	
+                           A    36    ;   26		Comments: It was a fun and challenging lab. I learned a lot.
+                           A    37    ;   27	
+                           A    38    ;   28		Enhancements: None.
+                           A    39    ;   29	*/
+                           A    40    ;   30	
+                           A    41    ;   31	#include "LED.h"
+                           A    42    ;   32	#include "buttons.h"
+                           A    43    ;   33	
+                           A    44    ;   34	#include <zneo.h>
+                           A    45    ;   35	
+                           A    46    ;   36	/*
+                           A    47    ;   37		Intializes the LED, sets the default value, and loops.
+                           A    48    ;   38	 */
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               15-Feb-11     21:07:31     page:   2
+
+
+PC     Object              I  Line    Source main.src
+                           A    49    ;   39	void main(void)
+                           A    50    ;   40	{
+00000000                   A    51    _main:
+                           A    52    .define "_main"
+                           A    53    .value _main
+                           A    54    .class 2
+                           A    55    .type 65
+                           A    56    .type 0
+                           A    57    .endef
+                           A    58    .begfunc "main",40,"_main"
+00000000 0800              A    59    	LINK	#0
+                           A    60    ;   41		init_buttons();
+                           A    61    .line 41
+00000002 F1 FFFFFD         A    62    	CALL	_init_buttons
+                           A    63    ;   42		led_init();
+                           A    64    .line 42
+00000006 F1 FFFFFB         A    65    	CALL	_led_init
+                           A    66    ;   43		led_display_text("Hello World from ZNEO");
+                           A    67    .line 43
+0000000A 4501 0000         A    68    	LD	R1,#L__0
+0000000E F1 FFFFF7         A    69    	CALL	_led_display_text
+                           A    70    ;   44	
+                           A    71    ;   45		//enable interrupts
+                           A    72    ;   46		EI();
+                           A    73    .line 46
+00000012 FFFA              A    74    	EI
+                           A    75    ;   47	
+                           A    76    ;   48		//run forever
+                           A    77    ;   49		while(1) {
+00000014                   A    78    _1_L_1:
+                           A    79    .line 49
+00000014 CFFF              A    80    	JP	_1_L_1
+                           A    81    ;   50			//do nothing while responding to interrupts
+                           A    82    ;   51		}
+                           A    83    .line 52
+00000016 0001              A    84    	UNLINK	
+00000018 FFFC              A    85    	RET	
+                           A    86    
+                           A    87    
+                           A    88    ;**************************** _main ***************************
+                           A    89    ;Name                         Addr/Register   Size   Type
+                           A    90    ;_EI                                 IMPORT  -----   function
+                           A    91    ;_led_display_text                   IMPORT  -----   function
+                           A    92    ;_led_init                           IMPORT  -----   function
+                           A    93    ;_init_buttons                       IMPORT  -----   function
+                           A    94    
+                           A    95    
+                           A    96    ; Aggregate Stack Size: 0 (words)
+                           A    97    
+                           A    98    
+                           A    99    .endfunc "main",52,"_main"
+                           A   100    	XREF _init_buttons:EROM
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               15-Feb-11     21:07:31     page:   3
+
+
+PC     Object              I  Line    Source main.src
+                           A   101    	XREF _led_display_text:EROM
+                           A   102    	XREF _led_init:EROM
+                           A   103    	XDEF _main
+                           A   104    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 105
