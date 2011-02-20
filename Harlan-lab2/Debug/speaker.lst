@@ -1,0 +1,28 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               20-Feb-11     17:22:34     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -model=S -nomodsect -regvar -noreduceopt -debug -peephole
+                           A     3    ; -localcse -optsize -const=ROM -alias -fastcall 
+                           A     4    	FILE	"..\SPEAKER.C"
+                           A     5    .debug "C"
+                           A     6    ;    1	#include "speaker.h"
+                           A     7    ;    2	
+                           A     8    ;    3	/*
+                           A     9    ;    4		Initialize the speaker IO ports.
+                           A    10    ;    5	
+                           A    11    ;    6		GPIO:PC0
+                           A    12    ;    7		Ground:PC1
+                           A    13    ;    8	 */
+                           A    14    ;    9	void init_speaker(void);
+                           A    15    ;   10	
+                           A    16    ;   11	/*
+                           A    17    ;   12		Play a note in a given octave for a given duration on the speaker.
+                           A    18    ;   13	 */
+                           A    19    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 20
