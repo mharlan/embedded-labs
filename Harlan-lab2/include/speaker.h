@@ -3,14 +3,24 @@
 /*
 	Initialize the speaker IO ports.
 
-	GPIO:PC0
-	Ground:PC1
+	Ground:PC0
+	GPIO:PC1 (timer1 output)
  */
 void init_speaker(void);
 
 /*
 	Play a note in a given octave for a given duration on the speaker.
  */
-void play_note(int octave, unsigned char note, float duration);
+void play_note(int octave, unsigned char note[3], float duration);
+
+/*
+ 	Stop a note. This function is called by the duration timer.
+ */
+void stop_note(void);
+
+/*
+	Stop playing the ringtone.
+ */
+void stop_ringtone(void);
 
 #endif

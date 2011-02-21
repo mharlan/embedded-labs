@@ -6,9 +6,9 @@
 
 /* compiler options */
 /* -chartype:U -define:_Z16F2811FI -define:_Z16F_SERIES -genprintf */
-/* -NOkeepasm -keeplst -NOlist -NOlistinc -model:S -NOmodsect */
+/* -keepasm -keeplst -list -NOlistinc -model:S -NOmodsect */
 /* -stdinc:"C:\PROGRA~2\ZiLOG\ZDSII_~1.1\include\std;C:\PROGRA~2\ZiLOG\ZDSII_~1.1\include\zilog" */
-/* -usrinc:"..\include" -regvar -NOreduceopt -warn -debug */
+/* -usrinc:"..\include" -NOregvar -reduceopt -warn -debug */
 /* -cpu:Z16F2811FI */
 /* -asmsw:" -cpu:Z16F2811FI -define:_Z16F2811FI=1 -define:_Z16F_SERIES=1 -include:C:\PROGRA~2\ZiLOG\ZDSII_~1.1\include\std;C:\PROGRA~2\ZiLOG\ZDSII_~1.1\include\zilog" */
 
@@ -61,6 +61,11 @@ DEFINE _SYS_CLK_FREQ = 5529600
 "C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\Debug\Harlan-lab2"= \
  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\zilog\startupS.obj, \
  .\speaker.obj, \
+ .\buttons.obj, \
+ .\LED.obj, \
+ .\LED_interrupts.obj, \
+ .\main.obj, \
+ .\rttl.obj, \
  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\chelpSD.lib, \
  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\crtSD.lib, \
  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\fpSD.lib

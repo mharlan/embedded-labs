@@ -24,9 +24,9 @@ AR = @$(BIN)\zneolib
 
 CFLAGS =  \
 -chartype:U -define:_Z16F2811FI -define:_Z16F_SERIES -genprintf  \
--NOkeepasm -keeplst -NOlist -NOlistinc -model:S -NOmodsect  \
+-keepasm -keeplst -list -NOlistinc -model:S -NOmodsect  \
 -stdinc:"C:\PROGRA~2\ZiLOG\ZDSII_~1.1\include\std;C:\PROGRA~2\ZiLOG\ZDSII_~1.1\include\zilog"  \
--usrinc:"..\include" -regvar -NOreduceopt -warn -debug  \
+-usrinc:"..\include" -NOregvar -reduceopt -warn -debug  \
 -cpu:Z16F2811FI  \
 -asmsw:" -cpu:Z16F2811FI -define:_Z16F2811FI=1 -define:_Z16F_SERIES=1 -include:C:\PROGRA~2\ZiLOG\ZDSII_~1.1\include\std;C:\PROGRA~2\ZiLOG\ZDSII_~1.1\include\zilog"
 
@@ -62,6 +62,16 @@ clean:
             $(RM) $(WORKDIR)\Harlan-lab2.map
 	@if exist $(WORKDIR)\speaker.obj  \
             $(RM) $(WORKDIR)\speaker.obj
+	@if exist $(WORKDIR)\buttons.obj  \
+            $(RM) $(WORKDIR)\buttons.obj
+	@if exist $(WORKDIR)\LED.obj  \
+            $(RM) $(WORKDIR)\LED.obj
+	@if exist $(WORKDIR)\LED_interrupts.obj  \
+            $(RM) $(WORKDIR)\LED_interrupts.obj
+	@if exist $(WORKDIR)\main.obj  \
+            $(RM) $(WORKDIR)\main.obj
+	@if exist $(WORKDIR)\rttl.obj  \
+            $(RM) $(WORKDIR)\rttl.obj
 
 # pre-4.11.0 compatibility
 rebuildall: buildall 
@@ -69,13 +79,93 @@ rebuildall: buildall
 LIBS = 
 
 OBJS =  \
-            $(WORKDIR)\speaker.obj
+            $(WORKDIR)\speaker.obj  \
+            $(WORKDIR)\buttons.obj  \
+            $(WORKDIR)\LED.obj  \
+            $(WORKDIR)\LED_interrupts.obj  \
+            $(WORKDIR)\main.obj  \
+            $(WORKDIR)\rttl.obj
 
 Harlan-lab2: $(OBJS)
 	 $(LD) $(LDFLAGS)
 
 $(WORKDIR)\speaker.obj :  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\speaker.c  \
-            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\speaker.h
+            $(INCLUDE)\std\CTYPE.H  \
+            $(INCLUDE)\std\STRING.H  \
+            $(INCLUDE)\zilog\Zconst.h  \
+            $(INCLUDE)\zilog\zneo.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\notes.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\speaker.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\timer.h
 	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\speaker.c
+
+$(WORKDIR)\buttons.obj :  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\buttons.c  \
+            $(INCLUDE)\zilog\zneo.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\LED.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\LED_interrupts.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\buttons.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\ringtones.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\rttl.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\speaker.h
+	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\buttons.c
+
+$(WORKDIR)\LED.obj :  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\LED.c  \
+            $(INCLUDE)\std\STDARG.H  \
+            $(INCLUDE)\zilog\zneo.h  \
+            $(INCLUDE)\std\STDARG.H  \
+            $(INCLUDE)\std\STDIO.H  \
+            $(INCLUDE)\std\STDLIB.H  \
+            $(INCLUDE)\std\STRING.H  \
+            $(INCLUDE)\zilog\FORMAT.H  \
+            $(INCLUDE)\zilog\Zconst.h  \
+            $(INCLUDE)\zilog\zneo.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\LED.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\LED_interrupts.h
+	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\LED.c
+
+$(WORKDIR)\LED_interrupts.obj :  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\LED_interrupts.c  \
+            $(INCLUDE)\std\STDARG.H  \
+            $(INCLUDE)\zilog\zneo.h  \
+            $(INCLUDE)\std\STDARG.H  \
+            $(INCLUDE)\std\STDIO.H  \
+            $(INCLUDE)\std\STRING.H  \
+            $(INCLUDE)\zilog\FORMAT.H  \
+            $(INCLUDE)\zilog\Zconst.h  \
+            $(INCLUDE)\zilog\zneo.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\LED.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\LED_interrupts.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\buttons.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\matrix.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\rttl.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\speaker.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\timer.h
+	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\LED_interrupts.c
+
+$(WORKDIR)\main.obj :  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\main.c  \
+            $(INCLUDE)\zilog\zneo.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\LED.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\buttons.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\speaker.h
+	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\main.c
+
+$(WORKDIR)\rttl.obj :  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\rttl.c  \
+            $(INCLUDE)\std\STDARG.H  \
+            $(INCLUDE)\zilog\zneo.h  \
+            $(INCLUDE)\std\CTYPE.H  \
+            $(INCLUDE)\std\STDARG.H  \
+            $(INCLUDE)\std\STDIO.H  \
+            $(INCLUDE)\std\STDLIB.H  \
+            $(INCLUDE)\std\STRING.H  \
+            $(INCLUDE)\zilog\FORMAT.H  \
+            $(INCLUDE)\zilog\Zconst.h  \
+            $(INCLUDE)\zilog\zneo.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\rttl.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\speaker.h
+	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\rttl.c
 

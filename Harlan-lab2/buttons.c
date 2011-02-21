@@ -1,6 +1,9 @@
 #include "buttons.h"
 #include "LED.h"
 #include "LED_interrupts.h"
+#include "ringtones.h"
+#include "rttl.h"
+#include "speaker.h"
 
 #include <zneo.h>
 
@@ -57,12 +60,11 @@ static void handle_button_events(void)
 		if(button_twice_timer && (last_button == BUTTON_ONE)) {
 			button_twice_timer = 0;
 			last_button = BUTTON_NONE;
-
-			led_display_uptime_ms();
+			stop_ringtone();
 		}
 		else {
 			last_button = BUTTON_ONE;
-			led_display_uptime_seconds();
+			play_rttl_ringtone(zelda);
 		}
 	}
 	else if(current == BUTTON_TWO) {
@@ -70,11 +72,11 @@ static void handle_button_events(void)
 			button_twice_timer = 0;
 			last_button = BUTTON_NONE;
 
-			led_display_uptime_seconds_hex();
+			stop_ringtone();
 		}
 		else {
 			last_button = BUTTON_TWO;
-			led_display_double(3.1415926536);
+			play_rttl_ringtone(starwars);
 		}
 	}
 	else if(current == BUTTON_THREE) {
@@ -82,11 +84,11 @@ static void handle_button_events(void)
 			button_twice_timer = 0;
 			last_button = BUTTON_NONE;
 
-			led_display_text("Matthew Harlan CSCI 4415");
+			stop_ringtone();
 		}
 		else {
 			last_button = BUTTON_THREE;
-			led_display_text("Hello World");
+			play_rttl_ringtone(bohemian);
 		}
 	}
 	//don't do anything if multiple buttons are pressed

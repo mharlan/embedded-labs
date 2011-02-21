@@ -2,6 +2,8 @@
 #include "buttons.h"
 #include "matrix.h"
 #include "LED.h"
+#include "rttl.h"
+#include "speaker.h"
 #include "LED_interrupts.h"
 
 #include <zneo.h>
@@ -35,6 +37,9 @@ extern float debounce_cutoff;
 
 extern float button_twice_timer;
 extern float button_twice_cutoff;
+
+extern float duration_timer;
+extern float duration_cutoff;
 
 extern unsigned char last_button;
 
@@ -96,10 +101,23 @@ void interrupt draw_timer_isr(void)
 {
 	unsigned int led_uptime;
 
+	//enable interrupts for speaker interrupt
+	EI();
+
 	//increment timers
 	timer += DRAW_TIME;
 	uptime += DRAW_TIME;
 	button_timer += DRAW_TIME;
+
+	if(duration_cutoff) {
+		duration_timer += DRAW_TIME;
+		
+		if(duration_timer >= duration_cutoff) {
+			stop_note();
+			
+			play_next_note();
+		}
+	}
 
 	if(button_twice_timer >= button_twice_cutoff) {
 		button_twice_timer = 0;

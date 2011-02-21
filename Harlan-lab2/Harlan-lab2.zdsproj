@@ -6,6 +6,18 @@
 <file filter-key="">.\speaker.c</file>
 <file filter-key="">include\rttl.h</file>
 <file filter-key="">include\speaker.h</file>
+<file filter-key="">include\buttons.h</file>
+<file filter-key="">include\LED.h</file>
+<file filter-key="">include\LED_interrupts.h</file>
+<file filter-key="">include\matrix.h</file>
+<file filter-key="">include\timer.h</file>
+<file filter-key="">.\buttons.c</file>
+<file filter-key="">.\LED.c</file>
+<file filter-key="">.\LED_interrupts.c</file>
+<file filter-key="">.\main.c</file>
+<file filter-key="">.\rttl.c</file>
+<file filter-key="">include\notes.h</file>
+<file filter-key="">include\ringtones.h</file>
 </files>
 
 <!-- configuration information -->
@@ -29,24 +41,24 @@
 <option name="chartype" type="string" change-action="compile">U</option>
 <option name="define" type="string" change-action="compile">_Z16F2811FI,_Z16F_SERIES</option>
 <option name="genprintf" type="boolean" change-action="compile">true</option>
-<option name="keepasm" type="boolean" change-action="none">false</option>
+<option name="keepasm" type="boolean" change-action="none">true</option>
 <option name="keeplst" type="boolean" change-action="none">true</option>
-<option name="list" type="boolean" change-action="none">false</option>
+<option name="list" type="boolean" change-action="none">true</option>
 <option name="listinc" type="boolean" change-action="none">false</option>
 <option name="model" type="string" change-action="compile">S</option>
 <option name="modsect" type="boolean" change-action="compile">false</option>
 <option name="stdinc" type="string" change-action="compile"></option>
 <option name="usrinc" type="string" change-action="compile">C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include</option>
-<option name="regvar" type="boolean" change-action="compile">true</option>
-<option name="regvarcache" type="boolean" change-action="none">false</option>
-<option name="reduceopt" type="boolean" change-action="compile">false</option>
+<option name="regvar" type="boolean" change-action="compile">false</option>
+<option name="regvarcache" type="boolean" change-action="none">true</option>
+<option name="reduceopt" type="boolean" change-action="compile">true</option>
 <option name="watch" type="boolean" change-action="none">false</option>
 </options>
 </tool>
 <tool name="Debugger">
 <options>
 <option name="target" type="string" change-action="rebuild">Z16F2811FI</option>
-<option name="debugtool" type="string" change-action="none">Simulator</option>
+<option name="debugtool" type="string" change-action="none">USBSmartCable</option>
 <option name="usepageerase" type="boolean" change-action="none">true</option>
 </options>
 </tool>
