@@ -11,7 +11,7 @@ void init_speaker(void);
 /*
 	Play a note in a given octave for a given duration on the speaker.
  */
-void play_note(int octave, unsigned char note[3], float duration);
+void play_note(int octave, unsigned char note[3], int duration, int bpm);
 
 /*
  	Stop a note. This function is called by the duration timer.

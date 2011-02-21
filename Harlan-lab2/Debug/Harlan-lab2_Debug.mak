@@ -165,6 +165,7 @@ $(WORKDIR)\rttl.obj :  \
             $(INCLUDE)\zilog\FORMAT.H  \
             $(INCLUDE)\zilog\Zconst.h  \
             $(INCLUDE)\zilog\zneo.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\LED.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\rttl.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\speaker.h
 	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\rttl.c

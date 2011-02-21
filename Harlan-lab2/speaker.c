@@ -9,6 +9,7 @@
 static void disable_speaker_timer(void);
 static void init_speaker_timer(void);
 static void start_speaker_timer(unsigned int frequency);
+static float beats_to_duration(int beats, int bpm);
 
 float duration_timer;
 float duration_cutoff;
@@ -33,7 +34,7 @@ void init_speaker(void)
 /*
 	Play a note in a given octave for a given duration on the speaker.
  */
-void play_note(int octave, unsigned char note[3], float duration)
+void play_note(int octave, unsigned char note[3], int duration, int bpm)
 {
 	//if not lowercase, make lowercase
 	if(!islower(note[0])) {
@@ -42,56 +43,56 @@ void play_note(int octave, unsigned char note[3], float duration)
 
 	//figure out what note it is
 	if(!strncmp(note, "a", 2)) {
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][0]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_A]);
 	}
 	else if(!strncmp(note, "a#", 2))
 	{
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][1]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_ASHARP]);
 	}
 	else if(!strncmp(note, "b", 2))
 	{
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][2]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_B]);
 	}
 	else if(!strncmp(note, "c", 2))
 	{
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][3]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_C]);
 	}
 	else if(!strncmp(note, "c#", 2))
 	{
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][4]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_CSHARP]);
 	}
 	else if(!strncmp(note, "d", 2))
 	{
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][5]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_D]);
 	}
 	else if(!strncmp(note, "d#", 2))
 	{
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][6]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_DSHARP]);
 	}
 	else if(!strncmp(note, "e", 2))
 	{
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][7]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_E]);
 	}
 	else if(!strncmp(note, "f", 2))
 	{
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][8]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_F]);
 	}
 	else if(!strncmp(note, "f#", 2))
 	{
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][9]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_FSHARP]);
 	}
 	else if(!strncmp(note, "g", 2))
 	{
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][10]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_G]);
 	}
 	else if(!strncmp(note, "g#", 2))
 	{
-		start_speaker_timer(note_values[octave - NUM_OCTAVES][11]);
+		start_speaker_timer(note_values[octave - NUM_OCTAVES][NOTE_GSHARP]);
 	}
 
 	//set timer for duration of note
 	duration_timer = 0;
-	duration_cutoff = duration;
+	duration_cutoff = beats_to_duration(duration, bpm);
 }
 
 /*
@@ -145,7 +146,8 @@ static void start_speaker_timer(unsigned int frequency)
 	float timeout;
 
 	//calculate the timeout
-	timeout = 1.0f / (2.0f * (float)frequency);
+	//timeout = 1.0f / (2.0f * (float)frequency);
+	timeout = 1.0f / (float)frequency;
 
 	// Initial counter value
     T1HL = 0x00;
@@ -162,3 +164,13 @@ static void start_speaker_timer(unsigned int frequency)
 	//set PC1 as T1OUT
 	PCAF |= 0x02;
 }
+
+/*
+	Convert a duration to a time value using beats per minute.
+ */
+static float beats_to_duration(int beats, int bpm)
+{
+	return (60.0f / (float)bpm) * (4.0f / (float)beats);
+	//return ((60.0f / (float)bpm) * (4.0f / (float)beats)) * 4;
+}
+

@@ -1,5 +1,6 @@
 #include "rttl.h"
 #include "speaker.h"
+#include "LED.h"
 
 #include <zneo.h>
 #include <stdlib.h>
@@ -12,15 +13,15 @@
 struct rttl_note {
 	int   octave;
 	char  note[3];
-	float duration;
+	int   duration;
 };
 
 static struct rttl_note song[MAX_NOTES];
 static unsigned int num_notes = 0;
 static unsigned int song_pos = 0;
+static int bpm = 0;
 
-static void parse_rttl_ringtone(const char *ringtone);
-static float beats_to_duration(int beats, int bpm);
+static int parse_rttl_ringtone(const char *ringtone);
 
 /*
  	Plays the RTTL ringtone for a given
@@ -28,7 +29,7 @@ static float beats_to_duration(int beats, int bpm);
  */
 void play_rttl_ringtone(const char *ringtone)
 {
-	parse_rttl_ringtone(ringtone);
+	bpm = parse_rttl_ringtone(ringtone);
 	play_next_note();
 }
 
@@ -37,8 +38,13 @@ void play_rttl_ringtone(const char *ringtone)
  */
 void play_next_note(void)
 {
+	char note_info[8];
+
 	if(num_notes > 0) {
-		play_note(song[song_pos].octave, song[song_pos].note, song[song_pos].duration);
+		sprintf(note_info, "%d%s", song[song_pos].octave, song[song_pos].note);
+		led_display_text(note_info);
+
+		play_note(song[song_pos].octave, song[song_pos].note, song[song_pos].duration, bpm);
 		
 		song_pos = (song_pos + 1) % num_notes;
 	}	
@@ -47,7 +53,7 @@ void play_next_note(void)
 /*
 	Parse the RTTL ringtone into memory to be played on the speaker.
  */
-static void parse_rttl_ringtone(const char *ringtone)
+static int parse_rttl_ringtone(const char *ringtone)
 {
 	unsigned char *rttl_song;
 	unsigned char *token;
@@ -68,7 +74,7 @@ static void parse_rttl_ringtone(const char *ringtone)
 	token_length = strlen(ringtone) + 1;
 	rttl_song = malloc(sizeof(*rttl_song) * token_length);
 	if(rttl_song == NULL) {
-		return;
+		return 0;
 	}
 	strcpy(rttl_song, ringtone);
 
@@ -86,12 +92,12 @@ static void parse_rttl_ringtone(const char *ringtone)
 		}
 		//incorrect rttl syntax, return
 		else {
-			return;
+			return 0;
 		}
 	}
 	//incorrect rttl syntax, return
 	else {
-		return;
+		return 0;
 	}
 
 	//default octave, o=Value
@@ -102,12 +108,12 @@ static void parse_rttl_ringtone(const char *ringtone)
 		}
 		//incorrect rttl syntax, return
 		else {
-			return;
+			return 0;
 		}
 	}
 	//incorrect rttl syntax, return
 	else {
-		return;
+		return 0;
 	}	
 	
 	//default bpm, b=Value
@@ -118,12 +124,12 @@ static void parse_rttl_ringtone(const char *ringtone)
 		}
 		//incorrect rttl, return syntax
 		else {
-			return;
+			return 0;
 		}
 	}
 	//incorrect rttl syntax, return
 	else {
-		return;
+		return 0;
 	}
 
 	//grab each note
@@ -138,14 +144,14 @@ static void parse_rttl_ringtone(const char *ringtone)
 
 			//incorrect rttl, return syntax
 			if(token_pos >= token_length) {
-				return;
+				return 0;
 			}
 		}
 
 		//if more than 2 digits for duration
 		//incorrect rttl syntax, return
 		if(token_pos > 2) {
-			return;
+			return 0;
 		}
 
 		//has a duration specified
@@ -153,11 +159,11 @@ static void parse_rttl_ringtone(const char *ringtone)
 			memcpy(number_token, token, token_pos);
 			number_token[token_pos] = '\0';
 
-			song[notes].duration = beats_to_duration(atoi(number_token), bpm);
+			song[notes].duration = atoi(number_token);
 		}
 		//use default duration
 		else {
-			song[notes].duration = beats_to_duration(duration, bpm);
+			song[notes].duration = duration;
 		}
 
 		//if more than one character left
@@ -203,18 +209,12 @@ static void parse_rttl_ringtone(const char *ringtone)
 	if((notes + 1) < MAX_NOTES) {
 		song[notes].note[0] = 'P';
 		song[notes].note[1] = '\0';
-		song[notes].duration = beats_to_duration(1, bpm);
+		song[notes].duration = 1;
 		notes++;
 	}
 
 	num_notes = notes;
 	free(rttl_song);
-}
 
-/*
-	Convert a duration to a time value using beats per minute.
- */
-static float beats_to_duration(int beats, int bpm)
-{
-	return (60.0f / (float)bpm) * (4.0f / (float)beats);
+	return bpm;
 }
