@@ -48,31 +48,31 @@
 #define TIMER_INPUT_CAPTURE_OFF 0x00
 #define TIMER_INPUT_CAPTURE_ON  0x01
 
+#define TIMER_1MS 1
+#define TIMER_2MS 2
+#define TIMER_4MS 4
+
 // These are IRQ0 register bits. I didn't define
 // All 3 IRQ registers or all 24 bits. 
 #define IRQ_Timer0 0x20
 #define IRQ_Timer1 0x40
 #define IRQ_Timer2 0x80
 
-// Some binary
-#define b00000000 0x00
-#define b00000001 0x01
-#define b00000010 0x02
-#define b00000011 0x03
-#define b00000100 0x04
-#define b00000101 0x05
-#define b00000110 0x06
-#define b00000111 0x07
-#define b00001000 0x08
-#define b00001001 0x09
-#define b00001010 0x0A
-#define b00001011 0x0B
-#define b00001100 0x0C
-#define b00001101 0x0D
-#define b00001110 0x0E
-#define b00001111 0x0F
-// there should be a lot more but Im lazy  ...
+/*
+	Initialize and start the global timer (timer0).
 
-#define CLOCK 5500000 // Clock in HZ
+	TIMER_1MS, TIMER_2MS, TIMER_4MS
+ */
+void init_timer(int mode);
+
+/*
+	The timer interval as an int, in ms.
+ */
+int timer_interval_int(void);
+
+/*
+ 	The timer interval as a float, 1.0 is a second.
+ */
+float timer_interval_float(void);
 
 #endif

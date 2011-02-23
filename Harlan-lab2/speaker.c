@@ -1,18 +1,24 @@
 #include "speaker.h"
 #include "timer.h"
 #include "notes.h"
+#include "timer.h"
+#include "rttl.h"
+#include "oscillator.h"
 
 #include <zneo.h>
 #include <string.h>
 #include <ctype.h>
 
+static float duration_timer;
+static float duration_cutoff;
+
+static void play_note(int octave, unsigned char note[3], int duration, int bpm);
+static void stop_note(void);
+static void stop_ringtone(void);
 static void disable_speaker_timer(void);
 static void init_speaker_timer(void);
 static void start_speaker_timer(unsigned int frequency);
 static float beats_to_duration(int beats, int bpm);
-
-float duration_timer;
-float duration_cutoff;
 
 /*
 	Initialize the speaker IO ports.
@@ -29,6 +35,35 @@ void init_speaker(void)
 	duration_cutoff = 0;
 
 	init_speaker_timer();
+}
+
+/*
+	Handles all speaker events.
+ */
+void speaker_events(void)
+{
+	if(duration_cutoff) {
+		duration_timer += timer_interval_float();
+		
+		if(duration_timer >= duration_cutoff) {
+			disable_speaker_timer();
+		
+			play_next_note();
+		}
+	}
+}
+
+/*
+	Disables timer1 and sets PC1 low.
+ */
+void disable_speaker_timer(void)
+{
+	duration_cutoff = 0;
+	duration_timer = 0;
+
+	T1CTL1 |= TIMER_DISABLE;
+	PCOUT &= ~0x02;	//set PC1 low
+	PCAF &= ~0x02;
 }
 
 /*
@@ -96,35 +131,6 @@ void play_note(int octave, unsigned char note[3], int duration, int bpm)
 }
 
 /*
- 	Stop a note. This function is called by the duration timer.
- */
-void stop_note(void)
-{
-	disable_speaker_timer();
-}
-
-/*
-	Stop playing the ringtone.
- */
-void stop_ringtone(void)
-{
-	duration_cutoff = 0;
-	duration_timer = 0;
-
-	disable_speaker_timer();
-}
-
-/*
-	Disables timer1 and sets PC1 low.
- */
-static void disable_speaker_timer(void)
-{
-	T1CTL1 |= TIMER_DISABLE;
-	PCOUT &= ~0x02;	//set PC1 low
-	PCAF &= ~0x02;
-}
-
-/*
 	Setup timer1.
  */
 static void init_speaker_timer(void)
@@ -132,9 +138,6 @@ static void init_speaker_timer(void)
 	T1CTL1 |= TIMER_DISABLE;
 
     T1CTL1 = TIMER_MODE_CONTINUOUS + TIMER_PRESCALE_64;
-
-    // Initial counter value
-    T1HL = 0x00;
 }
 
 /*
@@ -154,10 +157,10 @@ static void start_speaker_timer(unsigned int frequency)
 
 	// Timer reload
     //   reload = clock / prescale * timeout  
-    T1R = CLOCK / 64 * timeout;
+    T1R = get_osc_clock() / 64 * timeout;
 
 	// Enable Timer0 interrupt
-    IRQ1EN = IRQ_Timer1;
+    //IRQ1EN = IRQ_Timer1;
 
 	T1CTL1 |= TIMER_ENABLE;
 
@@ -171,6 +174,5 @@ static void start_speaker_timer(unsigned int frequency)
 static float beats_to_duration(int beats, int bpm)
 {
 	return (60.0f / (float)bpm) * (4.0f / (float)beats);
-	//return ((60.0f / (float)bpm) * (4.0f / (float)beats)) * 4;
 }
 

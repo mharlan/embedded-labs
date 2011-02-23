@@ -17,8 +17,8 @@ struct rttl_note {
 };
 
 static struct rttl_note song[MAX_NOTES];
-static unsigned int num_notes = 0;
-static unsigned int song_pos = 0;
+static int num_notes = 0;
+static int song_pos = 0;
 static int bpm = 0;
 
 static int parse_rttl_ringtone(const char *ringtone);
