@@ -1,4 +1,4 @@
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:   1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:   1
 
 
 PC     Object              I  Line    Source 
@@ -54,7 +54,7 @@ PC     Object              I  Line    Source
 000000A8 00000B90          A    50    	DL	2960
 000000AC 00000C40          A    51    	DL	3136
 000000B0 00000CFA          A    52    	DL	3322
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:   2
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:   2
 
 
 PC     Object              I  Line    Source speaker.src
@@ -109,8 +109,8 @@ PC     Object              I  Line    Source speaker.src
                            A   101    ;   17	static void stop_ringtone(void);
                            A   102    ;   18	static void disable_speaker_timer(void);
                            A   103    ;   19	static void init_speaker_timer(void);
-                           A   104    ;   20	static void start_speaker_timer(unsigned int frequency);
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:   3
+                           A   104    ;   20	static void start_speaker_timer(int frequency);
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:   3
 
 
 PC     Object              I  Line    Source speaker.src
@@ -150,7 +150,7 @@ PC     Object              I  Line    Source speaker.src
                            A   138    ;   36	
                            A   139    ;   37		init_speaker_timer();
                            A   140    .line 37
-00000014 D11F              A   141    	CALL	_init_speaker_timer
+00000014 D125              A   141    	CALL	_init_speaker_timer
                            A   142    ;   38	}
                            A   143    .line 38
 00000016 0001              A   144    	UNLINK	
@@ -166,7 +166,7 @@ PC     Object              I  Line    Source speaker.src
                            A   154    
                            A   155    ; Aggregate Stack Size: 0 (words)
                            A   156    
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:   4
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:   4
 
 
 PC     Object              I  Line    Source speaker.src
@@ -222,7 +222,7 @@ PC     Object              I  Line    Source speaker.src
                            A   206    ;_play_next_note                     IMPORT  -----   function
                            A   207    ;_disable_speaker_timer              STATIC  -----   function
                            A   208    ;_duration_timer                     STATIC      4   variable
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:   5
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:   5
 
 
 PC     Object              I  Line    Source speaker.src
@@ -278,7 +278,7 @@ PC     Object              I  Line    Source speaker.src
                            A   258    ;_duration_cutoff                    STATIC      4   variable
                            A   259    
                            A   260    
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:   6
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:   6
 
 
 PC     Object              I  Line    Source speaker.src
@@ -334,7 +334,7 @@ PC     Object              I  Line    Source speaker.src
                            A   310    .define "_play_note"
                            A   311    .value _play_note
                            A   312    .class 2
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:   7
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:   7
 
 
 PC     Object              I  Line    Source speaker.src
@@ -390,7 +390,7 @@ PC     Object              I  Line    Source speaker.src
                            A   362    ;   77		}
 0000007C                   A   363    _4_L_29:
                            A   364    .line 77
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:   8
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:   8
 
 
 PC     Object              I  Line    Source speaker.src
@@ -413,7 +413,7 @@ PC     Object              I  Line    Source speaker.src
 00000094 4511 0000         A   381    	LD	R1,#_note_values
 00000098 A010              A   382    	ADD	R0,R1
 0000009A 4801 0028         A   383    	LD	R1,40(R0)
-0000009E D0E2              A   384    	CALL	_start_speaker_timer
+0000009E D0E8              A   384    	CALL	_start_speaker_timer
                            A   385    ;   82		}
                            A   386    ;   83		else if(!strncmp(note, "a#", 2))
                            A   387    .line 83
@@ -435,7 +435,7 @@ PC     Object              I  Line    Source speaker.src
 000000BA 4511 0000         A   403    	LD	R1,#_note_values
 000000BE A010              A   404    	ADD	R0,R1
 000000C0 4801 002C         A   405    	LD	R1,44(R0)
-000000C4 D0CF              A   406    	CALL	_start_speaker_timer
+000000C4 D0D5              A   406    	CALL	_start_speaker_timer
                            A   407    ;   86		}
                            A   408    ;   87		else if(!strncmp(note, "b", 2))
                            A   409    .line 87
@@ -446,7 +446,7 @@ PC     Object              I  Line    Source speaker.src
 000000CE 3302              A   414    	LD	R3,#2
 000000D0 F1 FFFF96         A   415    	CALL	_strncmp
 000000D4 9000              A   416    	CP	R0,#0
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:   9
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:   9
 
 
 PC     Object              I  Line    Source speaker.src
@@ -461,7 +461,7 @@ PC     Object              I  Line    Source speaker.src
 000000E0 4511 0000         A   425    	LD	R1,#_note_values
 000000E4 A010              A   426    	ADD	R0,R1
 000000E6 4801 0030         A   427    	LD	R1,48(R0)
-000000EA D0BC              A   428    	CALL	_start_speaker_timer
+000000EA D0C2              A   428    	CALL	_start_speaker_timer
                            A   429    ;   90		}
                            A   430    ;   91		else if(!strncmp(note, "c", 2))
                            A   431    .line 91
@@ -483,7 +483,7 @@ PC     Object              I  Line    Source speaker.src
 00000106 4511 0000         A   447    	LD	R1,#_note_values
 0000010A A010              A   448    	ADD	R0,R1
 0000010C 4801 0004         A   449    	LD	R1,4(R0)
-00000110 D0A9              A   450    	CALL	_start_speaker_timer
+00000110 D0AF              A   450    	CALL	_start_speaker_timer
                            A   451    ;   94		}
                            A   452    ;   95		else if(!strncmp(note, "c#", 2))
                            A   453    .line 95
@@ -502,14 +502,14 @@ PC     Object              I  Line    Source speaker.src
 00000126 80FC              A   466    	ADD	R0,#-4
 00000128 3130              A   467    	LD	R1,#48
 0000012A B110              A   468    	SMUL	R0,R1
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:  10
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:  10
 
 
 PC     Object              I  Line    Source speaker.src
 0000012C 4511 0000         A   469    	LD	R1,#_note_values
 00000130 A010              A   470    	ADD	R0,R1
 00000132 4801 0008         A   471    	LD	R1,8(R0)
-00000136 D096              A   472    	CALL	_start_speaker_timer
+00000136 D09C              A   472    	CALL	_start_speaker_timer
                            A   473    ;   98		}
                            A   474    ;   99		else if(!strncmp(note, "d", 2))
                            A   475    .line 99
@@ -531,7 +531,7 @@ PC     Object              I  Line    Source speaker.src
 00000152 4511 0000         A   491    	LD	R1,#_note_values
 00000156 A010              A   492    	ADD	R0,R1
 00000158 4801 000C         A   493    	LD	R1,12(R0)
-0000015C D083              A   494    	CALL	_start_speaker_timer
+0000015C D089              A   494    	CALL	_start_speaker_timer
                            A   495    ;  102		}
                            A   496    ;  103		else if(!strncmp(note, "d#", 2))
                            A   497    .line 103
@@ -553,12 +553,12 @@ PC     Object              I  Line    Source speaker.src
 00000178 4511 0000         A   513    	LD	R1,#_note_values
 0000017C A010              A   514    	ADD	R0,R1
 0000017E 4801 0010         A   515    	LD	R1,16(R0)
-00000182 D070              A   516    	CALL	_start_speaker_timer
+00000182 D076              A   516    	CALL	_start_speaker_timer
                            A   517    ;  106		}
                            A   518    ;  107		else if(!strncmp(note, "e", 2))
                            A   519    .line 107
 00000184 C05E              A   520    	JP	_4_L_30
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:  11
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:  11
 
 
 PC     Object              I  Line    Source speaker.src
@@ -579,7 +579,7 @@ PC     Object              I  Line    Source speaker.src
 0000019E 4511 0000         A   535    	LD	R1,#_note_values
 000001A2 A010              A   536    	ADD	R0,R1
 000001A4 4801 0014         A   537    	LD	R1,20(R0)
-000001A8 D05D              A   538    	CALL	_start_speaker_timer
+000001A8 D063              A   538    	CALL	_start_speaker_timer
                            A   539    ;  110		}
                            A   540    ;  111		else if(!strncmp(note, "f", 2))
                            A   541    .line 111
@@ -601,7 +601,7 @@ PC     Object              I  Line    Source speaker.src
 000001C4 4511 0000         A   557    	LD	R1,#_note_values
 000001C8 A010              A   558    	ADD	R0,R1
 000001CA 4801 0018         A   559    	LD	R1,24(R0)
-000001CE D04A              A   560    	CALL	_start_speaker_timer
+000001CE D050              A   560    	CALL	_start_speaker_timer
                            A   561    ;  114		}
                            A   562    ;  115		else if(!strncmp(note, "f#", 2))
                            A   563    .line 115
@@ -614,7 +614,7 @@ PC     Object              I  Line    Source speaker.src
 000001DE 9000              A   570    	CP	R0,#0
 000001E0 EE 0B             A   571    	JP	NE,_4_L_10
                            A   572    ;  116		{
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:  12
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:  12
 
 
 PC     Object              I  Line    Source speaker.src
@@ -627,7 +627,7 @@ PC     Object              I  Line    Source speaker.src
 000001EA 4511 0000         A   579    	LD	R1,#_note_values
 000001EE A010              A   580    	ADD	R0,R1
 000001F0 4801 001C         A   581    	LD	R1,28(R0)
-000001F4 D037              A   582    	CALL	_start_speaker_timer
+000001F4 D03D              A   582    	CALL	_start_speaker_timer
                            A   583    ;  118		}
                            A   584    ;  119		else if(!strncmp(note, "g", 2))
                            A   585    .line 119
@@ -649,7 +649,7 @@ PC     Object              I  Line    Source speaker.src
 00000210 4511 0000         A   601    	LD	R1,#_note_values
 00000214 A010              A   602    	ADD	R0,R1
 00000216 4801 0020         A   603    	LD	R1,32(R0)
-0000021A D024              A   604    	CALL	_start_speaker_timer
+0000021A D02A              A   604    	CALL	_start_speaker_timer
                            A   605    ;  122		}
                            A   606    ;  123		else if(!strncmp(note, "g#", 2))
                            A   607    .line 123
@@ -670,12 +670,12 @@ PC     Object              I  Line    Source speaker.src
 00000234 B110              A   622    	SMUL	R0,R1
 00000236 4511 0000         A   623    	LD	R1,#_note_values
 0000023A A010              A   624    	ADD	R0,R1
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:  13
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:  13
 
 
 PC     Object              I  Line    Source speaker.src
 0000023C 4801 0024         A   625    	LD	R1,36(R0)
-00000240 D011              A   626    	CALL	_start_speaker_timer
+00000240 D017              A   626    	CALL	_start_speaker_timer
                            A   627    ;  126		}
 00000242                   A   628    _4_L_30:
                            A   629    .line 126
@@ -688,7 +688,7 @@ PC     Object              I  Line    Source speaker.src
                            A   636    .line 130
 00000246 5F61              A   637    	LD	R1,-10(R14)
 00000248 5F22              A   638    	LD	R2,-14(R14)
-0000024A D035              A   639    	CALL	_beats_to_duration
+0000024A D03B              A   639    	CALL	_beats_to_duration
 0000024C 0370 0004         A   640    	LD	_duration_cutoff:RAM,R0
                            A   641    ;  131	}
                            A   642    .line 131
@@ -718,242 +718,287 @@ PC     Object              I  Line    Source speaker.src
                            A   666    .endfunc "play_note",131,"_play_note"
                            A   667    ;  132	
                            A   668    ;  133	/*
-                           A   669    ;  134		Setup timer1.
-                           A   670    ;  135	 */
-                           A   671    ;  136	static void init_speaker_timer(void)
-                           A   672    ;  137	{
-00000254                   A   673    _init_speaker_timer:
-                           A   674    .define "_init_speaker_timer"
-                           A   675    .value _init_speaker_timer
-                           A   676    .class 3
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:  14
+                           A   669    ;  134		Play a specific frequency note.
+                           A   670    ;  135	
+                           A   671    ;  136		This function can be used for testing speakers.
+                           A   672    ;  137	 */
+                           A   673    ;  138	void play_frequency(int frequency)
+                           A   674    ;  139	{
+00000254                   A   675    _play_frequency:
+                           A   676    .define "_play_frequency"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:  14
 
 
 PC     Object              I  Line    Source speaker.src
-                           A   677    .type 65
-                           A   678    .type 0
-                           A   679    .endef
-                           A   680    .begfunc "init_speaker_timer",137,"_init_speaker_timer"
-00000254 0800              A   681    	LINK	#0
-                           A   682    ;  138		T1CTL1 |= TIMER_DISABLE;
-                           A   683    .line 138
-00000256 0310 E317         A   684    	LD.SB	R0,58135:RAM
-                           A   685    ;  139	
-                           A   686    ;  140	    T1CTL1 = TIMER_MODE_CONTINUOUS + TIMER_PRESCALE_64;
-                           A   687    .line 140
-0000025A 3031              A   688    	LD	R0,#49
-0000025C 0350 E317         A   689    	LD.B	58135:RAM,R0
-                           A   690    ;  141	}
-                           A   691    .line 141
-00000260 0001              A   692    	UNLINK	
-00000262 FFFC              A   693    	RET	
-                           A   694    
-                           A   695    
-                           A   696    ;**************************** _init_speaker_timer ***************************
-                           A   697    ;Name                         Addr/Register   Size   Type
-                           A   698    
-                           A   699    
-                           A   700    ; Aggregate Stack Size: 0 (words)
+                           A   677    .value _play_frequency
+                           A   678    .class 2
+                           A   679    .type 65
+                           A   680    .type 0
+                           A   681    .endef
+                           A   682    .begfunc "play_frequency",139,"_play_frequency"
+00000254 0804              A   683    	LINK	#4
+                           A   684    .line 139
+00000256 5BC1              A   685    	LD	-4(R14),R1
+                           A   686    .define "frequency"
+                           A   687    .class 9
+                           A   688    .value -4
+                           A   689    .type 5
+                           A   690    .type 0
+                           A   691    .endef
+                           A   692    ;  140		start_speaker_timer(frequency);
+                           A   693    .line 140
+00000258 5FC1              A   694    	LD	R1,-4(R14)
+0000025A D00A              A   695    	CALL	_start_speaker_timer
+                           A   696    ;  141	}
+                           A   697    .line 141
+0000025C 0001              A   698    	UNLINK	
+0000025E FFFC              A   699    	RET	
+                           A   700    
                            A   701    
-                           A   702    
-                           A   703    .endfunc "init_speaker_timer",141,"_init_speaker_timer"
-                           A   704    ;  142	
-                           A   705    ;  143	/*
-                           A   706    ;  144	 	Enable timer 1. The timer will go off every
-                           A   707    ;  145		1 / (2 * frequency) seconds.
-                           A   708    ;  146	 */
-                           A   709    ;  147	static void start_speaker_timer(unsigned int frequency)
-                           A   710    ;  148	{
-00000264                   A   711    _start_speaker_timer:
-                           A   712    .define "_start_speaker_timer"
-                           A   713    .value _start_speaker_timer
-                           A   714    .class 3
-                           A   715    .type 65
-                           A   716    .type 0
-                           A   717    .endef
-                           A   718    .begfunc "start_speaker_timer",148,"_start_speaker_timer"
-00000264 0808              A   719    	LINK	#8
-00000266 05C0              A   720    	PUSHMHI	#3
-                           A   721    .line 148
-00000268 5BC1              A   722    	LD	-4(R14),R1
-                           A   723    .define "frequency"
-                           A   724    .class 9
-                           A   725    .value -4
-                           A   726    .type 15
-                           A   727    .type 0
-                           A   728    .endef
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:  15
+                           A   702    ;**************************** _play_frequency ***************************
+                           A   703    ;Name                         Addr/Register   Size   Type
+                           A   704    ;_start_speaker_timer                STATIC  -----   function
+                           A   705    ;frequency                            R14-4      4   parameter
+                           A   706    
+                           A   707    
+                           A   708    ; Aggregate Stack Size: -4 (words)
+                           A   709    
+                           A   710    
+                           A   711    .endfunc "play_frequency",141,"_play_frequency"
+                           A   712    ;  142	
+                           A   713    ;  143	/*
+                           A   714    ;  144		Setup timer1.
+                           A   715    ;  145	 */
+                           A   716    ;  146	static void init_speaker_timer(void)
+                           A   717    ;  147	{
+00000260                   A   718    _init_speaker_timer:
+                           A   719    .define "_init_speaker_timer"
+                           A   720    .value _init_speaker_timer
+                           A   721    .class 3
+                           A   722    .type 65
+                           A   723    .type 0
+                           A   724    .endef
+                           A   725    .begfunc "init_speaker_timer",147,"_init_speaker_timer"
+00000260 0800              A   726    	LINK	#0
+                           A   727    ;  148		T1CTL1 |= TIMER_DISABLE;
+                           A   728    .line 148
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:  15
 
 
 PC     Object              I  Line    Source speaker.src
-                           A   729    .define "timeout"
-                           A   730    .class 1
-                           A   731    .value -8
-                           A   732    .type 6
-                           A   733    .type 0
-                           A   734    .endef
-                           A   735    ;  149		float timeout;
-                           A   736    ;  150	
-                           A   737    ;  151		//calculate the timeout
-                           A   738    ;  152		timeout = 1.0f / (float)frequency;
-                           A   739    .line 152
-0000026A 5FC8              A   740    	LD	R8,-4(R14)
-0000026C F1 FFFEC8         A   741    	CALL	__fpultof
-00000270 4409              A   742    	LD	R9,R0
-00000272 4528 3F800000     A   743    	LD	R8,#1065353216
-00000278 F1 FFFEC2         A   744    	CALL	__fpdiv
-0000027C 5B80              A   745    	LD	-8(R14),R0
-                           A   746    ;  153	
-                           A   747    ;  154		// Initial counter value
-                           A   748    ;  155	    T1HL = 0x00;
-                           A   749    .line 155
-0000027E ADA4 E310         A   750    	CLR.W	58128:RAM
-                           A   751    ;  156	
-                           A   752    ;  157		// Timer reload
-                           A   753    ;  158	    //   reload = clock / prescale * timeout  
-                           A   754    ;  159	    T1R = get_osc_clock() / 64 * timeout;
-                           A   755    .line 159
-00000282 F1 FFFEBD         A   756    	CALL	_get_osc_clock
-00000286 3140              A   757    	LD	R1,#64
-00000288 AF10              A   758    	SDIV	R0,R1
-0000028A 4408              A   759    	LD	R8,R0
-0000028C F1 FFFEB8         A   760    	CALL	__fpltof
-00000290 4408              A   761    	LD	R8,R0
-00000292 5F89              A   762    	LD	R9,-8(R14)
-00000294 F1 FFFEB4         A   763    	CALL	__fpmul
-00000298 4408              A   764    	LD	R8,R0
-0000029A F1 FFFEB1         A   765    	CALL	__fpftol
-0000029E 0360 E312         A   766    	LD.W	58130:RAM,R0
-                           A   767    ;  160	
-                           A   768    ;  161		// Enable Timer0 interrupt
-                           A   769    ;  162	    //IRQ1EN = IRQ_Timer1;
-                           A   770    ;  163	
-                           A   771    ;  164		T1CTL1 |= TIMER_ENABLE;
-                           A   772    .line 164
-000002A2 4500 0080         A   773    	LD	R0,#128
-000002A6 7350 E317         A   774    	OR.B	58135:RAM,R0
-                           A   775    ;  165	
-                           A   776    ;  166		//set PC1 as T1OUT
-                           A   777    ;  167		PCAF |= 0x02;
-                           A   778    .line 167
-000002AA 3002              A   779    	LD	R0,#2
-000002AC 7360 E124         A   780    	OR.W	57636:RAM,R0
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:  16
+00000262 0310 E317         A   729    	LD.SB	R0,58135:RAM
+                           A   730    ;  149	
+                           A   731    ;  150	    T1CTL1 = TIMER_MODE_CONTINUOUS + TIMER_PRESCALE_64;
+                           A   732    .line 150
+00000266 3031              A   733    	LD	R0,#49
+00000268 0350 E317         A   734    	LD.B	58135:RAM,R0
+                           A   735    ;  151	}
+                           A   736    .line 151
+0000026C 0001              A   737    	UNLINK	
+0000026E FFFC              A   738    	RET	
+                           A   739    
+                           A   740    
+                           A   741    ;**************************** _init_speaker_timer ***************************
+                           A   742    ;Name                         Addr/Register   Size   Type
+                           A   743    
+                           A   744    
+                           A   745    ; Aggregate Stack Size: 0 (words)
+                           A   746    
+                           A   747    
+                           A   748    .endfunc "init_speaker_timer",151,"_init_speaker_timer"
+                           A   749    ;  152	
+                           A   750    ;  153	/*
+                           A   751    ;  154	 	Enable timer 1. The timer will go off every
+                           A   752    ;  155		1 / (2 * frequency) seconds.
+                           A   753    ;  156	 */
+                           A   754    ;  157	static void start_speaker_timer(int frequency)
+                           A   755    ;  158	{
+00000270                   A   756    _start_speaker_timer:
+                           A   757    .define "_start_speaker_timer"
+                           A   758    .value _start_speaker_timer
+                           A   759    .class 3
+                           A   760    .type 65
+                           A   761    .type 0
+                           A   762    .endef
+                           A   763    .begfunc "start_speaker_timer",158,"_start_speaker_timer"
+00000270 0808              A   764    	LINK	#8
+00000272 05C0              A   765    	PUSHMHI	#3
+                           A   766    .line 158
+00000274 5BC1              A   767    	LD	-4(R14),R1
+                           A   768    .define "frequency"
+                           A   769    .class 9
+                           A   770    .value -4
+                           A   771    .type 5
+                           A   772    .type 0
+                           A   773    .endef
+                           A   774    .define "timeout"
+                           A   775    .class 1
+                           A   776    .value -8
+                           A   777    .type 6
+                           A   778    .type 0
+                           A   779    .endef
+                           A   780    ;  159		float timeout;
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:  16
 
 
 PC     Object              I  Line    Source speaker.src
-                           A   781    ;  168	}
-                           A   782    .line 168
-000002B0 0703              A   783    	POPMHI	#3
-000002B2 0001              A   784    	UNLINK	
-000002B4 FFFC              A   785    	RET	
-                           A   786    
-                           A   787    
-                           A   788    ;**************************** _start_speaker_timer ***************************
-                           A   789    ;Name                         Addr/Register   Size   Type
-                           A   790    ;_get_osc_clock                      IMPORT  -----   function
-                           A   791    ;timeout                              R14-8      4   variable
-                           A   792    ;frequency                            R14-4      4   parameter
-                           A   793    
-                           A   794    
-                           A   795    ; Aggregate Stack Size: -8 (words)
-                           A   796    
-                           A   797    
-                           A   798    .endfunc "start_speaker_timer",168,"_start_speaker_timer"
-                           A   799    ;  169	
-                           A   800    ;  170	/*
-                           A   801    ;  171		Convert a duration to a time value using beats per minute.
-                           A   802    ;  172	 */
-                           A   803    ;  173	static int beats_to_duration(int beats, int bpm)
-                           A   804    ;  174	{
-000002B6                   A   805    _beats_to_duration:
-                           A   806    .define "_beats_to_duration"
-                           A   807    .value _beats_to_duration
-                           A   808    .class 3
-                           A   809    .type 69
-                           A   810    .type 0
-                           A   811    .endef
-                           A   812    .begfunc "beats_to_duration",174,"_beats_to_duration"
-                           A   813    .line 174
-                           A   814    .define "beats"
-                           A   815    .class 17
-                           A   816    .reg 2
-                           A   817    .type 5
-                           A   818    .type 0
-                           A   819    .endef
-                           A   820    .define "bpm"
-                           A   821    .class 17
-                           A   822    .reg 3
-                           A   823    .type 5
-                           A   824    .type 0
-                           A   825    .endef
-000002B6 0800              A   826    	LINK	#0
-000002B8 05C0              A   827    	PUSHMHI	#3
-                           A   828    ;  175		return (int)((60.0f / (float)bpm) * (4.0f / (float)beats) * 1000.0f);
-                           A   829    .line 175
-000002BA 4428              A   830    	LD	R8,R2
-000002BC F1 FFFEA0         A   831    	CALL	__fpltof
-000002C0 4409              A   832    	LD	R9,R0
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:  17
+                           A   781    ;  160	
+                           A   782    ;  161		//calculate the timeout
+                           A   783    ;  162		timeout = 1.0f / (float)frequency;
+                           A   784    .line 162
+00000276 5FC8              A   785    	LD	R8,-4(R14)
+00000278 F1 FFFEC2         A   786    	CALL	__fpltof
+0000027C 4409              A   787    	LD	R9,R0
+0000027E 4528 3F800000     A   788    	LD	R8,#1065353216
+00000284 F1 FFFEBC         A   789    	CALL	__fpdiv
+00000288 5B80              A   790    	LD	-8(R14),R0
+                           A   791    ;  163	
+                           A   792    ;  164		// Initial counter value
+                           A   793    ;  165	    T1HL = 0x00;
+                           A   794    .line 165
+0000028A ADA4 E310         A   795    	CLR.W	58128:RAM
+                           A   796    ;  166	
+                           A   797    ;  167		// Timer reload
+                           A   798    ;  168	    //   reload = clock / prescale * timeout  
+                           A   799    ;  169	    T1R = get_osc_clock() / 64 * timeout;
+                           A   800    .line 169
+0000028E F1 FFFEB7         A   801    	CALL	_get_osc_clock
+00000292 3140              A   802    	LD	R1,#64
+00000294 AF10              A   803    	SDIV	R0,R1
+00000296 4408              A   804    	LD	R8,R0
+00000298 F1 FFFEB2         A   805    	CALL	__fpltof
+0000029C 4408              A   806    	LD	R8,R0
+0000029E 5F89              A   807    	LD	R9,-8(R14)
+000002A0 F1 FFFEAE         A   808    	CALL	__fpmul
+000002A4 4408              A   809    	LD	R8,R0
+000002A6 F1 FFFEAB         A   810    	CALL	__fpftol
+000002AA 0360 E312         A   811    	LD.W	58130:RAM,R0
+                           A   812    ;  170	
+                           A   813    ;  171		// Enable Timer0 interrupt
+                           A   814    ;  172	    //IRQ1EN = IRQ_Timer1;
+                           A   815    ;  173	
+                           A   816    ;  174		T1CTL1 |= TIMER_ENABLE;
+                           A   817    .line 174
+000002AE 4500 0080         A   818    	LD	R0,#128
+000002B2 7350 E317         A   819    	OR.B	58135:RAM,R0
+                           A   820    ;  175	
+                           A   821    ;  176		//set PC1 as T1OUT
+                           A   822    ;  177		PCAF |= 0x02;
+                           A   823    .line 177
+000002B6 3002              A   824    	LD	R0,#2
+000002B8 7360 E124         A   825    	OR.W	57636:RAM,R0
+                           A   826    ;  178	}
+                           A   827    .line 178
+000002BC 0703              A   828    	POPMHI	#3
+000002BE 0001              A   829    	UNLINK	
+000002C0 FFFC              A   830    	RET	
+                           A   831    
+                           A   832    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:  17
 
 
 PC     Object              I  Line    Source speaker.src
-000002C2 4528 42700000     A   833    	LD	R8,#1114636288
-000002C8 F1 FFFE9A         A   834    	CALL	__fpdiv
-000002CC 4402              A   835    	LD	R2,R0
-000002CE 4418              A   836    	LD	R8,R1
-000002D0 F1 FFFE96         A   837    	CALL	__fpltof
-000002D4 4409              A   838    	LD	R9,R0
-000002D6 4528 40800000     A   839    	LD	R8,#1082130432
-000002DC F1 FFFE90         A   840    	CALL	__fpdiv
-000002E0 4428              A   841    	LD	R8,R2
-000002E2 4409              A   842    	LD	R9,R0
-000002E4 F1 FFFE8C         A   843    	CALL	__fpmul
-000002E8 4408              A   844    	LD	R8,R0
-000002EA 4529 447A0000     A   845    	LD	R9,#1148846080
-000002F0 F1 FFFE86         A   846    	CALL	__fpmul
-000002F4 4408              A   847    	LD	R8,R0
-000002F6 F1 FFFE83         A   848    	CALL	__fpftol
-                           A   849    ;  176	}
-                           A   850    .line 176
-000002FA 0703              A   851    	POPMHI	#3
-000002FC 0001              A   852    	UNLINK	
-000002FE FFFC              A   853    	RET	
-                           A   854    
-                           A   855    
-                           A   856    ;**************************** _beats_to_duration ***************************
-                           A   857    ;Name                         Addr/Register   Size   Type
-                           A   858    ;bpm                                     R2      4   parameter
-                           A   859    ;beats                                   R1      4   parameter
-                           A   860    
-                           A   861    
-                           A   862    ; Aggregate Stack Size: 0 (words)
-                           A   863    
-                           A   864    
-                           A   865    .endfunc "beats_to_duration",176,"_beats_to_duration"
-                           A   866    	XREF _tolower:EROM
-                           A   867    	XREF _islower:EROM
-                           A   868    	XREF _strncmp:EROM
-                           A   869    	XREF _get_osc_clock:EROM
-                           A   870    	XREF _play_next_note:EROM
-                           A   871    	XREF _timer_interval_int:EROM
-                           A   872    	XREF __fpltof:EROM
-                           A   873    	XREF __fpultof:EROM
-                           A   874    	XREF __fpftol:EROM
-                           A   875    	XREF __fpdiv:EROM
-                           A   876    	XREF __fpmul:EROM
-                           A   877    	XDEF _play_note
-                           A   878    	XDEF _disable_speaker_timer
-                           A   879    	XDEF _speaker_events
-                           A   880    	XDEF _init_speaker
-                           A   881    	XDEF _note_values
-                           A   882    	END
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     22:44:16     page:  18
+                           A   833    ;**************************** _start_speaker_timer ***************************
+                           A   834    ;Name                         Addr/Register   Size   Type
+                           A   835    ;_get_osc_clock                      IMPORT  -----   function
+                           A   836    ;timeout                              R14-8      4   variable
+                           A   837    ;frequency                            R14-4      4   parameter
+                           A   838    
+                           A   839    
+                           A   840    ; Aggregate Stack Size: -8 (words)
+                           A   841    
+                           A   842    
+                           A   843    .endfunc "start_speaker_timer",178,"_start_speaker_timer"
+                           A   844    ;  179	
+                           A   845    ;  180	/*
+                           A   846    ;  181		Convert a duration to a time value using beats per minute.
+                           A   847    ;  182	 */
+                           A   848    ;  183	static int beats_to_duration(int beats, int bpm)
+                           A   849    ;  184	{
+000002C2                   A   850    _beats_to_duration:
+                           A   851    .define "_beats_to_duration"
+                           A   852    .value _beats_to_duration
+                           A   853    .class 3
+                           A   854    .type 69
+                           A   855    .type 0
+                           A   856    .endef
+                           A   857    .begfunc "beats_to_duration",184,"_beats_to_duration"
+                           A   858    .line 184
+                           A   859    .define "beats"
+                           A   860    .class 17
+                           A   861    .reg 2
+                           A   862    .type 5
+                           A   863    .type 0
+                           A   864    .endef
+                           A   865    .define "bpm"
+                           A   866    .class 17
+                           A   867    .reg 3
+                           A   868    .type 5
+                           A   869    .type 0
+                           A   870    .endef
+000002C2 0800              A   871    	LINK	#0
+000002C4 05C0              A   872    	PUSHMHI	#3
+                           A   873    ;  185		return (int)((60.0f / (float)bpm) * (4.0f / (float)beats) * 1000.0f);
+                           A   874    .line 185
+000002C6 4428              A   875    	LD	R8,R2
+000002C8 F1 FFFE9A         A   876    	CALL	__fpltof
+000002CC 4409              A   877    	LD	R9,R0
+000002CE 4528 42700000     A   878    	LD	R8,#1114636288
+000002D4 F1 FFFE94         A   879    	CALL	__fpdiv
+000002D8 4402              A   880    	LD	R2,R0
+000002DA 4418              A   881    	LD	R8,R1
+000002DC F1 FFFE90         A   882    	CALL	__fpltof
+000002E0 4409              A   883    	LD	R9,R0
+000002E2 4528 40800000     A   884    	LD	R8,#1082130432
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               22-Feb-11     23:13:04     page:  18
 
 
-PC     Object              I  Line    Source 
+PC     Object              I  Line    Source speaker.src
+000002E8 F1 FFFE8A         A   885    	CALL	__fpdiv
+000002EC 4428              A   886    	LD	R8,R2
+000002EE 4409              A   887    	LD	R9,R0
+000002F0 F1 FFFE86         A   888    	CALL	__fpmul
+000002F4 4408              A   889    	LD	R8,R0
+000002F6 4529 447A0000     A   890    	LD	R9,#1148846080
+000002FC F1 FFFE80         A   891    	CALL	__fpmul
+00000300 4408              A   892    	LD	R8,R0
+00000302 F1 FFFE7D         A   893    	CALL	__fpftol
+                           A   894    ;  186	}
+                           A   895    .line 186
+00000306 0703              A   896    	POPMHI	#3
+00000308 0001              A   897    	UNLINK	
+0000030A FFFC              A   898    	RET	
+                           A   899    
+                           A   900    
+                           A   901    ;**************************** _beats_to_duration ***************************
+                           A   902    ;Name                         Addr/Register   Size   Type
+                           A   903    ;bpm                                     R2      4   parameter
+                           A   904    ;beats                                   R1      4   parameter
+                           A   905    
+                           A   906    
+                           A   907    ; Aggregate Stack Size: 0 (words)
+                           A   908    
+                           A   909    
+                           A   910    .endfunc "beats_to_duration",186,"_beats_to_duration"
+                           A   911    	XREF _tolower:EROM
+                           A   912    	XREF _islower:EROM
+                           A   913    	XREF _strncmp:EROM
+                           A   914    	XREF _get_osc_clock:EROM
+                           A   915    	XREF _play_next_note:EROM
+                           A   916    	XREF _timer_interval_int:EROM
+                           A   917    	XREF __fpltof:EROM
+                           A   918    	XREF __fpftol:EROM
+                           A   919    	XREF __fpdiv:EROM
+                           A   920    	XREF __fpmul:EROM
+                           A   921    	XDEF _play_frequency
+                           A   922    	XDEF _play_note
+                           A   923    	XDEF _disable_speaker_timer
+                           A   924    	XDEF _speaker_events
+                           A   925    	XDEF _init_speaker
+                           A   926    	XDEF _note_values
+                           A   927    	END
 
 
 Errors: 0
 Warnings: 0
-Lines Assembled: 883
+Lines Assembled: 928

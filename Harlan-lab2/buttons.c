@@ -29,6 +29,9 @@ static unsigned short button_state;
 
 static void handle_button_events(void);
 
+/*
+	Initializes the buttons.
+ */
 void init_buttons(void)
 {
 	//set as inputs
@@ -47,6 +50,9 @@ void init_buttons(void)
 	button_twice_cutoff = BUTTON_TWICE_CUTOFF;
 }
 
+/*
+	Processes button events.
+ */
 void button_events(void)
 {
 	button_timer += timer_interval_int();

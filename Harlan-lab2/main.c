@@ -10,19 +10,16 @@
 	measure rest between each playthrough until a button is double tapped.
 	The currently playing note and its duration is displayed on the LCD.
 
-	Other files: [list other files that are necessary for this program]
+	Other files: buttons.c buttons.h LED.c LED.h notes.h oscillator.c oscillator.h ringtones.h
+	rttl.c rttl.h speaker.c speaker.h timer.c timer.h
 
-	Compile: [provide any special instructions for compiling. Only necessary if 
-	there are special instructions]
+	Compile: Set the user include path to the include directory.
 	
-	Problems: [explaining what you did, what problems you had, how you solved them, 
-	and what you might do differently if you had to do it again]
+	Problems: I didn't run in to any significant problems.
 
-	Comments: [Feel free to provide comments on how this lab went, what you think 
-	is good or bad about it and how it could be improved or anything else you want 
-	to say.]
+	Comments: Another fun and challenging lab.
 
-	Enhancements: [describe the enhancements you added to this lab]
+	Enhancements: None.
  */
 
 #include "LED.h"
@@ -38,6 +35,7 @@
  */
 void main(void)
 {
+	//initialize the hardware
 	init_buttons();
 	init_speaker();
 	init_leds();

@@ -6,6 +6,10 @@ ptn_Child1=ChildFrames
 
 [WorkState_v1_2.Frames.ChildFrames]
 ptn_Child1=Document-0
+ptn_Child10=Document-9
+ptn_Child11=Document-10
+ptn_Child12=Document-11
+ptn_Child13=Document-12
 ptn_Child2=Document-1
 ptn_Child3=Document-2
 ptn_Child4=Document-3
@@ -37,6 +41,39 @@ IsActiveChildFrame=False
 IsFrameVisible=True
 WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPCOPPPPPPNHAAAAAANHAAAAAAGAGAAAAAGICAAAAA
 
+[WorkState_v1_2.Frames.ChildFrames.Document-10]
+ptn_Child1=ViewFrame-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-10.ViewFrame-0]
+DocPathName=include\buttons.h
+DocTemplateIndex=0
+DocumentString=IDE.Document
+IsActiveChildFrame=False
+IsFrameVisible=True
+WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPCOPPPPPPKPAAAAAAKPAAAAAADIGAAAAADADAAAAA
+
+[WorkState_v1_2.Frames.ChildFrames.Document-11]
+ptn_Child1=ViewFrame-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-11.ViewFrame-0]
+DocPathName=include\matrix.h
+DocTemplateIndex=0
+DocumentString=IDE.Document
+IsActiveChildFrame=False
+IsFrameVisible=True
+WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPCOPPPPPPAAAAAAAAAAAAAAAAJIFAAAAAJACAAAAA
+
+[WorkState_v1_2.Frames.ChildFrames.Document-12]
+ptn_Child1=ViewFrame-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-12.ViewFrame-0]
+DocPathName=include\oscillator.h
+DocTemplateIndex=0
+DocumentString=IDE.Document
+IsActiveChildFrame=False
+IsFrameVisible=True
+WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPCOPPPPPPJBAAAAAAJBAAAAAACKFAAAAACCCAAAAA
+
 [WorkState_v1_2.Frames.ChildFrames.Document-2]
 ptn_Child1=ViewFrame-0
 
@@ -55,9 +92,9 @@ ptn_Child1=ViewFrame-0
 DocPathName=C:\PROGRA~2\ZiLOG\ZDSII_~1.1\src\boot\common\startups.asm
 DocTemplateIndex=0
 DocumentString=IDE.Document
-IsActiveChildFrame=True
+IsActiveChildFrame=False
 IsFrameVisible=True
-WindowPlacement=MCAAAAAACAAAAAAADAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPCOPPPPPPCDAAAAAACDAAAAAAHBGAAAAAFDCAAAAA
+WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPCOPPPPPPCDAAAAAACDAAAAAAHBGAAAAAFDCAAAAA
 
 [WorkState_v1_2.Frames.ChildFrames.Document-4]
 ptn_Child1=ViewFrame-0
@@ -99,9 +136,9 @@ ptn_Child1=ViewFrame-0
 DocPathName=.\rttl.c
 DocTemplateIndex=0
 DocumentString=IDE.Document
-IsActiveChildFrame=False
+IsActiveChildFrame=True
 IsFrameVisible=True
-WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPCOPPPPPPGJAAAAAAGJAAAAAALHGAAAAAJJCAAAAA
+WindowPlacement=MCAAAAAACAAAAAAADAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPCOPPPPPPGJAAAAAAGJAAAAAALHGAAAAAJJCAAAAA
 
 [WorkState_v1_2.Frames.ChildFrames.Document-8]
 ptn_Child1=ViewFrame-0
@@ -113,4 +150,15 @@ DocumentString=IDE.Document
 IsActiveChildFrame=False
 IsFrameVisible=True
 WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPCOPPPPPPJBAAAAAAJBAAAAAACKFAAAAACCCAAAAA
+
+[WorkState_v1_2.Frames.ChildFrames.Document-9]
+ptn_Child1=ViewFrame-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-9.ViewFrame-0]
+DocPathName=include\speaker.h
+DocTemplateIndex=0
+DocumentString=IDE.Document
+IsActiveChildFrame=False
+IsFrameVisible=True
+WindowPlacement=MCAAAAAAAAAAAAAABAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPCOPPPPPPBOAAAAAABOAAAAAAKGGAAAAAKOCAAAAA
 

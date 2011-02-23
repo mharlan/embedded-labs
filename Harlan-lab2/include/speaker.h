@@ -23,4 +23,11 @@ void disable_speaker_timer(void);
  */
 void play_note(int octave, unsigned char note[3], int duration, int bpm);
 
+/*
+	Play a specific frequency note.
+
+	This function can be used for testing speakers.
+ */
+void play_frequency(int frequency);
+
 #endif

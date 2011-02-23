@@ -17,7 +17,7 @@ static void stop_note(void);
 static void stop_ringtone(void);
 static void disable_speaker_timer(void);
 static void init_speaker_timer(void);
-static void start_speaker_timer(unsigned int frequency);
+static void start_speaker_timer(int frequency);
 static int beats_to_duration(int beats, int bpm);
 
 /*
@@ -131,6 +131,16 @@ void play_note(int octave, unsigned char note[3], int duration, int bpm)
 }
 
 /*
+	Play a specific frequency note.
+
+	This function can be used for testing speakers.
+ */
+void play_frequency(int frequency)
+{
+	start_speaker_timer(frequency);
+}
+
+/*
 	Setup timer1.
  */
 static void init_speaker_timer(void)
@@ -144,7 +154,7 @@ static void init_speaker_timer(void)
  	Enable timer 1. The timer will go off every
 	1 / (2 * frequency) seconds.
  */
-static void start_speaker_timer(unsigned int frequency)
+static void start_speaker_timer(int frequency)
 {
 	float timeout;
 

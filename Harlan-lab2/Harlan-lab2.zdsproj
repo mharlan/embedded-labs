@@ -18,6 +18,7 @@
 <file filter-key="">.\oscillator.c</file>
 <file filter-key="">include\oscillator.h</file>
 <file filter-key="">.\timer.c</file>
+<file filter-key="">include\matrix.h</file>
 </files>
 
 <!-- configuration information -->
