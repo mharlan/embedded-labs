@@ -14,9 +14,9 @@ void init_leds(void);
 void led_update(void);
 
 /*
- 	Set the scroll timer cutoff in seconds.
+ 	Set the scroll timer cutoff in milliseconds.
  */
-void led_set_timer_cutoff(float seconds);
+void led_set_scroll_cutoff(int ms);
 
 /*
 	Switch the LEDs to text display mode and display msg.

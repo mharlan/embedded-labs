@@ -1,13 +1,17 @@
 /*
-	Author: [Your name]
-	Email:  [Your email]
-	Class:  [CSCI-4415]
-	Date: 
-	Lab:    [Lab number]
+	Author: Matthew Harlan
+	Email:  mharlan@gwmail.gwu.edu
+	Class:  CSCI-4415
+	Date: 	February 22nd, 2011
+	Lab:    2
 	
-	Description: [short description of program. Include changes you made and     
-	note any enhancements that you made to the lab]
+	Description: This program plays three RTTL ringtones. Ringtones are
+	selected by pressing the buttons. The ringtone will loop with a one
+	measure rest between each playthrough until a button is double tapped.
+	The currently playing note and its duration is displayed on the LCD.
+
 	Other files: [list other files that are necessary for this program]
+
 	Compile: [provide any special instructions for compiling. Only necessary if 
 	there are special instructions]
 	
@@ -26,7 +30,6 @@
 #include "buttons.h"
 #include "speaker.h"
 #include "timer.h"
-#include "interrupts.h"
 
 #include <zneo.h>
 

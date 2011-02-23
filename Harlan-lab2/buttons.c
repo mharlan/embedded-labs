@@ -6,8 +6,8 @@
 
 #include <zneo.h>
 
-#define DEBOUNCE_CUTOFF     0.040 	//40 ms
-#define BUTTON_TWICE_CUTOFF 0.5		//500 ms
+#define DEBOUNCE_CUTOFF     40 	//40 ms
+#define BUTTON_TWICE_CUTOFF 500	//500 ms
 
 #define BUTTON_NONE  0xC8
 #define BUTTON_ONE   0xC0
@@ -17,10 +17,10 @@
 #define BUTTON_PRESSED     1
 #define BUTTON_NOT_PRESSED 0
 
-static float button_timer;
-static float debounce_cutoff;
-static float button_twice_timer;
-static float button_twice_cutoff;
+static int button_timer;
+static int debounce_cutoff;
+static int button_twice_timer;
+static int button_twice_cutoff;
 
 static unsigned char last_button;
 static unsigned char current;
@@ -49,14 +49,14 @@ void init_buttons(void)
 
 void button_events(void)
 {
-	button_timer += timer_interval_float();
+	button_timer += timer_interval_int();
 
 	if(button_twice_timer >= button_twice_cutoff) {
 		button_twice_timer = 0;
 		last_button = BUTTON_NONE;
 	}
 	else if(button_twice_timer > 0) {
-		button_twice_timer += timer_interval_float();
+		button_twice_timer += timer_interval_int();
 	}
 
 	//check buttons every debounce interval
@@ -74,7 +74,7 @@ void button_events(void)
 				}
 			}
 			else if(button_state == BUTTON_PRESSED) {
-				button_twice_timer += timer_interval_float();
+				button_twice_timer += timer_interval_int();
 				button_state = BUTTON_NOT_PRESSED;
 			}
 		}

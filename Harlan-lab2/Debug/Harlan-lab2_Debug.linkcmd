@@ -61,10 +61,10 @@ DEFINE _SYS_CLK_FREQ = 5529600
 "C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\Debug\Harlan-lab2"= \
  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\zilog\startupS.obj, \
  .\speaker.obj, \
- .\BUTTONS.obj, \
+ .\buttons.obj, \
  .\LED.obj, \
  .\main.obj, \
- .\RTTL.obj, \
+ .\rttl.obj, \
  .\oscillator.obj, \
  .\timer.obj, \
  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\chelpSD.lib, \

@@ -41,7 +41,7 @@ void play_next_note(void)
 	char note_info[8];
 
 	if(num_notes > 0) {
-		sprintf(note_info, "%d%s", song[song_pos].octave, song[song_pos].note);
+		sprintf(note_info, "%d%s%d", song[song_pos].duration, song[song_pos].note, song[song_pos].octave);
 		led_display_text(note_info);
 
 		play_note(song[song_pos].octave, song[song_pos].note, song[song_pos].duration, bpm);
@@ -61,6 +61,7 @@ static int parse_rttl_ringtone(const char *ringtone)
 	unsigned char test;
 
 	size_t token_length;
+	size_t octave_length;
 
 	int octave;
 	int duration;
@@ -174,6 +175,12 @@ static int parse_rttl_ringtone(const char *ringtone)
 				song[notes].note[1] = '\0';
 				token_pos++;
 			}
+			//ignore dots
+			else if(token[token_pos + 1] == '.') {
+				song[notes].note[0] = token[token_pos];
+				song[notes].note[1] = '\0';
+				token_pos += 2;
+			}
 			//note is sharp
 			else {
 				memcpy(song[notes].note, &token[token_pos], 2);
@@ -182,8 +189,37 @@ static int parse_rttl_ringtone(const char *ringtone)
 			}
 
 			//octave is specifed
-			if(token_pos < token_length && isdigit(token[token_pos])) {
-				song[notes].octave = atoi(&token[token_pos]);
+			if(token_pos < token_length) {
+				//skip the dot
+				if(token[token_pos] == '.') {
+					token_pos++;
+
+					if(token_pos >= token_length) {
+						song[notes].octave = octave;
+					}
+				}
+
+				octave_length = 0;
+
+				while(isdigit(token[token_pos])) {
+					octave_length++;
+					token_pos++;
+
+					if(token_pos >= token_length) {
+						break;
+					}
+				}
+
+				//check if octave specified
+				if(octave_length) {
+					memcpy(number_token, &token[token_pos - octave_length], octave_length);
+					number_token[octave_length] = '\0';
+					
+					song[notes].octave = atoi(number_token);
+				}
+				else {
+					song[notes].octave = octave;
+				}
 			}
 			//otherwise use default
 			else {

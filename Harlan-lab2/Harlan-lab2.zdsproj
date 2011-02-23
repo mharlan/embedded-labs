@@ -9,15 +9,15 @@
 <file filter-key="">include\buttons.h</file>
 <file filter-key="">include\LED.h</file>
 <file filter-key="">include\timer.h</file>
-<file filter-key="">.\BUTTONS.C</file>
+<file filter-key="">.\buttons.c</file>
 <file filter-key="">.\LED.c</file>
 <file filter-key="">.\main.c</file>
-<file filter-key="">.\RTTL.C</file>
+<file filter-key="">.\rttl.c</file>
 <file filter-key="">include\notes.h</file>
 <file filter-key="">include\ringtones.h</file>
 <file filter-key="">.\oscillator.c</file>
 <file filter-key="">include\oscillator.h</file>
-<file filter-key="">.\TIMER.C</file>
+<file filter-key="">.\timer.c</file>
 </files>
 
 <!-- configuration information -->

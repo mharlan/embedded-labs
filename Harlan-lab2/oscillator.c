@@ -4,8 +4,8 @@
 
 static int osc_clock;
 
-#define CLOCK_5_52MHZ   5500000
-#define CLOCK_18_432MHZ 18430000
+#define CLOCK_5_52MHZ   5520000
+#define CLOCK_18_432MHZ 18432000
 
 /*
 	Unlocks the oscillator control register and selects either

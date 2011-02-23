@@ -12,7 +12,7 @@
 #define NUM_LEDS     4
 
 //time in seconds
-#define SCROLL_CUTOFF 0.4
+#define SCROLL_CUTOFF 400
 
 #define LED_DEC_MAX  9999
 #define LED_HEX_MAX  0xFFFF
@@ -32,8 +32,8 @@ static unsigned int draw_char[NUM_LEDS];
 static unsigned int msg_pos;
 static unsigned int row_pos;
 
-static float led_scroll_timer;
-static float led_scroll_cutoff;
+static int led_scroll_timer;
+static int led_scroll_cutoff;
 
 //values for selecting each LED row
 static unsigned int led_anode[NUM_ANODES] =
@@ -71,7 +71,7 @@ void init_leds(void)
 
 void led_update(void)
 {
-	led_scroll_timer += timer_interval_float();
+	led_scroll_timer += timer_interval_int();
 
 	//updates the characters being displayed at timer_cutoff interval
 	if((msg_size > 4) && 
@@ -91,9 +91,9 @@ void led_update(void)
 	row_pos = (row_pos + 1) % NUM_ANODES;
 }
 
-void led_set_timer_cutoff(float seconds)
+void led_set_scroll_cutoff(int ms)
 {
-	led_scroll_cutoff = seconds;
+	led_scroll_cutoff = ms;
 }
 
 void led_display_text(const unsigned char *msg)

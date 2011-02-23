@@ -9,8 +9,8 @@
 #include <string.h>
 #include <ctype.h>
 
-static float duration_timer;
-static float duration_cutoff;
+static int duration_timer;
+static int duration_cutoff;
 
 static void play_note(int octave, unsigned char note[3], int duration, int bpm);
 static void stop_note(void);
@@ -18,7 +18,7 @@ static void stop_ringtone(void);
 static void disable_speaker_timer(void);
 static void init_speaker_timer(void);
 static void start_speaker_timer(unsigned int frequency);
-static float beats_to_duration(int beats, int bpm);
+static int beats_to_duration(int beats, int bpm);
 
 /*
 	Initialize the speaker IO ports.
@@ -43,7 +43,7 @@ void init_speaker(void)
 void speaker_events(void)
 {
 	if(duration_cutoff) {
-		duration_timer += timer_interval_float();
+		duration_timer += timer_interval_int();
 		
 		if(duration_timer >= duration_cutoff) {
 			disable_speaker_timer();
@@ -149,7 +149,6 @@ static void start_speaker_timer(unsigned int frequency)
 	float timeout;
 
 	//calculate the timeout
-	//timeout = 1.0f / (2.0f * (float)frequency);
 	timeout = 1.0f / (float)frequency;
 
 	// Initial counter value
@@ -171,8 +170,8 @@ static void start_speaker_timer(unsigned int frequency)
 /*
 	Convert a duration to a time value using beats per minute.
  */
-static float beats_to_duration(int beats, int bpm)
+static int beats_to_duration(int beats, int bpm)
 {
-	return (60.0f / (float)bpm) * (4.0f / (float)beats);
+	return (int)((60.0f / (float)bpm) * (4.0f / (float)beats) * 1000.0f);
 }
 
