@@ -74,6 +74,8 @@ clean:
             $(RM) $(WORKDIR)\uart.obj
 	@if exist $(WORKDIR)\cli.obj  \
             $(RM) $(WORKDIR)\cli.obj
+	@if exist $(WORKDIR)\info.obj  \
+            $(RM) $(WORKDIR)\info.obj
 
 # pre-4.11.0 compatibility
 rebuildall: buildall 
@@ -87,7 +89,8 @@ OBJS =  \
             $(WORKDIR)\oscillator.obj  \
             $(WORKDIR)\timer.obj  \
             $(WORKDIR)\uart.obj  \
-            $(WORKDIR)\cli.obj
+            $(WORKDIR)\cli.obj  \
+            $(WORKDIR)\info.obj
 
 Harlan-lab3: $(OBJS)
 	 $(LD) $(LDFLAGS)
@@ -166,8 +169,17 @@ $(WORKDIR)\cli.obj :  \
             $(INCLUDE)\std\STRING.H  \
             $(INCLUDE)\zilog\Zconst.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\LED.h  \
-            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\oscillator.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\cli.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\info.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\uart.h
 	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\cli.c
+
+$(WORKDIR)\info.obj :  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\info.c  \
+            $(INCLUDE)\std\STRING.H  \
+            $(INCLUDE)\zilog\Zconst.h  \
+            $(INCLUDE)\zilog\zneo.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\info.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\uart.h
+	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\info.c
 

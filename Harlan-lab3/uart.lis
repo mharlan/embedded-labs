@@ -1,188 +1,198 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\UART.C
 
      1	    1	#include "uart.h"
-     2	   33	
-     3	   34	#include <zneo.h>
-     4	  560	#include <string.h>
-     5	  652	#include <stdio.h>
-     6	 1498	#include <stdarg.h>
-     7	 1514	
-     8	 1515	#define BUFFER_SIZE 512
-     9	 1516	
-    10	 1517	#define FREQ         5529600UL  //use internal oscillator
-    11	 1518	#define DEFAULT_BAUD 57600UL    //our desired baud rate
-    12	 1519	
-    13	 1520	//alternate function enable for PA for uart0
-    14	 1521	#define PORTA_UART_RXD	0x10	
-    15	 1522	#define PORTA_UART_TXD	0x20
-    16	 1523	
-    17	 1524	#define UART_TXD_EN		0x80	//transmit enable
-    18	 1525	#define UART_RXD_EN		0x40	//receive enable
-    19	 1526	
-    20	 1527	#define UART_TRAN_RDY 0x04
-    21	 1528	
-    22	 1529	#define UART_IRQ_EN   0x18
-    23	 1530	
-    24	 1531	#define UART_IRQ_TRAN 0x08
-    25	 1532	#define UART_IRQ_REC  0x10
-    26	 1533	
-    27	 1534	static unsigned char trans_buffer[BUFFER_SIZE];
-    28	 1535	static unsigned char rec_buffer[BUFFER_SIZE];
-    29	 1536	
-    30	 1537	static volatile int trans_buffer_size;
-    31	 1538	static volatile int rec_buffer_size;
-    32	 1539	
-    33	 1540	static volatile int trans_buffer_current;
-    34	 1541	static volatile int rec_buffer_current;
-    35	 1542	
-    36	 1543	void interrupt uart_receive(void)
-    37	 1544	{
-    38	 1545		int buffer_loc;
-    39	 1546		unsigned char c;
-    40	 1547	
-    41	 1548		c = U0RXD;
-    42	 1549		if(c == '\r' || c == '\n') {
-    43	 1550			c = '\n';
-    44	 1551			uart_putchar('\r');
-    45	 1552			uart_putchar('\n');	
-    46	 1553		}
-    47	 1554		else {
-    48	 1555			uart_putchar(c);
-    49	 1556		}
-    50	 1557	
-    51	 1558		if(rec_buffer_size < BUFFER_SIZE) {
-    52	 1559			buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
-    53	 1560	
-    54	 1561			rec_buffer[buffer_loc] = c;
-    55	 1562			rec_buffer_size++;
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 2
+     2	   38	
+     3	   39	#include <zneo.h>
+     4	  565	#include <string.h>
+     5	  657	#include <stdio.h>
+     6	 1503	#include <stdarg.h>
+     7	 1519	
+     8	 1520	#define BUFFER_SIZE 512
+     9	 1521	
+    10	 1522	#define FREQ         5529600UL  //use internal oscillator
+    11	 1523	#define DEFAULT_BAUD 57600UL    //our desired baud rate
+    12	 1524	
+    13	 1525	//alternate function enable for PA for uart0
+    14	 1526	#define PORTA_UART_RXD	0x10	
+    15	 1527	#define PORTA_UART_TXD	0x20
+    16	 1528	
+    17	 1529	#define UART_TXD_EN		0x80	//transmit enable
+    18	 1530	#define UART_RXD_EN		0x40	//receive enable
+    19	 1531	
+    20	 1532	#define UART_TRAN_RDY 0x04
+    21	 1533	
+    22	 1534	#define UART_IRQ_EN   0x18
+    23	 1535	
+    24	 1536	#define UART_IRQ_TRAN 0x08
+    25	 1537	#define UART_IRQ_REC  0x10
+    26	 1538	
+    27	 1539	static unsigned char trans_buffer[BUFFER_SIZE];
+    28	 1540	static unsigned char rec_buffer[BUFFER_SIZE];
+    29	 1541	
+    30	 1542	static volatile int trans_buffer_size;
+    31	 1543	static volatile int rec_buffer_size;
+    32	 1544	
+    33	 1545	static volatile int trans_buffer_current;
+    34	 1546	static volatile int rec_buffer_current;
+    35	 1547	
+    36	 1548	static unsigned long baud_rate;
+    37	 1549	
+    38	 1550	void interrupt uart_receive(void)
+    39	 1551	{
+    40	 1552		int buffer_loc;
+    41	 1553		unsigned char c;
+    42	 1554	
+    43	 1555		c = U0RXD;
+    44	 1556	
+    45	 1557		//so the echo is compatible with Windows, CR+LF
+    46	 1558		if(c == '\r' || c == '\n') {
+    47	 1559			c = '\n';
+    48	 1560			uart_putchar('\r');
+    49	 1561			uart_putchar('\n');	
+    50	 1562		}
+    51	 1563		//echo the character back
+    52	 1564		else {
+    53	 1565			uart_putchar(c);
+    54	 1566		}
+    55	 1567	
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 2
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\UART.C
 
-    56	 1563		}
-    57	 1564	}
-    58	 1565	
-    59	 1566	void interrupt uart_transfer(void)
-    60	 1567	{
-    61	 1568		if(trans_buffer_size) {
-    62	 1569			U0TXD = trans_buffer[trans_buffer_current];
-    63	 1570	
-    64	 1571			trans_buffer_current = (trans_buffer_current + 1) % BUFFER_SIZE;
-    65	 1572			trans_buffer_size--;
-    66	 1573		}
-    67	 1574	}
-    68	 1575	
-    69	 1576	/*
-    70	 1577		Configure UART0.
-    71	 1578	 */
-    72	 1579	void init_uart(void)
-    73	 1580	{
-    74	 1581		memset(rec_buffer, 0, BUFFER_SIZE);
-    75	 1582		memset(trans_buffer, 0, BUFFER_SIZE);
-    76	 1583	
-    77	 1584		// Set the alternate function on port A
-    78	 1585	    // Enable UART0 TxD0/RxD0 pins (bits 4 & 5)
-    79	 1586		PAAFH &= ~(PORTA_UART_TXD | PORTA_UART_RXD);
-    80	 1587	    PAAFL |= PORTA_UART_TXD | PORTA_UART_RXD;
-    81	 1588	
-    82	 1589	    // Set the baud rate
-    83	 1590	    // BRG = freq/( baud * 16)
-    84	 1591	    U0BR = FREQ/((unsigned long)DEFAULT_BAUD * 16UL);
-    85	 1592	
-    86	 1593	    // U0 control
-    87	 1594	    // Transmit enable, Receive Enable, No Parity, 1 Stop
-    88	 1595	    U0CTL0 = UART_RXD_EN | UART_TXD_EN;
-    89	 1596	    U0CTL1 = 0;
-    90	 1597	
-    91	 1598		//set nominal priority
-    92	 1599		IRQ0ENH |= UART_IRQ_EN;
-    93	 1600		IRQ0ENL &= ~UART_IRQ_EN;
-    94	 1601	
-    95	 1602		PAIMUX &= ~UART_IRQ_EN;		//Port A (0) for interrupts
-    96	 1603		PAIEDGE &= ~UART_IRQ_EN;	//negedge (0) interrupt
-    97	 1604	
-    98	 1605		SET_VECTOR(UART0_RX, uart_receive);
-    99	 1606		SET_VECTOR(UART0_TX, uart_transfer);
-   100	 1607	}
-   101	 1608	
-   102	 1609	int uart_putchar(unsigned char c)
-   103	 1610	{
-   104	 1611		int buffer_loc;
-   105	 1612	
-   106	 1613		if(c == '\n') {
-   107	 1614			while(uart_putchar('\r')) { ; }
-   108	 1615		}
-   109	 1616	
-   110	 1617		if(trans_buffer_size < BUFFER_SIZE) {
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 3
+    56	 1568		if(rec_buffer_size < BUFFER_SIZE) {
+    57	 1569			buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
+    58	 1570			
+    59	 1571			rec_buffer[buffer_loc] = c;
+    60	 1572			++rec_buffer_size;
+    61	 1573		}
+    62	 1574	}
+    63	 1575	
+    64	 1576	void interrupt uart_transfer(void)
+    65	 1577	{
+    66	 1578		if(trans_buffer_size) {
+    67	 1579			U0TXD = trans_buffer[trans_buffer_current];
+    68	 1580	
+    69	 1581			trans_buffer_current = (trans_buffer_current + 1) % BUFFER_SIZE;
+    70	 1582			trans_buffer_size--;
+    71	 1583		}
+    72	 1584	}
+    73	 1585	
+    74	 1586	/*
+    75	 1587		Configure UART0.
+    76	 1588	 */
+    77	 1589	void init_uart(void)
+    78	 1590	{
+    79	 1591		memset(rec_buffer, 0, BUFFER_SIZE);
+    80	 1592		memset(trans_buffer, 0, BUFFER_SIZE);
+    81	 1593	
+    82	 1594		// Set the alternate function on port A
+    83	 1595	    // Enable UART0 TxD0/RxD0 pins (bits 4 & 5)
+    84	 1596		PAAFH &= ~(PORTA_UART_TXD | PORTA_UART_RXD);
+    85	 1597	    PAAFL |= PORTA_UART_TXD | PORTA_UART_RXD;
+    86	 1598	
+    87	 1599	    // Set the baud rate
+    88	 1600	    // BRG = freq/( baud * 16)
+    89	 1601	    U0BR = FREQ/((unsigned long)DEFAULT_BAUD * 16UL);
+    90	 1602		baud_rate = DEFAULT_BAUD;
+    91	 1603	
+    92	 1604	    // U0 control
+    93	 1605	    // Transmit enable, Receive Enable, No Parity, 1 Stop
+    94	 1606	    U0CTL0 = UART_RXD_EN | UART_TXD_EN;
+    95	 1607	    U0CTL1 = 0;
+    96	 1608	
+    97	 1609		//set nominal priority
+    98	 1610		IRQ0ENH |= UART_IRQ_EN;
+    99	 1611		IRQ0ENL &= ~UART_IRQ_EN;
+   100	 1612	
+   101	 1613		PAIMUX &= ~UART_IRQ_EN;		//Port A (0) for interrupts
+   102	 1614		PAIEDGE &= ~UART_IRQ_EN;	//negedge (0) interrupt
+   103	 1615	
+   104	 1616		SET_VECTOR(UART0_RX, uart_receive);
+   105	 1617		SET_VECTOR(UART0_TX, uart_transfer);
+   106	 1618	}
+   107	 1619	
+   108	 1620	int uart_putchar(unsigned char c)
+   109	 1621	{
+   110	 1622		int buffer_loc;
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 3
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\UART.C
 
-   111	 1618			DI();
-   112	 1619			
-   113	 1620			buffer_loc = (trans_buffer_current + trans_buffer_size) % BUFFER_SIZE;
-   114	 1621			trans_buffer[buffer_loc] = c;
-   115	 1622			trans_buffer_size++;
-   116	 1623	
-   117	 1624			//trigger the interrupt if already ready to transmit
-   118	 1625			if((U0STAT0 & UART_TRAN_RDY) && 
-   119	 1626			   ((IRQ0SET & UART_IRQ_TRAN) == 0)) {
-   120	 1627				IRQ0SET |= UART_IRQ_TRAN;
-   121	 1628			}
-   122	 1629	
-   123	 1630			EI();
-   124	 1631		}
-   125	 1632		else {
-   126	 1633			return 1;
-   127	 1634		}
-   128	 1635	
-   129	 1636		return 0;
-   130	 1637	}
-   131	 1638	
-   132	 1639	unsigned char uart_getchar(void)
-   133	 1640	{
-   134	 1641		unsigned char c;
-   135	 1642	
-   136	 1643		if(rec_buffer_size) {
-   137	 1644			DI();
-   138	 1645	
-   139	 1646			c = rec_buffer[rec_buffer_current];
-   140	 1647			rec_buffer_current = (rec_buffer_current + 1) % BUFFER_SIZE;
-   141	 1648			rec_buffer_size--;
-   142	 1649	
-   143	 1650			EI();
-   144	 1651	
-   145	 1652			return c;
-   146	 1653		}
-   147	 1654	
-   148	 1655		return 0;
-   149	 1656	}
-   150	 1657	
-   151	 1658	void uart_printf(const char *format, ...)
-   152	 1659	{
-   153	 1660		char buffer[BUFFER_SIZE];
-   154	 1661		va_list args;
-   155	 1662		int i;
-   156	 1663	
-   157	 1664		va_start(args, format);
-   158	 1665		vsprintf(buffer, format, args);
-   159	 1666		va_end(args);
-   160	 1667	
-   161	 1668		uart_transfer_msg(buffer);
-   162	 1669	}
-   163	 1670	
-   164	 1671	void uart_transfer_msg(char *text)
-   165	 1672	{
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 4
+   111	 1623	
+   112	 1624		if(c == '\n') {
+   113	 1625			while(uart_putchar('\r')) { ; }
+   114	 1626		}
+   115	 1627	
+   116	 1628		if(trans_buffer_size < BUFFER_SIZE) {
+   117	 1629			DI();
+   118	 1630			
+   119	 1631			buffer_loc = (trans_buffer_current + trans_buffer_size) % BUFFER_SIZE;
+   120	 1632			trans_buffer[buffer_loc] = c;
+   121	 1633			trans_buffer_size++;
+   122	 1634	
+   123	 1635			//trigger the interrupt if already ready to transmit
+   124	 1636			if((U0STAT0 & UART_TRAN_RDY) && 
+   125	 1637			   ((IRQ0SET & UART_IRQ_TRAN) == 0)) {
+   126	 1638				IRQ0SET |= UART_IRQ_TRAN;
+   127	 1639			}
+   128	 1640	
+   129	 1641			EI();
+   130	 1642		}
+   131	 1643		else {
+   132	 1644			return 1;
+   133	 1645		}
+   134	 1646	
+   135	 1647		return 0;
+   136	 1648	}
+   137	 1649	
+   138	 1650	unsigned char uart_getchar(void)
+   139	 1651	{
+   140	 1652		unsigned char c;
+   141	 1653	
+   142	 1654		if(rec_buffer_size) {
+   143	 1655			DI();
+   144	 1656	
+   145	 1657			c = rec_buffer[rec_buffer_current];
+   146	 1658			rec_buffer_current = (rec_buffer_current + 1) % BUFFER_SIZE;
+   147	 1659			rec_buffer_size--;
+   148	 1660	
+   149	 1661			EI();
+   150	 1662	
+   151	 1663			return c;
+   152	 1664		}
+   153	 1665	
+   154	 1666		return 0;
+   155	 1667	}
+   156	 1668	
+   157	 1669	void uart_printf(const char *format, ...)
+   158	 1670	{
+   159	 1671		char buffer[BUFFER_SIZE];
+   160	 1672		va_list args;
+   161	 1673		int i;
+   162	 1674	
+   163	 1675		va_start(args, format);
+   164	 1676		vsprintf(buffer, format, args);
+   165	 1677		va_end(args);
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 4
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\UART.C
 
-   166	 1673		int i;
-   167	 1674		char *msg;
-   168	 1675		
-   169	 1676		msg = text;
-   170	 1677		for(i = 0; *msg && i < BUFFER_SIZE; i++) {
-   171	 1678			while(uart_putchar(*msg)) { ; }	//wait if the buffer is full
-   172	 1679			msg++;
-   173	 1680		}
-   174	 1681	}
-   175	 1682	
-   176	 1683	ÿ
+   166	 1678	
+   167	 1679		uart_transfer_msg(buffer);
+   168	 1680	}
+   169	 1681	
+   170	 1682	void uart_transfer_msg(char *text)
+   171	 1683	{
+   172	 1684		int i;
+   173	 1685		char *msg;
+   174	 1686		
+   175	 1687		msg = text;
+   176	 1688		for(i = 0; *msg && i < BUFFER_SIZE; i++) {
+   177	 1689			while(uart_putchar(*msg)) { ; }	//wait if the buffer is full
+   178	 1690			msg++;
+   179	 1691		}
+   180	 1692	}
+   181	 1693	
+   182	 1694	unsigned long uart_get_baud_rate(void)
+   183	 1695	{
+   184	 1696		return baud_rate;
+   185	 1697	}
+   186	 1698	ÿ

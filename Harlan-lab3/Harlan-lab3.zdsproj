@@ -17,6 +17,8 @@
 <file filter-key="">.\uart.c</file>
 <file filter-key="">.\cli.c</file>
 <file filter-key="">include\cli.h</file>
+<file filter-key="">include\info.h</file>
+<file filter-key="">.\info.c</file>
 </files>
 
 <!-- configuration information -->
@@ -247,10 +249,27 @@
 <watch-element expression="rec_buffer" />
 <watch-element expression="rec_buffer_size" />
 <watch-element expression="rec_buffer_current" />
+<watch-element expression="*command" />
+<watch-element expression="command[1]" />
+<watch-element expression="command[2]" />
+<watch-element expression="command[3]" />
+<watch-element expression="command[4]" />
+<watch-element expression="command[5]" />
+<watch-element expression="*token_end" />
+<watch-element expression="token_end" />
+<watch-element expression="command" />
+<watch-element expression="&command[5]" />
 </watch-elements>
 
 <!-- breakpoint information -->
 <breakpoints>
+<breakpoint temporary="false" enabled="true" >
+<line-number>56</line-number>
+<pathname>C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\cli.c</pathname>
+<address>34838</address>
+<command></command>
+<preserve-type>0</preserve-type>
+</breakpoint>
 </breakpoints>
 
 </project>

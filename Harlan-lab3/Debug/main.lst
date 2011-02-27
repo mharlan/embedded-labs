@@ -1,4 +1,4 @@
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     17:33:57     page:   1
 
 
 PC     Object              I  Line    Source 
@@ -54,7 +54,7 @@ PC     Object              I  Line    Source
                            A    50    .define "set_begin"
                            A    51    .value 7
                            A    52    .class 8
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   2
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     17:33:57     page:   2
 
 
 PC     Object              I  Line    Source main.src
@@ -110,7 +110,7 @@ PC     Object              I  Line    Source main.src
                            A   102    .class 8
                            A   103    .dim 10
                            A   104    .type 108
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   3
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     17:33:57     page:   3
 
 
 PC     Object              I  Line    Source main.src
@@ -166,7 +166,7 @@ PC     Object              I  Line    Source main.src
 00000000 0800              A   154    	LINK	#0
                            A   155    ;   39		//initialize the oscillator and global timer
                            A   156    ;   40		init_oscillator(OSC_5_52MHZ);
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   4
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     17:33:57     page:   4
 
 
 PC     Object              I  Line    Source main.src
@@ -222,7 +222,7 @@ PC     Object              I  Line    Source main.src
                            A   206    	XREF _init_oscillator:EROM
                            A   207    	XDEF _main
                            A   208    	END
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   5
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     17:33:57     page:   5
 
 
 PC     Object              I  Line    Source 

@@ -134,6 +134,34 @@ _get_osc_clock:
 
 
 .endfunc "get_osc_clock",40,"_get_osc_clock"
+;   41	
+;   42	void oscillator_settings_display(void)
+;   43	{
+_oscillator_settings_display:
+.define "_oscillator_settings_display"
+.value _oscillator_settings_display
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "oscillator_settings_display",43,"_oscillator_settings_display"
+	LINK	#0
+;   44		
+;   45	}
+.line 45
+	UNLINK	
+	RET	
+
+
+;**************************** _oscillator_settings_display ***************************
+;Name                         Addr/Register   Size   Type
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "oscillator_settings_display",45,"_oscillator_settings_display"
+	XDEF _oscillator_settings_display
 	XDEF _get_osc_clock
 	XDEF _init_oscillator
 	END

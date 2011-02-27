@@ -4,12 +4,13 @@ Copyright (C) 1999-2004 ZiLOG, Inc. All Rights Reserved
 
 LINK MAP:
 
-DATE:      Sun Feb 27 00:45:40 2011
+DATE:      Sun Feb 27 17:33:58 2011
 PROCESSOR: assembler
 FILES:     C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\zilog\startupS.obj
            .\buttons.obj          .\LED.obj              .\main.obj             
            .\oscillator.obj
            .\timer.obj            .\uart.obj             .\cli.obj              
+           .\info.obj             
            C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\chelpSD.lib
            C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\crtSD.lib
            C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\fpSD.lib
@@ -78,17 +79,25 @@ DEFINE _SYS_CLK_FREQ = 5529600
 
 
 
-"C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\Debug\Harlan-lab2"=  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\zilog\startupS.obj,  .\buttons.obj,  .\LED.obj,  .\main.obj,  .\oscillator.obj,  .\timer.obj,  .\uart.obj,  .\cli.obj,  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\chelpSD.lib,  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\crtSD.lib,  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\fpSD.lib
+"C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\Debug\Harlan-lab2"=  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\zilog\startupS.obj,  .\buttons.obj,  .\LED.obj,  .\main.obj,  .\oscillator.obj,  .\timer.obj,  .\uart.obj,  .\cli.obj,  .\info.obj,  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\chelpSD.lib,  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\crtSD.lib,  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\fpSD.lib
 
+WARNING (747) --> Segment overlap occurs while binding the segment '___part_num_segment'
+
+SEGMENT OVERLAYS:
+=================
+
+Name                                     Base        Top       Length
+------------------------------------ ----------- ----------- ----------
+Section: ___part_num_segment              T:0040      T:0054        15h
 
 SPACE ALLOCATION:
 =================
 
 Space              Base        Top         Size
 ------------------ ----------- ----------- ---------
-EROM                  C:008000    C:009D68     1d69h
-RAM                   R:FFB000    R:FFB846      847h
-ROM                     T:0000      T:0557      558h
+EROM                  C:008000    C:00A0EB     20ech
+RAM                   R:FFB000    R:FFB85F      860h
+ROM                     T:0000      T:05F9      5fah
 
 
 SEGMENTS WITHIN SPACE:
@@ -96,14 +105,14 @@ SEGMENTS WITHIN SPACE:
 
 EROM               Type                Base        Top         Size
 ------------------ ------------------- ----------- ----------- ---------
-CODE               normal data            C:008000    C:009AA5     1aa6h
-NEAR_DATA          * segment copy *       C:009AA6    C:009D68      2c3h
+CODE               normal data            C:008000    C:009E13     1e14h
+NEAR_DATA          * segment copy *       C:009E14    C:00A0EB      2d8h
 
 
 RAM                Type                Base        Top         Size
 ------------------ ------------------- ----------- ----------- ---------
-NEAR_BSS           normal data            R:FFB000    R:FFB583      584h
-NEAR_DATA          normal data            R:FFB584    R:FFB846      2c3h
+NEAR_BSS           normal data            R:FFB000    R:FFB587      588h
+NEAR_DATA          normal data            R:FFB588    R:FFB85F      2d8h
 
 
 ROM                Type                Base        Top         Size
@@ -112,6 +121,7 @@ ____flash_option0_ absolute data            T:0000      T:0000        1h
 ____flash_option1_ absolute data            T:0001      T:0001        1h
 ____flash_option2_ absolute data            T:0002      T:0002        1h
 ____flash_option3_ absolute data            T:0003      T:0003        1h
+___part_num_segmen absolute data            T:0040      T:0053       14h
 __VECTORS_04       absolute data            T:0004      T:0007        4h
 __VECTORS_08       absolute data            T:0008      T:000B        4h
 __VECTORS_0C       absolute data            T:000C      T:000F        4h
@@ -140,8 +150,8 @@ __VECTORS_64       absolute data            T:0064      T:0067        4h
 __VECTORS_68       absolute data            T:0068      T:006B        4h
 __VECTORS_6C       absolute data            T:006C      T:006F        4h
 ROM_DATA           normal data              T:0070      T:0137       c8h
-ROM_TEXT           normal data              T:0138      T:04EA      3b3h
-startup            normal data              T:04EC      T:0557       6ch
+ROM_TEXT           normal data              T:0138      T:058C      455h
+startup            normal data              T:058E      T:05F9       6ch
 
 SEGMENTS WITHIN MODULES:
 ========================
@@ -152,10 +162,10 @@ Module: ..\..\src\boot\common\startups.asm (File: startupS.obj) Version: 1:0 07/
     --------------------------------------- ----------- ----------- ---------
     Segment: __VECTORS_04                        T:0004      T:0007        4h
     Segment: NEAR_BSS                          R:FFB000    R:FFB003        4h
-    Segment: startup                             T:04EC      T:0557       6ch
+    Segment: startup                             T:058E      T:05F9       6ch
 
 
-Module: ..\BUTTONS.C (File: buttons.obj) Version: 1:0 02/27/2011 00:45:40
+Module: ..\BUTTONS.C (File: buttons.obj) Version: 1:0 02/27/2011 17:33:57
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
@@ -163,63 +173,80 @@ Module: ..\BUTTONS.C (File: buttons.obj) Version: 1:0 02/27/2011 00:45:40
     Segment: NEAR_BSS                          R:FFB004    R:FFB018       15h
 
 
-Module: ..\CLI.C (File: cli.obj) Version: 1:0 02/27/2011 00:45:40
+Module: ..\CLI.C (File: cli.obj) Version: 1:0 02/27/2011 17:33:57
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:0087CC    C:008A7F      2b4h
-    Segment: NEAR_BSS                          R:FFB457    R:FFB556      100h
-    Segment: ROM_TEXT                            T:0138      T:04DA      3a3h
+    Segment: CODE                              C:0087E0    C:008BE9      40ah
+    Segment: NEAR_BSS                          R:FFB45B    R:FFB55A      100h
+    Segment: ROM_TEXT                            T:0138      T:0533      3fch
 
 
-Module: ..\LED.C (File: LED.obj) Version: 1:0 02/27/2011 00:45:40
+Module: ..\INFO.C (File: info.obj) Version: 1:0 02/27/2011 17:33:57
+
+    Name                                        Base        Top      Size
+    --------------------------------------- ----------- ----------- ---------
+    Segment: ___part_num_segment                 T:0040      T:0053       14h
+    Segment: CODE                              C:008BEA    C:008C2D       44h
+    Segment: NEAR_DATA                         R:FFB84B    R:FFB85F       15h
+    Segment: ROM_TEXT                            T:0534      T:057C       49h
+
+
+Module: ..\LED.C (File: LED.obj) Version: 1:0 02/27/2011 17:33:57
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
     Segment: CODE                              C:00816A    C:00846D      304h
     Segment: NEAR_BSS                          R:FFB019    R:FFB03E       26h
-    Segment: NEAR_DATA                         R:FFB584    R:FFB838      2b5h
+    Segment: NEAR_DATA                         R:FFB588    R:FFB83C      2b5h
 
 
-Module: ..\MAIN.C (File: main.obj) Version: 1:0 02/27/2011 00:45:40
+Module: ..\MAIN.C (File: main.obj) Version: 1:0 02/27/2011 17:33:57
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
     Segment: CODE                              C:00846E    C:00848D       20h
 
 
-Module: ..\OSCILLATOR.C (File: oscillator.obj) Version: 1:0 02/27/2011 00:45:40
+Module: ..\OSCILLATOR.C (File: oscillator.obj) Version: 1:0 02/27/2011 17:33:57
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:00848E    C:0084D3       46h
+    Segment: CODE                              C:00848E    C:0084D9       4ch
     Segment: NEAR_BSS                          R:FFB03F    R:FFB042        4h
 
 
-Module: ..\TIMER.C (File: timer.obj) Version: 1:0 02/27/2011 00:45:40
+Module: ..\TIMER.C (File: timer.obj) Version: 1:0 02/27/2011 17:33:57
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
     Segment: __VECTORS_18                        T:0018      T:001B        4h
-    Segment: CODE                              C:0084D4    C:0085E3      110h
+    Segment: CODE                              C:0084DA    C:0085E9      110h
     Segment: NEAR_BSS                          R:FFB043    R:FFB046        4h
 
 
-Module: ..\UART.C (File: uart.obj) Version: 1:0 02/27/2011 00:45:40
+Module: ..\UART.C (File: uart.obj) Version: 1:0 02/27/2011 17:33:57
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
     Segment: __VECTORS_1C                        T:001C      T:001F        4h
     Segment: __VECTORS_20                        T:0020      T:0023        4h
-    Segment: CODE                              C:0085E4    C:0087CB      1e8h
-    Segment: NEAR_BSS                          R:FFB047    R:FFB456      410h
+    Segment: CODE                              C:0085EA    C:0087DF      1f6h
+    Segment: NEAR_BSS                          R:FFB047    R:FFB45A      414h
 
 
 Module: COMMON\ABS.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:32
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:009200    C:009211       12h
+    Segment: CODE                              C:009550    C:009561       12h
+
+
+Module: COMMON\ATOI.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:32
+
+    Name                                        Base        Top      Size
+    --------------------------------------- ----------- ----------- ---------
+    Segment: CODE                              C:009148    C:009155        eh
 
 
 Module: COMMON\FLASH0.C (Library: chelpSD.lib) Version: 1:0 07/08/2008 06:58:31
@@ -254,64 +281,85 @@ Module: common\fpftol.asm (Library: chelpSD.lib) Version: 1:0 07/08/2008 06:58:3
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008DFA    C:008E31       38h
+    Segment: CODE                              C:008FA8    C:008FDF       38h
 
 
 Module: common\fpltof.asm (Library: chelpSD.lib) Version: 1:0 07/08/2008 06:58:32
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:00923C    C:00925D       22h
+    Segment: CODE                              C:00958C    C:0095AD       22h
 
 
 Module: common\fpmul.asm (Library: chelpSD.lib) Version: 1:0 07/08/2008 06:58:32
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008DAE    C:008DC7       1ah
+    Segment: CODE                              C:008F5C    C:008F75       1ah
 
 
 Module: common\fppost.asm (Library: chelpSD.lib) Version: 1:0 07/08/2008 06:58:32
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008DC8    C:008DED       26h
+    Segment: CODE                              C:008F76    C:008F9B       26h
 
 
 Module: common\fpprep.asm (Library: chelpSD.lib) Version: 1:0 07/08/2008 06:58:32
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:00925E    C:009289       2ch
+    Segment: CODE                              C:0095AE    C:0095D9       2ch
 
 
 Module: COMMON\FREE.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:32
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008A80    C:008AFF       80h
-    Segment: NEAR_DATA                         R:FFB839    R:FFB840        8h
+    Segment: CODE                              C:008C2E    C:008CAD       80h
+    Segment: NEAR_DATA                         R:FFB83D    R:FFB844        8h
+
+
+Module: COMMON\ISDIGIT.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:33
+
+    Name                                        Base        Top      Size
+    --------------------------------------- ----------- ----------- ---------
+    Segment: CODE                              C:0092CC    C:0092E9       1eh
 
 
 Module: COMMON\ISGRAPH.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:33
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008F9A    C:008FB7       1eh
+    Segment: CODE                              C:0092AE    C:0092CB       1eh
+
+
+Module: COMMON\ISLOWER.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:33
+
+    Name                                        Base        Top      Size
+    --------------------------------------- ----------- ----------- ---------
+    Segment: CODE                              C:0095EE    C:00960B       1eh
+
+
+Module: COMMON\ISSPACE.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:33
+
+    Name                                        Base        Top      Size
+    --------------------------------------- ----------- ----------- ---------
+    Segment: CODE                              C:0093D0    C:0093ED       1eh
 
 
 Module: COMMON\ISUPPER.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:33
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:009996    C:0099B3       1eh
+    Segment: CODE                              C:009D04    C:009D21       1eh
 
 
 Module: COMMON\MALLOC.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:34
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008FDC    C:00906D       92h
+    Segment: CODE                              C:00930E    C:00939F       92h
 
 
 Module: COMMON\MAPTAB.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:34
@@ -325,151 +373,165 @@ Module: COMMON\MEMCPY.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:34
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008F82    C:008F99       18h
+    Segment: CODE                              C:009130    C:009147       18h
 
 
 Module: COMMON\MEMSET.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:34
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:00933E    C:009351       14h
+    Segment: CODE                              C:0096AC    C:0096BF       14h
 
 
 Module: COMMON\PRINT_GLOBALS.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:34
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: NEAR_BSS                          R:FFB563    R:FFB583       21h
-    Segment: NEAR_DATA                         R:FFB841    R:FFB844        4h
+    Segment: NEAR_BSS                          R:FFB567    R:FFB587       21h
+    Segment: NEAR_DATA                         R:FFB845    R:FFB848        4h
 
 
 Module: COMMON\PRINT_PUTCH.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:34
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:009332    C:00933D        ch
+    Segment: CODE                              C:0096A0    C:0096AB        ch
 
 
 Module: COMMON\PRINT_PUTSTRING.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:35
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:009692    C:009755       c4h
+    Segment: CODE                              C:009A00    C:009AC3       c4h
 
 
 Module: COMMON\PRINT_SEND.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:35
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:00909E    C:0091FF      162h
+    Segment: CODE                              C:0093EE    C:00954F      162h
 
 
 Module: COMMON\PRINT_SPUTCH.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:35
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008E46    C:008E55       10h
+    Segment: CODE                              C:008FF4    C:009003       10h
 
 
 Module: common\sbrksd.asm (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:40
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:00906E    C:00909D       30h
-    Segment: NEAR_DATA                         R:FFB845    R:FFB846        2h
+    Segment: CODE                              C:0093A0    C:0093CF       30h
+    Segment: NEAR_DATA                         R:FFB849    R:FFB84A        2h
 
 
 Module: COMMON\STRCHR.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:36
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008FB8    C:008FDB       24h
+    Segment: CODE                              C:0092EA    C:00930D       24h
 
 
 Module: COMMON\STRCMP.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:36
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008D90    C:008DAD       1eh
+    Segment: CODE                              C:008F3E    C:008F5B       1eh
 
 
 Module: COMMON\STRCPY.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:36
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:00928A    C:00929D       14h
+    Segment: CODE                              C:0095DA    C:0095ED       14h
 
 
 Module: COMMON\STRLEN.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:36
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008E32    C:008E45       14h
+    Segment: CODE                              C:008FE0    C:008FF3       14h
+
+
+Module: COMMON\STRTOL.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:37
+
+    Name                                        Base        Top      Size
+    --------------------------------------- ----------- ----------- ---------
+    Segment: CODE                              C:009156    C:009291      13ch
 
 
 Module: COMMON\TOLOWER.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:38
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:0099CE    C:0099E9       1ch
+    Segment: CODE                              C:009D3C    C:009D57       1ch
+
+
+Module: COMMON\TOUPPER.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:38
+
+    Name                                        Base        Top      Size
+    --------------------------------------- ----------- ----------- ---------
+    Segment: CODE                              C:009292    C:0092AD       1ch
 
 
 Module: common\ubcase.asm (Library: chelpSD.lib) Version: 1:0 07/08/2008 06:58:31
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:0099B4    C:0099CD       1ah
+    Segment: CODE                              C:009D22    C:009D3B       1ah
 
 
 Module: COMMON\UDTOF.C (Library: fpSD.lib) Version: 1:0 07/08/2008 06:58:12
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008B00    C:008D83      284h
-    Segment: NEAR_BSS                          R:FFB557    R:FFB562        ch
-    Segment: ROM_TEXT                            T:04DB      T:04EA       10h
+    Segment: CODE                              C:008CAE    C:008F31      284h
+    Segment: NEAR_BSS                          R:FFB55B    R:FFB566        ch
+    Segment: ROM_TEXT                            T:057D      T:058C       10h
 
 
 Module: COMMON\UDTOG.C (Library: fpSD.lib) Version: 1:0 07/08/2008 06:58:12
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:009616    C:009691       7ch
+    Segment: CODE                              C:009984    C:0099FF       7ch
 
 
 Module: COMMON\UFLTINFO.C (Library: fpSD.lib) Version: 1:0 07/08/2008 06:58:13
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:0099EA    C:009AA5       bch
+    Segment: CODE                              C:009D58    C:009E13       bch
 
 
 Module: COMMON\UFLTRND.C (Library: fpSD.lib) Version: 1:0 07/08/2008 06:58:13
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:00929E    C:009331       94h
+    Segment: CODE                              C:00960C    C:00969F       94h
 
 
 Module: COMMON\ULTOA.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:38
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008E56    C:008F81      12ch
+    Segment: CODE                              C:009004    C:00912F      12ch
 
 
 Module: COMMON\UPRINT.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:38
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:009438    C:009614      1ddh
+    Segment: CODE                              C:0097A6    C:009982      1ddh
 
 
 Module: COMMON\UPSCAN.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:38
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:009756    C:009994      23fh
+    Segment: CODE                              C:009AC4    C:009D02      23fh
     Segment: ROM_DATA                            T:00F0      T:0137       48h
 
 
@@ -477,28 +539,28 @@ Module: COMMON\UREVERSE.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:39
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:009212    C:00923B       2ah
+    Segment: CODE                              C:009562    C:00958B       2ah
 
 
 Module: COMMON\USTOA.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:39
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008D84    C:008D8F        ch
+    Segment: CODE                              C:008F32    C:008F3D        ch
 
 
 Module: COMMON\UULTOA.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:39
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:009352    C:00942D       dch
+    Segment: CODE                              C:0096C0    C:00979B       dch
 
 
 Module: COMMON\UUSTOA.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:40
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:008DEE    C:008DF9        ch
+    Segment: CODE                              C:008F9C    C:008FA7        ch
 
 
 Module: common\vect08.asm (Library: chelpSD.lib) Version: 1:0 07/08/2008 06:58:31
@@ -666,7 +728,7 @@ Module: COMMON\VSPRINTF.C (Library: crtSD.lib) Version: 1:0 07/08/2008 06:57:40
 
     Name                                        Base        Top      Size
     --------------------------------------- ----------- ----------- ---------
-    Segment: CODE                              C:00942E    C:009437        ah
+    Segment: CODE                              C:00979C    C:0097A5        ah
 
 EXTERNAL DEFINITIONS:
 =====================
@@ -675,40 +737,40 @@ Symbol                             Address   Module          Segment
 -------------------------------- ----------- --------------- --------------------------------
 _0_exit                             00000000 (User Defined)
 ___maptab                             T:0070 MAPTAB          ROM_DATA                        
-___print_buff                       R:FFB563 PRINT_GLOBALS   NEAR_BSS                        
-___print_fmt                        R:FFB570 PRINT_GLOBALS   NEAR_BSS                        
-___print_leading_char               R:FFB581 PRINT_GLOBALS   NEAR_BSS                        
-___print_len                        R:FFB580 PRINT_GLOBALS   NEAR_BSS                        
-___print_out                        R:FFB582 PRINT_GLOBALS   NEAR_BSS                        
-___print_putch                      C:009332 PRINT_PUTCH     CODE                            
-___print_send                       C:00909E PRINT_SEND      CODE                            
-___print_sendstring                 C:009692 PRINT_PUTSTRING CODE                            
-___print_sputch                     C:008E46 PRINT_SPUTCH    CODE                            
-___print_xputch                     R:FFB841 PRINT_GLOBALS   NEAR_DATA                       
+___print_buff                       R:FFB567 PRINT_GLOBALS   NEAR_BSS                        
+___print_fmt                        R:FFB574 PRINT_GLOBALS   NEAR_BSS                        
+___print_leading_char               R:FFB585 PRINT_GLOBALS   NEAR_BSS                        
+___print_len                        R:FFB584 PRINT_GLOBALS   NEAR_BSS                        
+___print_out                        R:FFB586 PRINT_GLOBALS   NEAR_BSS                        
+___print_putch                      C:0096A0 PRINT_PUTCH     CODE                            
+___print_send                       C:0093EE PRINT_SEND      CODE                            
+___print_sendstring                 C:009A00 PRINT_PUTSTRING CODE                            
+___print_sputch                     C:008FF4 PRINT_SPUTCH    CODE                            
+___print_xputch                     R:FFB845 PRINT_GLOBALS   NEAR_DATA                       
 __flash_option0                       T:0000 FLASH0          ____flash_option0_segment       
 __flash_option1                       T:0001 FLASH1          ____flash_option1_segment       
 __flash_option2                       T:0002 FLASH2          ____flash_option2_segment       
 __flash_option3                       T:0003 FLASH3          ____flash_option3_segment       
-__fpftol                            C:008DFA fpftol          CODE                            
-__fpltof                            C:00923C fpltof          CODE                            
-__fpmul                             C:008DAE fpmul           CODE                            
-__fppost                            C:008DCA fppost          CODE                            
-__fpprep                            C:00925E fpprep          CODE                            
-__fpultof                           C:009248 fpltof          CODE                            
-__info                              R:FFB557 UDTOF           NEAR_BSS                        
-__s_sbrk                            C:00906E sbrksd          CODE                            
-__u_dtof                            C:008B00 UDTOF           CODE                            
-__u_dtog                            C:009616 UDTOG           CODE                            
-__u_flt_info                        C:0099EA UFLTINFO        CODE                            
-__u_flt_rnd                         C:00929E UFLTRND         CODE                            
-__u_ltoa                            C:008E56 ULTOA           CODE                            
-__u_print                           C:009438 UPRINT          CODE                            
-__u_pscan                           C:009756 UPSCAN          CODE                            
-__u_reverse                         C:009212 UREVERSE        CODE                            
-__u_stoa                            C:008D84 USTOA           CODE                            
-__u_ultoa                           C:009352 UULTOA          CODE                            
-__u_ustoa                           C:008DEE UUSTOA          CODE                            
-__ubcase                            C:0099B4 ubcase          CODE                            
+__fpftol                            C:008FA8 fpftol          CODE                            
+__fpltof                            C:00958C fpltof          CODE                            
+__fpmul                             C:008F5C fpmul           CODE                            
+__fppost                            C:008F78 fppost          CODE                            
+__fpprep                            C:0095AE fpprep          CODE                            
+__fpultof                           C:009598 fpltof          CODE                            
+__info                              R:FFB55B UDTOF           NEAR_BSS                        
+__s_sbrk                            C:0093A0 sbrksd          CODE                            
+__u_dtof                            C:008CAE UDTOF           CODE                            
+__u_dtog                            C:009984 UDTOG           CODE                            
+__u_flt_info                        C:009D58 UFLTINFO        CODE                            
+__u_flt_rnd                         C:00960C UFLTRND         CODE                            
+__u_ltoa                            C:009004 ULTOA           CODE                            
+__u_print                           C:0097A6 UPRINT          CODE                            
+__u_pscan                           C:009AC4 UPSCAN          CODE                            
+__u_reverse                         C:009562 UREVERSE        CODE                            
+__u_stoa                            C:008F32 USTOA           CODE                            
+__u_ultoa                           C:0096C0 UULTOA          CODE                            
+__u_ustoa                           C:008F9C UUSTOA          CODE                            
+__ubcase                            C:009D22 ubcase          CODE                            
 __VECTOR_04                           T:0000 startups        __VECTORS_04                    
 __VECTOR_08                           T:0000 vect08          __VECTORS_08                    
 __VECTOR_0C                           T:000C vect0c          __VECTORS_0C                    
@@ -762,27 +824,33 @@ __VECTOR_uart0_rx                     T:0000 UART            __VECTORS_1C
 __VECTOR_uart0_tx                     T:0000 UART            __VECTORS_20                    
 __VECTOR_uart1_rx                     T:0000 vect54          __VECTORS_54                    
 __VECTOR_uart1_tx                     T:0000 vect58          __VECTORS_58                    
-_abs                                C:009200 ABS             CODE                            
+_abs                                C:009550 ABS             CODE                            
+_atoi                               C:009148 ATOI            CODE                            
 _button_events                      C:008040 BUTTONS         CODE                            
-_c_startup                            T:04EC startups        startup                         
-_char_data                          R:FFB584 LED             NEAR_DATA                       
-_cli_loop                           C:0087E6 CLI             CODE                            
+_c_startup                            T:058E startups        startup                         
+_char_data                          R:FFB588 LED             NEAR_DATA                       
+_cli_loop                           C:0087FE CLI             CODE                            
 _errno                              R:FFB000 startups        NEAR_BSS                        
-_exit                                 T:0556 startups        startup                         
+_exit                                 T:05F8 startups        startup                         
 _far_heapbot                        007FFFFF (User Defined)
 _far_heaptop                        0087FFFF (User Defined)
 _far_stack                          0087FFFF (User Defined)
-_free                               C:008A80 FREE            CODE                            
-_free_list                          R:FFB83F FREE            NEAR_DATA                       
+_free                               C:008C2E FREE            CODE                            
+_free_list                          R:FFB843 FREE            NEAR_DATA                       
 _get_osc_clock                      C:0084CA OSCILLATOR      CODE                            
+_info_display                       C:008BF8 INFO            CODE                            
 _init_buttons                       C:008000 BUTTONS         CODE                            
-_init_cli                           C:0087CC CLI             CODE                            
+_init_cli                           C:0087E0 CLI             CODE                            
+_init_info                          C:008BEA INFO            CODE                            
 _init_leds                          C:00816A LED             CODE                            
 _init_oscillator                    C:00848E OSCILLATOR      CODE                            
-_init_timer                         C:0084E8 TIMER           CODE                            
-_init_uart                          C:00867C UART            CODE                            
-_isgraph                            C:008F9A ISGRAPH         CODE                            
-_isupper                            C:009996 ISUPPER         CODE                            
+_init_timer                         C:0084EE TIMER           CODE                            
+_init_uart                          C:00867E UART            CODE                            
+_isdigit                            C:0092CC ISDIGIT         CODE                            
+_isgraph                            C:0092AE ISGRAPH         CODE                            
+_islower                            C:0095EE ISLOWER         CODE                            
+_isspace                            C:0093D0 ISSPACE         CODE                            
+_isupper                            C:009D04 ISUPPER         CODE                            
 _led_display_double                 C:008264 LED             CODE                            
 _led_display_int                    C:00828E LED             CODE                            
 _led_display_int_hex                C:0082AC LED             CODE                            
@@ -791,40 +859,46 @@ _led_set_scroll_cutoff              C:0081E0 LED             CODE
 _led_update                         C:00819C LED             CODE                            
 _len_farbss                         00000000 (User Defined)
 _len_fardata                        00000000 (User Defined)
-_len_nearbss                        00000584 (User Defined)
-_len_neardata                       000002C3 (User Defined)
+_len_nearbss                        00000588 (User Defined)
+_len_neardata                       000002D8 (User Defined)
 _low_far_romdata                    00000000 (User Defined)
 _low_farbss                         00000000 (User Defined)
 _low_fardata                        00000000 (User Defined)
-_low_near_romdata                   00009AA6 (User Defined)
+_low_near_romdata                   00009E14 (User Defined)
 _low_nearbss                        00FFB000 (User Defined)
-_low_neardata                       00FFB584 (User Defined)
+_low_neardata                       00FFB588 (User Defined)
 _main                               C:00846E MAIN            CODE                            
-_malloc                             C:009004 MALLOC          CODE                            
-_memcpy                             C:008F82 MEMCPY          CODE                            
-_memset                             C:00933E MEMSET          CODE                            
-_near_heapbot                       00FFB846 (User Defined)
+_malloc                             C:009336 MALLOC          CODE                            
+_memcpy                             C:009130 MEMCPY          CODE                            
+_memset                             C:0096AC MEMSET          CODE                            
+_near_heapbot                       00FFB85F (User Defined)
 _near_heaptop                       00FFBFFF (User Defined)
 _near_stack                         00FFBFFF (User Defined)
-_strchr                             C:008FB8 STRCHR          CODE                            
-_strcmp                             C:008D90 STRCMP          CODE                            
-_strcpy                             C:00928A STRCPY          CODE                            
-_strlen                             C:008E32 STRLEN          CODE                            
+_oscillator_settings_display        C:0084D4 OSCILLATOR      CODE                            
+_part_num                             T:0040 INFO            ___part_num_segment             
+_strchr                             C:0092EA STRCHR          CODE                            
+_strcmp                             C:008F3E STRCMP          CODE                            
+_strcpy                             C:0095DA STRCPY          CODE                            
+_strlen                             C:008FE0 STRLEN          CODE                            
+_strtol                             C:009288 STRTOL          CODE                            
+_strtoul                            C:00927E STRTOL          CODE                            
 _SYS_CLK_FREQ                       00546000 (User Defined)
 _SYS_CLK_SRC                        00000000 (User Defined)
-_timer_interval_float               C:0085B8 TIMER           CODE                            
-_timer_interval_int                 C:00859C TIMER           CODE                            
-_timer_isr                          C:0084D4 TIMER           CODE                            
-_tolower                            C:0099CE TOLOWER         CODE                            
-_uart_getchar                       C:008736 UART            CODE                            
-_uart_printf                        C:008772 UART            CODE                            
-_uart_putchar                       C:0086D0 UART            CODE                            
-_uart_receive                       C:0085E4 UART            CODE                            
-_uart_transfer                      C:008644 UART            CODE                            
-_uart_transfer_msg                  C:008792 UART            CODE                            
-_vsprintf                           C:00942E VSPRINTF        CODE                            
+_timer_interval_float               C:0085BE TIMER           CODE                            
+_timer_interval_int                 C:0085A2 TIMER           CODE                            
+_timer_isr                          C:0084DA TIMER           CODE                            
+_tolower                            C:009D3C TOLOWER         CODE                            
+_toupper                            C:009292 TOUPPER         CODE                            
+_uart_get_baud_rate                 C:0087D6 UART            CODE                            
+_uart_getchar                       C:008740 UART            CODE                            
+_uart_printf                        C:00877C UART            CODE                            
+_uart_putchar                       C:0086DA UART            CODE                            
+_uart_receive                       C:0085EA UART            CODE                            
+_uart_transfer                      C:008646 UART            CODE                            
+_uart_transfer_msg                  C:00879C UART            CODE                            
+_vsprintf                           C:00979C VSPRINTF        CODE                            
 
-150 external symbol(s).
+162 external symbol(s).
 
 SYMBOL CROSS REFERENCE:
 =======================
@@ -833,6 +907,9 @@ Name                              Use         Module
 _0_exit                           Defined     LINKER
 ___maptab                         Defined     COMMON\MAPTAB.C
                                   Referenced  COMMON\ISGRAPH.C
+                                  Referenced  COMMON\ISDIGIT.C
+                                  Referenced  COMMON\ISSPACE.C
+                                  Referenced  COMMON\ISLOWER.C
                                   Referenced  COMMON\ISUPPER.C
 ___print_buff                     Defined     COMMON\PRINT_GLOBALS.C
                                   Referenced  COMMON\UDTOF.C
@@ -1014,6 +1091,8 @@ __VECTOR_uart1_tx                 Defined     common\vect58.asm
 _abs                              Defined     COMMON\ABS.C
                                   Referenced  COMMON\PRINT_SEND.C
                                   Referenced  COMMON\PRINT_PUTSTRING.C
+_atoi                             Defined     COMMON\ATOI.C
+                                  Referenced  ..\CLI.C
 _button_events                    Defined     ..\BUTTONS.C
                                   Referenced  ..\TIMER.C
 _c_startup                        Defined     ..\..\src\boot\common\startups.asm
@@ -1021,6 +1100,7 @@ _char_data                        Defined     ..\LED.C
 _cli_loop                         Defined     ..\CLI.C
                                   Referenced  ..\MAIN.C
 _errno                            Defined     ..\..\src\boot\common\startups.asm
+                                  Referenced  COMMON\STRTOL.C
 _exit                             Defined     ..\..\src\boot\common\startups.asm
 _far_heapbot                      Defined     LINKER
 _far_heaptop                      Defined     LINKER
@@ -1032,10 +1112,14 @@ _free_list                        Defined     COMMON\FREE.C
                                   Referenced  COMMON\MALLOC.C
 _get_osc_clock                    Defined     ..\OSCILLATOR.C
                                   Referenced  ..\TIMER.C
+_info_display                     Defined     ..\INFO.C
+                                  Referenced  ..\CLI.C
 _init_buttons                     Defined     ..\BUTTONS.C
                                   Referenced  ..\MAIN.C
 _init_cli                         Defined     ..\CLI.C
                                   Referenced  ..\MAIN.C
+_init_info                        Defined     ..\INFO.C
+                                  Referenced  ..\CLI.C
 _init_leds                        Defined     ..\LED.C
                                   Referenced  ..\CLI.C
 _init_oscillator                  Defined     ..\OSCILLATOR.C
@@ -1044,14 +1128,22 @@ _init_timer                       Defined     ..\TIMER.C
                                   Referenced  ..\MAIN.C
 _init_uart                        Defined     ..\UART.C
                                   Referenced  ..\CLI.C
+_isdigit                          Defined     COMMON\ISDIGIT.C
+                                  Referenced  ..\CLI.C
 _isgraph                          Defined     COMMON\ISGRAPH.C
                                   Referenced  ..\CLI.C
+_islower                          Defined     COMMON\ISLOWER.C
+                                  Referenced  COMMON\TOUPPER.C
+_isspace                          Defined     COMMON\ISSPACE.C
+                                  Referenced  ..\CLI.C
+                                  Referenced  COMMON\STRTOL.C
 _isupper                          Defined     COMMON\ISUPPER.C
                                   Referenced  COMMON\UPSCAN.C
                                   Referenced  COMMON\TOLOWER.C
 _led_display_double               Defined     ..\LED.C
 _led_display_int                  Defined     ..\LED.C
 _led_display_int_hex              Defined     ..\LED.C
+                                  Referenced  ..\CLI.C
 _led_display_text                 Defined     ..\LED.C
                                   Referenced  ..\CLI.C
 _led_set_scroll_cutoff            Defined     ..\LED.C
@@ -1085,6 +1177,7 @@ _memcpy                           Defined     COMMON\MEMCPY.C
                                   Referenced  ..\LED.C
 _memset                           Defined     COMMON\MEMSET.C
                                   Referenced  ..\UART.C
+                                  Referenced  ..\CLI.C
                                   Referenced  COMMON\UFLTINFO.C
 _near_heapbot                     Defined     LINKER
                                   Referenced  ..\..\src\boot\common\startups.asm
@@ -1092,6 +1185,8 @@ _near_heapbot                     Defined     LINKER
 _near_heaptop                     Defined     LINKER
 _near_stack                       Defined     LINKER
                                   Referenced  ..\..\src\boot\common\startups.asm
+_oscillator_settings_display      Defined     ..\OSCILLATOR.C
+_part_num                         Defined     ..\INFO.C
 _strchr                           Defined     COMMON\STRCHR.C
                                   Referenced  ..\CLI.C
 _strcmp                           Defined     COMMON\STRCMP.C
@@ -1104,6 +1199,9 @@ _strlen                           Defined     COMMON\STRLEN.C
                                   Referenced  COMMON\PRINT_SEND.C
                                   Referenced  COMMON\UREVERSE.C
                                   Referenced  COMMON\PRINT_PUTSTRING.C
+_strtol                           Defined     COMMON\STRTOL.C
+                                  Referenced  COMMON\ATOI.C
+_strtoul                          Defined     COMMON\STRTOL.C
 _SYS_CLK_FREQ                     Defined     LINKER
 _SYS_CLK_SRC                      Defined     LINKER
 _timer_interval_float             Defined     ..\TIMER.C
@@ -1113,10 +1211,15 @@ _timer_interval_int               Defined     ..\TIMER.C
 _timer_isr                        Defined     ..\TIMER.C
 _tolower                          Defined     COMMON\TOLOWER.C
                                   Referenced  COMMON\UPSCAN.C
+_toupper                          Defined     COMMON\TOUPPER.C
+                                  Referenced  COMMON\STRTOL.C
+_uart_get_baud_rate               Defined     ..\UART.C
+                                  Referenced  ..\INFO.C
 _uart_getchar                     Defined     ..\UART.C
                                   Referenced  ..\CLI.C
 _uart_printf                      Defined     ..\UART.C
                                   Referenced  ..\CLI.C
+                                  Referenced  ..\INFO.C
 _uart_putchar                     Defined     ..\UART.C
 _uart_receive                     Defined     ..\UART.C
 _uart_transfer                    Defined     ..\UART.C
@@ -1127,10 +1230,10 @@ _vsprintf                         Defined     COMMON\VSPRINTF.C
 
 START ADDRESS:
 ==============
-(T:04EC) set in module ..\..\src\boot\common\startups.asm.
+(T:058E) set in module ..\..\src\boot\common\startups.asm.
 
 
 END OF LINK MAP:
 ================
 0 Errors
-0 Warnings
+1 Warnings

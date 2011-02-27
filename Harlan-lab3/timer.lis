@@ -1,4 +1,4 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\TIMER.C
 
      1	    1	#include "timer.h"
@@ -56,7 +56,7 @@ Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\TIMER.C
     53	  734			T0R = (get_osc_clock() / 128) * INTERVAL_2MS_FLOAT;
     54	  735		}
     55	  736	
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 2
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 2
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\TIMER.C
 
     56	  737		// Enable Timer0 interrupt

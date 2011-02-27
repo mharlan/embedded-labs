@@ -1,4 +1,4 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\OSCILLATOR.C
 
      1	    1	#include "oscillator.h"
@@ -41,4 +41,9 @@ Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\OSCILLATOR
     38	  583	{
     39	  584		return osc_clock;
     40	  585	}
-    41	  586	ÿ
+    41	  586	
+    42	  587	void oscillator_settings_display(void)
+    43	  588	{
+    44	  589		
+    45	  590	}
+    46	  591	ÿ

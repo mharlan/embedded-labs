@@ -28,4 +28,9 @@ void uart_printf(const char *format, ...);
  */
 void uart_transfer_msg(char *msg);
 
+/*
+	Return the baud rate of the uart.
+ */
+unsigned long uart_get_baud_rate(void);
+
 #endif

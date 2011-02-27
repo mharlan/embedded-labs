@@ -38,3 +38,8 @@ int get_osc_clock(void)
 {
 	return osc_clock;
 }
+
+void oscillator_settings_display(void)
+{
+	
+}

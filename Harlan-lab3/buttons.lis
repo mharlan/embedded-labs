@@ -1,4 +1,4 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\BUTTONS.C
 
      1	    1	#include "buttons.h"
@@ -56,7 +56,7 @@ Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\BUTTONS.C
     53	  670	void button_events(void)
     54	  671	{
     55	  672		button_timer += timer_interval_int();
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 2
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 2
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\BUTTONS.C
 
     56	  673	
@@ -114,7 +114,7 @@ Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\BUTTONS.C
    108	  725			}
    109	  726		}
    110	  727		else if(current == BUTTON_THREE) {
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 3
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 3
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\BUTTONS.C
 
    111	  728			if(button_twice_timer && (last_button == BUTTON_THREE)) {

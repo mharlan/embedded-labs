@@ -33,26 +33,31 @@ static volatile int rec_buffer_size;
 static volatile int trans_buffer_current;
 static volatile int rec_buffer_current;
 
+static unsigned long baud_rate;
+
 void interrupt uart_receive(void)
 {
 	int buffer_loc;
 	unsigned char c;
 
 	c = U0RXD;
+
+	//so the echo is compatible with Windows, CR+LF
 	if(c == '\r' || c == '\n') {
 		c = '\n';
 		uart_putchar('\r');
 		uart_putchar('\n');	
 	}
+	//echo the character back
 	else {
 		uart_putchar(c);
 	}
 
 	if(rec_buffer_size < BUFFER_SIZE) {
 		buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
-
+		
 		rec_buffer[buffer_loc] = c;
-		rec_buffer_size++;
+		++rec_buffer_size;
 	}
 }
 
@@ -82,6 +87,7 @@ void init_uart(void)
     // Set the baud rate
     // BRG = freq/( baud * 16)
     U0BR = FREQ/((unsigned long)DEFAULT_BAUD * 16UL);
+	baud_rate = DEFAULT_BAUD;
 
     // U0 control
     // Transmit enable, Receive Enable, No Parity, 1 Stop
@@ -173,3 +179,7 @@ void uart_transfer_msg(char *text)
 	}
 }
 
+unsigned long uart_get_baud_rate(void)
+{
+	return baud_rate;
+}
