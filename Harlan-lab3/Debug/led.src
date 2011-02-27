@@ -1,0 +1,1846 @@
+; ZiLOG ZNEO ANSI C Compiler Release 1.11
+; -nolocalcse -optsize -model=S -nomodsect -noregvar
+; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+	FILE	"..\LED.C"
+.debug "C"
+	SEGMENT NEAR_DATA
+_char_data:
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	0
+	DB	4
+	DB	10
+	DB	10
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	10
+	DB	31
+	DB	10
+	DB	31
+	DB	10
+	DB	0
+	DB	4
+	DB	15
+	DB	20
+	DB	14
+	DB	5
+	DB	30
+	DB	4
+	DB	24
+	DB	25
+	DB	2
+	DB	4
+	DB	8
+	DB	19
+	DB	3
+	DB	14
+	DB	10
+	DB	12
+	DB	8
+	DB	21
+	DB	19
+	DB	14
+	DB	4
+	DB	4
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	1
+	DB	2
+	DB	4
+	DB	4
+	DB	4
+	DB	2
+	DB	1
+	DB	16
+	DB	8
+	DB	4
+	DB	4
+	DB	4
+	DB	8
+	DB	16
+	DB	0
+	DB	4
+	DB	21
+	DB	31
+	DB	21
+	DB	4
+	DB	0
+	DB	0
+	DB	4
+	DB	4
+	DB	31
+	DB	4
+	DB	4
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	2
+	DB	4
+	DB	0
+	DB	0
+	DB	0
+	DB	14
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	6
+	DB	6
+	DB	0
+	DB	1
+	DB	2
+	DB	4
+	DB	8
+	DB	16
+	DB	0
+	DB	14
+	DB	17
+	DB	19
+	DB	21
+	DB	25
+	DB	17
+	DB	14
+	DB	4
+	DB	12
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	31
+	DB	14
+	DB	17
+	DB	1
+	DB	6
+	DB	8
+	DB	16
+	DB	31
+	DB	14
+	DB	17
+	DB	1
+	DB	6
+	DB	1
+	DB	17
+	DB	14
+	DB	16
+	DB	17
+	DB	17
+	DB	31
+	DB	1
+	DB	1
+	DB	1
+	DB	31
+	DB	16
+	DB	16
+	DB	30
+	DB	1
+	DB	17
+	DB	14
+	DB	14
+	DB	17
+	DB	16
+	DB	30
+	DB	17
+	DB	17
+	DB	14
+	DB	31
+	DB	1
+	DB	1
+	DB	2
+	DB	4
+	DB	4
+	DB	4
+	DB	14
+	DB	17
+	DB	17
+	DB	14
+	DB	17
+	DB	17
+	DB	14
+	DB	14
+	DB	17
+	DB	17
+	DB	15
+	DB	1
+	DB	1
+	DB	1
+	DB	0
+	DB	4
+	DB	4
+	DB	0
+	DB	4
+	DB	4
+	DB	0
+	DB	0
+	DB	0
+	DB	4
+	DB	4
+	DB	0
+	DB	4
+	DB	8
+	DB	1
+	DB	2
+	DB	4
+	DB	8
+	DB	4
+	DB	2
+	DB	1
+	DB	0
+	DB	0
+	DB	31
+	DB	0
+	DB	31
+	DB	0
+	DB	0
+	DB	16
+	DB	8
+	DB	4
+	DB	2
+	DB	4
+	DB	8
+	DB	16
+	DB	14
+	DB	17
+	DB	2
+	DB	4
+	DB	4
+	DB	0
+	DB	4
+	DB	14
+	DB	17
+	DB	21
+	DB	21
+	DB	23
+	DB	16
+	DB	15
+	DB	4
+	DB	10
+	DB	17
+	DB	17
+	DB	31
+	DB	17
+	DB	17
+	DB	30
+	DB	17
+	DB	17
+	DB	30
+	DB	17
+	DB	17
+	DB	31
+	DB	14
+	DB	17
+	DB	16
+	DB	16
+	DB	16
+	DB	17
+	DB	14
+	DB	30
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	31
+	DB	31
+	DB	16
+	DB	16
+	DB	28
+	DB	16
+	DB	16
+	DB	31
+	DB	31
+	DB	16
+	DB	16
+	DB	28
+	DB	16
+	DB	16
+	DB	16
+	DB	14
+	DB	17
+	DB	16
+	DB	23
+	DB	17
+	DB	17
+	DB	14
+	DB	17
+	DB	17
+	DB	17
+	DB	31
+	DB	17
+	DB	17
+	DB	17
+	DB	31
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	31
+	DB	31
+	DB	2
+	DB	2
+	DB	2
+	DB	2
+	DB	18
+	DB	12
+	DB	17
+	DB	18
+	DB	20
+	DB	24
+	DB	20
+	DB	18
+	DB	17
+	DB	16
+	DB	16
+	DB	16
+	DB	16
+	DB	16
+	DB	16
+	DB	31
+	DB	17
+	DB	27
+	DB	21
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	25
+	DB	21
+	DB	19
+	DB	17
+	DB	17
+	DB	14
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	14
+	DB	30
+	DB	17
+	DB	17
+	DB	30
+	DB	16
+	DB	16
+	DB	16
+	DB	14
+	DB	17
+	DB	17
+	DB	17
+	DB	21
+	DB	18
+	DB	13
+	DB	30
+	DB	17
+	DB	17
+	DB	30
+	DB	20
+	DB	18
+	DB	17
+	DB	14
+	DB	17
+	DB	16
+	DB	14
+	DB	1
+	DB	17
+	DB	14
+	DB	31
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	14
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	10
+	DB	4
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	21
+	DB	27
+	DB	17
+	DB	17
+	DB	17
+	DB	10
+	DB	4
+	DB	10
+	DB	17
+	DB	17
+	DB	17
+	DB	17
+	DB	10
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	31
+	DB	17
+	DB	2
+	DB	4
+	DB	8
+	DB	17
+	DB	31
+	DB	14
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	14
+	DB	0
+	DB	16
+	DB	8
+	DB	4
+	DB	2
+	DB	1
+	DB	0
+	DB	14
+	DB	2
+	DB	2
+	DB	2
+	DB	2
+	DB	2
+	DB	14
+	DB	4
+	DB	10
+	DB	17
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	31
+	DB	8
+	DB	4
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	12
+	DB	18
+	DB	18
+	DB	13
+	DB	0
+	DB	16
+	DB	16
+	DB	30
+	DB	17
+	DB	17
+	DB	30
+	DB	0
+	DB	0
+	DB	0
+	DB	15
+	DB	16
+	DB	16
+	DB	15
+	DB	0
+	DB	1
+	DB	1
+	DB	15
+	DB	17
+	DB	17
+	DB	15
+	DB	0
+	DB	0
+	DB	14
+	DB	17
+	DB	30
+	DB	16
+	DB	15
+	DB	6
+	DB	9
+	DB	8
+	DB	30
+	DB	8
+	DB	8
+	DB	8
+	DB	0
+	DB	14
+	DB	17
+	DB	17
+	DB	15
+	DB	1
+	DB	14
+	DB	0
+	DB	16
+	DB	16
+	DB	30
+	DB	17
+	DB	17
+	DB	17
+	DB	0
+	DB	0
+	DB	4
+	DB	0
+	DB	4
+	DB	4
+	DB	4
+	DB	0
+	DB	2
+	DB	2
+	DB	2
+	DB	2
+	DB	18
+	DB	12
+	DB	0
+	DB	17
+	DB	18
+	DB	28
+	DB	20
+	DB	18
+	DB	17
+	DB	0
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	0
+	DB	0
+	DB	0
+	DB	17
+	DB	27
+	DB	21
+	DB	17
+	DB	0
+	DB	0
+	DB	0
+	DB	22
+	DB	25
+	DB	17
+	DB	17
+	DB	0
+	DB	0
+	DB	0
+	DB	14
+	DB	17
+	DB	17
+	DB	14
+	DB	0
+	DB	14
+	DB	9
+	DB	9
+	DB	14
+	DB	8
+	DB	8
+	DB	0
+	DB	14
+	DB	17
+	DB	14
+	DB	2
+	DB	2
+	DB	1
+	DB	0
+	DB	0
+	DB	8
+	DB	14
+	DB	8
+	DB	8
+	DB	8
+	DB	0
+	DB	0
+	DB	7
+	DB	8
+	DB	6
+	DB	1
+	DB	14
+	DB	0
+	DB	0
+	DB	4
+	DB	14
+	DB	4
+	DB	4
+	DB	4
+	DB	0
+	DB	0
+	DB	0
+	DB	17
+	DB	17
+	DB	17
+	DB	14
+	DB	0
+	DB	0
+	DB	0
+	DB	17
+	DB	17
+	DB	10
+	DB	4
+	DB	0
+	DB	0
+	DB	0
+	DB	17
+	DB	21
+	DB	27
+	DB	17
+	DB	0
+	DB	0
+	DB	17
+	DB	10
+	DB	4
+	DB	10
+	DB	17
+	DB	0
+	DB	0
+	DB	17
+	DB	10
+	DB	4
+	DB	4
+	DB	4
+	DB	0
+	DB	0
+	DB	31
+	DB	2
+	DB	4
+	DB	8
+	DB	31
+	DB	6
+	DB	8
+	DB	8
+	DB	16
+	DB	8
+	DB	8
+	DB	6
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	4
+	DB	12
+	DB	2
+	DB	2
+	DB	1
+	DB	2
+	DB	2
+	DB	12
+	DB	0
+	DB	10
+	DB	21
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+.define "char_data"
+.alias "_char_data"
+.class 133
+.value _char_data
+.dim 95
+.dim 7
+.type 876
+.type 0
+.endef
+	SEGMENT NEAR_BSS
+_led_msg:
+	DS	2*1
+.define "led_msg"
+.alias "_led_msg"
+.class 147
+.value _led_msg
+.type 140
+.type 0
+.endef
+	SEGMENT CODE
+.begrec "NONAME0",8
+.define "quot"
+.value 0
+.class 8
+.type 5
+.type 0
+.endef
+.define "rem"
+.value 4
+.class 8
+.type 5
+.type 0
+.endef
+.endrec "NONAME0"
+.begrec "NONAME1",8
+.define "quot"
+.value 0
+.class 8
+.type 5
+.type 0
+.endef
+.define "rem"
+.value 4
+.class 8
+.type 5
+.type 0
+.endef
+.endrec "NONAME1"
+.begrec "fmt_type",16
+.define "status"
+.value 0
+.class 8
+.type 12
+.type 0
+.endef
+.define "flags"
+.value 1
+.class 8
+.type 12
+.type 0
+.endef
+.define "size"
+.value 2
+.class 8
+.type 12
+.type 0
+.endef
+.define "chr"
+.value 3
+.class 8
+.type 12
+.type 0
+.endef
+.define "type"
+.value 4
+.class 8
+.type 12
+.type 0
+.endef
+.define "field_width"
+.value 5
+.class 8
+.type 2
+.type 0
+.endef
+.define "precision"
+.value 6
+.class 8
+.type 2
+.type 0
+.endef
+.define "set_begin"
+.value 7
+.class 8
+.type 140
+.type 0
+.endef
+.define "set_end"
+.value 9
+.class 8
+.type 140
+.type 0
+.endef
+.define "pad_whole"
+.value 11
+.class 8
+.type 12
+.type 0
+.endef
+.define "pad_pre_fract"
+.value 12
+.class 8
+.type 12
+.type 0
+.endef
+.define "pad_post_fract"
+.value 13
+.class 8
+.type 12
+.type 0
+.endef
+.define "pad_at"
+.value 14
+.class 8
+.type 140
+.type 0
+.endef
+.endrec "fmt_type"
+.begrec "flt_info",12
+.define "flags"
+.value 0
+.class 8
+.type 12
+.type 0
+.endef
+.define "exp"
+.value 1
+.class 8
+.type 2
+.type 0
+.endef
+.define "digits"
+.value 2
+.class 8
+.dim 10
+.type 108
+.type 0
+.endef
+.endrec "flt_info"
+	SEGMENT NEAR_BSS
+_msg_size:
+	DS	4*1
+.define "msg_size"
+.alias "_msg_size"
+.class 147
+.value _msg_size
+.type 15
+.type 0
+.endef
+_draw_char:
+	DS	16
+.define "draw_char"
+.alias "_draw_char"
+.class 147
+.value _draw_char
+.dim 4
+.type 111
+.type 0
+.endef
+_msg_pos:
+	DS	4*1
+.define "msg_pos"
+.alias "_msg_pos"
+.class 147
+.value _msg_pos
+.type 15
+.type 0
+.endef
+_row_pos:
+	DS	4*1
+.define "row_pos"
+.alias "_row_pos"
+.class 147
+.value _row_pos
+.type 15
+.type 0
+.endef
+_led_scroll_timer:
+	DS	4*1
+.define "led_scroll_timer"
+.alias "_led_scroll_timer"
+.class 147
+.value _led_scroll_timer
+.type 5
+.type 0
+.endef
+_led_scroll_cutoff:
+	DS	4*1
+.define "led_scroll_cutoff"
+.alias "_led_scroll_cutoff"
+.class 147
+.value _led_scroll_cutoff
+.type 5
+.type 0
+.endef
+	SEGMENT NEAR_DATA
+_led_anode:
+	DL	1
+	DL	2
+	DL	4
+	DL	8
+	DL	16
+	DL	32
+	DL	64
+.define "led_anode"
+.alias "_led_anode"
+.class 133
+.value _led_anode
+.dim 7
+.type 111
+.type 0
+.endef
+;    1	#include "LED.h"
+;    2	#include "LED_ascii.h"
+;    3	#include "timer.h"
+;    4	
+;    5	#include <zneo.h>
+;    6	#include <stdlib.h>
+;    7	#include <stdio.h>
+;    8	#include <string.h>
+;    9	
+;   10	#define ASCII_SPACE  0
+;   11	#define ASCII_OFFSET 0x20
+;   12	#define NUM_LEDS     4
+;   13	
+;   14	//time in seconds
+;   15	#define SCROLL_CUTOFF 400
+;   16	
+;   17	#define LED_DEC_MAX  9999
+;   18	#define LED_HEX_MAX  0xFFFF
+;   19	
+;   20	#define NUM_ANODES   7
+;   21	#define D1           0
+;   22	#define D2           1
+;   23	#define D3           2
+;   24	#define D4           3
+;   25	
+;   26	#define MAX_DIGITS 16  //Max digits for number displayed on LED
+;   27	
+;   28	static unsigned char *led_msg;
+;   29	static size_t msg_size;
+;   30	
+;   31	static unsigned int draw_char[NUM_LEDS];
+;   32	static volatile unsigned int msg_pos;
+;   33	static volatile unsigned int row_pos;
+;   34	
+;   35	static volatile int led_scroll_timer;
+;   36	static int led_scroll_cutoff;
+;   37	
+;   38	//values for selecting each LED row
+;   39	static unsigned int led_anode[NUM_ANODES] =
+;   40	{
+	SEGMENT CODE
+;   41		0x01,
+;   42		0x02,
+;   43		0x04,
+;   44		0x08,
+;   45		0x10,
+;   46		0x20,
+;   47		0x40
+;   48	};
+;   49	
+;   50	static void led_scroll_draw_chars(void);
+;   51	static void led_set_draw_chars(void);
+;   52	static void led_draw_row(int led_id);
+;   53	
+;   54	void init_leds(void) 
+;   55	{ 
+_init_leds:
+.define "_init_leds"
+.value _init_leds
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "init_leds",55,"_init_leds"
+	LINK	#0
+;   56	    PEDD = 0x00;	// data direction = outputs	
+.line 56
+	CLR.B	57666:RAM
+;   57		PGDD = 0x00;
+.line 57
+	CLR.B	57698:RAM
+;   58	
+;   59		led_scroll_timer = 0;
+.line 59
+	CLR	_led_scroll_timer:RAM
+;   60		led_scroll_cutoff = SCROLL_CUTOFF;
+.line 60
+	LD	R0,#400
+	LD	_led_scroll_cutoff:RAM,R0
+;   61	
+;   62		//set LED display defaults
+;   63		led_msg = NULL;
+.line 63
+	CLR.W	_led_msg:RAM
+;   64	
+;   65		msg_size = 0;
+.line 65
+	CLR	_msg_size:RAM
+;   66		draw_char[0] = ASCII_SPACE;
+.line 66
+	CLR	_draw_char:RAM
+;   67		draw_char[1] = ASCII_SPACE;
+.line 67
+	CLR	_draw_char+4:RAM
+;   68		draw_char[2] = ASCII_SPACE;
+.line 68
+	CLR	_draw_char+8:RAM
+;   69		draw_char[3] = ASCII_SPACE;
+.line 69
+	CLR	_draw_char+12:RAM
+;   70	}
+.line 70
+	UNLINK	
+	RET	
+
+
+;**************************** _init_leds ***************************
+;Name                         Addr/Register   Size   Type
+;_draw_char                          STATIC     16   variable
+;_msg_size                           STATIC      4   variable
+;_led_msg                            STATIC      2   variable
+;_led_scroll_cutoff                  STATIC      4   variable
+;_led_scroll_timer                   STATIC      4   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "init_leds",70,"_init_leds"
+;   71	
+;   72	void led_update(void)
+;   73	{
+_led_update:
+.define "_led_update"
+.value _led_update
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "led_update",73,"_led_update"
+	LINK	#0
+;   74		led_scroll_timer += timer_interval_int();
+.line 74
+	CALL	_timer_interval_int
+	ADD	_led_scroll_timer:RAM,R0
+;   75	
+;   76		//updates the characters being displayed at timer_cutoff interval
+;   77		if((msg_size > 4) && 
+.line 77
+	LD	R0,#4
+	CP	_msg_size:RAM,R0
+	JP	ULE,_2_L_3
+;   78		   (led_scroll_timer >= led_scroll_cutoff)) {
+.line 78
+	LD	R0,_led_scroll_cutoff:RAM
+	CP	_led_scroll_timer:RAM,R0
+	JP	LT,_2_L_3
+;   79			led_scroll_timer = 0;
+.line 79
+	CLR	_led_scroll_timer:RAM
+;   80	
+;   81			led_scroll_draw_chars();
+.line 81
+	CALL	_led_scroll_draw_chars
+;   82		}
+_2_L_3:
+.line 82
+;   83	
+;   84		//draw the current row for each LED
+;   85		led_draw_row(D1);
+.line 85
+	LD	R1,#0
+	CALL	_led_draw_row
+;   86		led_draw_row(D2);
+.line 86
+	LD	R1,#1
+	CALL	_led_draw_row
+;   87		led_draw_row(D3);
+.line 87
+	LD	R1,#2
+	CALL	_led_draw_row
+;   88		led_draw_row(D4);
+.line 88
+	LD	R1,#3
+	CALL	_led_draw_row
+;   89	
+;   90		//move to the next row for next time
+;   91		row_pos = (row_pos + 1) % NUM_ANODES;
+.line 91
+	LD	R0,_row_pos:RAM
+	ADD	R0,#1
+	LD	R1,#7
+	UDIV	R0,R1
+	LD	_row_pos:RAM,R1
+;   92	}
+.line 92
+	UNLINK	
+	RET	
+
+
+;**************************** _led_update ***************************
+;Name                         Addr/Register   Size   Type
+;_row_pos                            STATIC      4   variable
+;_led_draw_row                       STATIC  -----   function
+;_led_scroll_draw_chars              STATIC  -----   function
+;_led_scroll_cutoff                  STATIC      4   variable
+;_msg_size                           STATIC      4   variable
+;_timer_interval_int                 IMPORT  -----   function
+;_led_scroll_timer                   STATIC      4   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "led_update",92,"_led_update"
+;   93	
+;   94	void led_set_scroll_cutoff(int ms)
+;   95	{
+_led_set_scroll_cutoff:
+.define "_led_set_scroll_cutoff"
+.value _led_set_scroll_cutoff
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "led_set_scroll_cutoff",95,"_led_set_scroll_cutoff"
+.line 95
+.define "ms"
+.class 17
+.reg 2
+.type 5
+.type 0
+.endef
+	LINK	#0
+;   96		led_scroll_cutoff = ms;
+.line 96
+	LD	_led_scroll_cutoff:RAM,R1
+;   97	}
+.line 97
+	UNLINK	
+	RET	
+
+
+;**************************** _led_set_scroll_cutoff ***************************
+;Name                         Addr/Register   Size   Type
+;_led_scroll_cutoff                  STATIC      4   variable
+;ms                                      R1      4   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "led_set_scroll_cutoff",97,"_led_set_scroll_cutoff"
+;   98	
+;   99	void led_display_text(const unsigned char *msg)
+;  100	{
+_led_display_text:
+.define "_led_display_text"
+.value _led_display_text
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "led_display_text",100,"_led_display_text"
+	LINK	#4
+.line 100
+	LD.W	-2(R14),R1
+.define "msg"
+.class 9
+.value -2
+.type 140
+.type 0
+.endef
+.define "new_msg"
+.class 1
+.value -4
+.type 140
+.type 0
+.endef
+;  101		char *new_msg;
+;  102	
+;  103		msg_size = strlen(msg);
+.line 103
+	LD.SW	R1,-2(R14)
+	CALL	_strlen
+	LD	_msg_size:RAM,R0
+;  104		new_msg = malloc(sizeof(*new_msg) * (msg_size + 2));	//+2 for space pad and null terminator
+.line 104
+	LD	R1,_msg_size:RAM
+	ADD	R1,#2
+	CALL	_malloc
+	LD.W	-4(R14),R0
+;  105		if(!new_msg) {
+.line 105
+	CPZ.W	-4(R14)
+	JP	NE,_4_L_11
+;  106			msg_size = 0;
+.line 106
+	CLR	_msg_size:RAM
+;  107		}
+;  108		else {
+.line 108
+	JP	_4_L_12
+_4_L_11:
+;  109			memcpy(new_msg, msg, msg_size);
+.line 109
+	LD.SW	R1,-4(R14)
+	LD.SW	R2,-2(R14)
+	LD	R3,_msg_size:RAM
+	CALL	_memcpy
+;  110	
+;  111			//space pads the wrap-around
+;  112			if(msg_size > 4) {
+.line 112
+	LD	R0,#4
+	CP	_msg_size:RAM,R0
+	JP	ULE,_4_L_7
+;  113				new_msg[msg_size] = ' ';
+.line 113
+	LD.SW	R0,_msg_size+2:RAM
+	ADD.SW	R0,-4(R14)
+	LD.B	(R0),#32
+;  114				++msg_size;
+.line 114
+	INC	_msg_size:RAM
+;  115			}
+_4_L_7:
+.line 115
+;  116			new_msg[msg_size] = '\0';
+.line 116
+	LD.SW	R0,_msg_size+2:RAM
+	ADD.SW	R0,-4(R14)
+	CLR.B	(R0)
+;  117	
+;  118			DI();
+.line 118
+	DI
+;  119			
+;  120			if(led_msg != NULL) {
+.line 120
+	CPZ.W	_led_msg:RAM
+	JP	EQ,_4_L_9
+;  121				free(led_msg);
+.line 121
+	LD.SW	R1,_led_msg:RAM
+	CALL	_free
+;  122			}
+_4_L_9:
+.line 122
+;  123			
+;  124			led_msg = new_msg;
+.line 124
+	LD.SW	R0,-4(R14)
+	LD.W	_led_msg:RAM,R0
+;  125			msg_pos = 0;
+.line 125
+	CLR	_msg_pos:RAM
+;  126			row_pos = 0;
+.line 126
+	CLR	_row_pos:RAM
+;  127			led_set_draw_chars();
+.line 127
+	CALL	_led_set_draw_chars
+;  128	
+;  129			EI();
+.line 129
+	EI
+;  130		}
+;  131	}
+_4_L_12:
+.line 131
+	UNLINK	
+	RET	
+
+
+;**************************** _led_display_text ***************************
+;Name                         Addr/Register   Size   Type
+;_EI                                 IMPORT  -----   function
+;_led_set_draw_chars                 STATIC  -----   function
+;_row_pos                            STATIC      4   variable
+;_msg_pos                            STATIC      4   variable
+;_free                               IMPORT  -----   function
+;_led_msg                            STATIC      2   variable
+;_DI                                 IMPORT  -----   function
+;_memcpy                             IMPORT  -----   function
+;_malloc                             IMPORT  -----   function
+;_msg_size                           STATIC      4   variable
+;_strlen                             IMPORT  -----   function
+;new_msg                              R14-4      2   variable
+;msg                                  R14-2      2   parameter
+
+
+; Aggregate Stack Size: -4 (words)
+
+
+.endfunc "led_display_text",131,"_led_display_text"
+;  132	
+;  133	void led_display_double(double value)
+;  134	{
+_led_display_double:
+.define "_led_display_double"
+.value _led_display_double
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "led_display_double",134,"_led_display_double"
+	LINK	#20
+.line 134
+	LD	-4(R14),R1
+.define "value"
+.class 9
+.value -4
+.type 6
+.type 0
+.endef
+.define "num_msg"
+.class 1
+.value -20
+.dim 16
+.type 108
+.type 0
+.endef
+;  135		unsigned char num_msg[MAX_DIGITS];
+;  136	
+;  137		sprintf(num_msg, "%f", value);
+.line 137
+	LEA	R0,-20(R14)
+	LD.W	___print_out:RAM,R0
+	LD	R0,#6
+	LD.B	___print_fmt+6:RAM,R0
+	LD	R0,#102
+	LD.B	___print_fmt+4:RAM,R0
+	LD	R1,-4(R14)
+	CALL	__u_dtof
+	LD	R1,#0
+	CALL	___print_sputch
+;  138	
+;  139		led_display_text(num_msg);
+.line 139
+	LEA	R1,-20(R14)
+	CALL	_led_display_text
+;  140	}
+.line 140
+	UNLINK	
+	RET	
+
+
+;**************************** _led_display_double ***************************
+;Name                         Addr/Register   Size   Type
+;_led_display_text                   IMPORT  -----   function
+;___print_sputch                     IMPORT  -----   function
+;__u_dtof                            IMPORT  -----   function
+;___print_fmt                        IMPORT     16   variable
+;___print_out                        IMPORT      2   variable
+;num_msg                             R14-20     16   variable
+;value                                R14-4      4   parameter
+
+
+; Aggregate Stack Size: -20 (words)
+
+
+.endfunc "led_display_double",140,"_led_display_double"
+;  141	
+;  142	void led_display_int(int value)
+;  143	{
+_led_display_int:
+.define "_led_display_int"
+.value _led_display_int
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "led_display_int",143,"_led_display_int"
+	LINK	#20
+.line 143
+	LD	-4(R14),R1
+.define "value"
+.class 9
+.value -4
+.type 5
+.type 0
+.endef
+.define "num_msg"
+.class 1
+.value -20
+.dim 16
+.type 108
+.type 0
+.endef
+;  144		unsigned char num_msg[MAX_DIGITS];
+;  145	
+;  146		sprintf(num_msg, "%d", value);
+.line 146
+	LEA	R0,-20(R14)
+	LD.W	___print_out:RAM,R0
+	LD.SW	R1,-2(R14)
+	CALL	__u_stoa
+	LD	R1,#0
+	CALL	___print_sputch
+;  147	
+;  148		led_display_text(num_msg);
+.line 148
+	LEA	R1,-20(R14)
+	CALL	_led_display_text
+;  149	}
+.line 149
+	UNLINK	
+	RET	
+
+
+;**************************** _led_display_int ***************************
+;Name                         Addr/Register   Size   Type
+;_led_display_text                   IMPORT  -----   function
+;___print_sputch                     IMPORT  -----   function
+;__u_stoa                            IMPORT  -----   function
+;___print_out                        IMPORT      2   variable
+;num_msg                             R14-20     16   variable
+;value                                R14-4      4   parameter
+
+
+; Aggregate Stack Size: -20 (words)
+
+
+.endfunc "led_display_int",149,"_led_display_int"
+;  150	
+;  151	void led_display_int_hex(int value)
+;  152	{
+_led_display_int_hex:
+.define "_led_display_int_hex"
+.value _led_display_int_hex
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "led_display_int_hex",152,"_led_display_int_hex"
+	LINK	#20
+.line 152
+	LD	-4(R14),R1
+.define "value"
+.class 9
+.value -4
+.type 5
+.type 0
+.endef
+.define "num_msg"
+.class 1
+.value -20
+.dim 16
+.type 108
+.type 0
+.endef
+;  153		unsigned char num_msg[MAX_DIGITS];
+;  154	
+;  155		sprintf(num_msg, "%X", value);
+.line 155
+	LEA	R0,-20(R14)
+	LD.W	___print_out:RAM,R0
+	LD	R0,#32
+	LD.B	___print_fmt+1:RAM,R0
+	LD	R0,#120
+	LD.B	___print_fmt+4:RAM,R0
+	LD.SW	R1,-2(R14)
+	CALL	__u_ustoa
+	LD	R1,#0
+	CALL	___print_sputch
+;  156	
+;  157		led_display_text(num_msg);
+.line 157
+	LEA	R1,-20(R14)
+	CALL	_led_display_text
+;  158	}
+.line 158
+	UNLINK	
+	RET	
+
+
+;**************************** _led_display_int_hex ***************************
+;Name                         Addr/Register   Size   Type
+;_led_display_text                   IMPORT  -----   function
+;___print_sputch                     IMPORT  -----   function
+;__u_ustoa                           IMPORT  -----   function
+;___print_fmt                        IMPORT     16   variable
+;___print_out                        IMPORT      2   variable
+;num_msg                             R14-20     16   variable
+;value                                R14-4      4   parameter
+
+
+; Aggregate Stack Size: -20 (words)
+
+
+.endfunc "led_display_int_hex",158,"_led_display_int_hex"
+;  159	
+;  160	/*
+;  161	 	Draws the current row to a particular LED
+;  162	 */
+;  163	static void led_draw_row(int led_id)
+;  164	{
+_led_draw_row:
+.define "_led_draw_row"
+.value _led_draw_row
+.class 3
+.type 65
+.type 0
+.endef
+.begfunc "led_draw_row",164,"_led_draw_row"
+.line 164
+.define "led_id"
+.class 17
+.reg 2
+.type 5
+.type 0
+.endef
+	LINK	#0
+;  165		// set cathodes
+;  166		PEOUT |= 0x1F;
+.line 166
+	LD	R0,#31
+	OR.B	57665:RAM,R0
+;  167		PEOUT &= ~char_data[draw_char[led_id]][row_pos];
+.line 167
+	LD	R0,R1
+	SLL	R0,#2
+	LD	R2,#_draw_char
+	ADD	R0,R2
+	LD	R0,(R0)
+	LD	R2,#7
+	MUL	R0,R2
+	LD	R2,#_char_data
+	ADD	R2,R0
+	LD.SW	R0,_row_pos+2:RAM
+	ADD	R0,R2
+	LD.SB	R0,(R0)
+	COM	R0
+	AND.B	57665:RAM,R0
+;  168	
+;  169		// set anodes
+;  170		PGOUT &= 0x80;
+.line 170
+	LD	R0,#128
+	AND.B	57697:RAM,R0
+;  171		PGOUT |= led_anode[row_pos];
+.line 171
+	LD	R0,_row_pos:RAM
+	SLL	R0,#2
+	LD	R2,#_led_anode
+	ADD	R0,R2
+	LD.SB	R0,3(R0)
+	OR.B	57697:RAM,R0
+;  172	
+;  173		//latch the LED
+;  174		if(led_id == D1) {               // PE7 controls D1
+.line 174
+	CP	R1,#0
+	JP	NE,_8_L_22
+;  175	        PEOUT &= ~0x80;           //   create rising edge on PE7, clear bit 7
+.line 175
+	LD	R0,#127
+	AND.B	57665:RAM,R0
+;  176	        PEOUT |= 0x80;            //   set bit 7
+.line 176
+	LD	R0,#128
+	OR.B	57665:RAM,R0
+;  177	    }
+;  178	    else if(led_id == D2) {               // PG7 controls D2
+.line 178
+	JP	_8_L_23
+_8_L_22:
+	CP	R1,#1
+	JP	NE,_8_L_20
+;  179	        PGOUT &= ~0x80;           //   create rising edge on PG7
+.line 179
+	LD	R0,#127
+	AND.B	57697:RAM,R0
+;  180	        PGOUT |= 0x80; 
+.line 180
+	LD	R0,#128
+	OR.B	57697:RAM,R0
+;  181	    }
+;  182	    else if(led_id == D3) {               // PE5 controls D3
+.line 182
+	JP	_8_L_23
+_8_L_20:
+	CP	R1,#2
+	JP	NE,_8_L_18
+;  183	        PEOUT &= ~0x20;           //   create rising edge on PE5
+.line 183
+	LD	R0,#-33
+	AND.B	57665:RAM,R0
+;  184	        PEOUT |= 0x20; 
+.line 184
+	LD	R0,#32
+	OR.B	57665:RAM,R0
+;  185	    }
+;  186	    else if(led_id == D4) {               // PE6 controls D4
+.line 186
+	JP	_8_L_23
+_8_L_18:
+	CP	R1,#3
+	JP	NE,_8_L_23
+;  187	        PEOUT &= ~0x40;           //   create rising edge on PE6
+.line 187
+	LD	R0,#-65
+	AND.B	57665:RAM,R0
+;  188	        PEOUT |= 0x40; 
+.line 188
+	LD	R0,#64
+	OR.B	57665:RAM,R0
+;  189	    }
+;  190	}
+_8_L_23:
+.line 190
+	UNLINK	
+	RET	
+
+
+;**************************** _led_draw_row ***************************
+;Name                         Addr/Register   Size   Type
+;_led_anode                          STATIC     28   variable
+;_row_pos                            STATIC      4   variable
+;_draw_char                          STATIC     16   variable
+;_char_data                          STATIC    665   variable
+;led_id                                  R1      4   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "led_draw_row",190,"_led_draw_row"
+;  191	
+;  192	/*
+;  193		Updates what characters the LED is drawing.
+;  194	 */
+;  195	static void led_scroll_draw_chars(void)
+;  196	{
+_led_scroll_draw_chars:
+.define "_led_scroll_draw_chars"
+.value _led_scroll_draw_chars
+.class 3
+.type 65
+.type 0
+.endef
+.begfunc "led_scroll_draw_chars",196,"_led_scroll_draw_chars"
+	LINK	#0
+;  197		//update what each led is drawing
+;  198		draw_char[0] = ((unsigned int)led_msg[msg_pos]) - ASCII_OFFSET;
+.line 198
+	LD.SW	R0,_msg_pos+2:RAM
+	ADD.SW	R0,_led_msg:RAM
+	LD.UB	R0,(R0)
+	ADD	R0,#-32
+	LD	_draw_char:RAM,R0
+;  199		draw_char[1] = ((unsigned int)led_msg[(msg_pos + 1) % msg_size]) - ASCII_OFFSET;
+.line 199
+	LD	R1,_msg_pos:RAM
+	ADD	R1,#1
+	LD	R0,_msg_size:RAM
+	UDIV	R1,R0
+	ADD.SW	R0,_led_msg:RAM
+	LD.UB	R0,(R0)
+	ADD	R0,#-32
+	LD	_draw_char+4:RAM,R0
+;  200		draw_char[2] = ((unsigned int)led_msg[(msg_pos + 2) % msg_size]) - ASCII_OFFSET;
+.line 200
+	LD	R1,_msg_pos:RAM
+	ADD	R1,#2
+	LD	R0,_msg_size:RAM
+	UDIV	R1,R0
+	ADD.SW	R0,_led_msg:RAM
+	LD.UB	R0,(R0)
+	ADD	R0,#-32
+	LD	_draw_char+8:RAM,R0
+;  201		draw_char[3] = ((unsigned int)led_msg[(msg_pos + 3) % msg_size]) - ASCII_OFFSET;
+.line 201
+	LD	R1,_msg_pos:RAM
+	ADD	R1,#3
+	LD	R0,_msg_size:RAM
+	UDIV	R1,R0
+	ADD.SW	R0,_led_msg:RAM
+	LD.UB	R0,(R0)
+	ADD	R0,#-32
+	LD	_draw_char+12:RAM,R0
+;  202		msg_pos = (msg_pos + 1) % msg_size;
+.line 202
+	LD	R0,_msg_pos:RAM
+	ADD	R0,#1
+	LD	R1,_msg_size:RAM
+	UDIV	R0,R1
+	LD	_msg_pos:RAM,R1
+;  203	}
+.line 203
+	UNLINK	
+	RET	
+
+
+;**************************** _led_scroll_draw_chars ***************************
+;Name                         Addr/Register   Size   Type
+;_msg_size                           STATIC      4   variable
+;_draw_char                          STATIC     16   variable
+;_msg_pos                            STATIC      4   variable
+;_led_msg                            STATIC      2   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "led_scroll_draw_chars",203,"_led_scroll_draw_chars"
+;  204	
+;  205	/*
+;  206		Sets the characters the LED is drawing to the first 4 of the message.
+;  207	 */
+;  208	static void led_set_draw_chars(void)
+;  209	{
+_led_set_draw_chars:
+.define "_led_set_draw_chars"
+.value _led_set_draw_chars
+.class 3
+.type 65
+.type 0
+.endef
+.begfunc "led_set_draw_chars",209,"_led_set_draw_chars"
+	LINK	#0
+;  210		if(msg_size > 0) {
+.line 210
+	CPZ	_msg_size:RAM
+	JP	ULE,_10_L_26
+;  211			draw_char[0] = ((unsigned int)led_msg[msg_pos]) - ASCII_OFFSET;
+.line 211
+	LD.SW	R0,_msg_pos+2:RAM
+	ADD.SW	R0,_led_msg:RAM
+	LD.UB	R0,(R0)
+	ADD	R0,#-32
+	LD	_draw_char:RAM,R0
+;  212		}
+;  213		else {
+.line 213
+	JP	_10_L_29
+_10_L_26:
+;  214			draw_char[0] = ASCII_SPACE;
+.line 214
+	CLR	_draw_char:RAM
+;  215		}
+_10_L_29:
+.line 215
+;  216		
+;  217		if(msg_size > 1) {
+.line 217
+	LD	R0,#1
+	CP	_msg_size:RAM,R0
+	JP	ULE,_10_L_28
+;  218			draw_char[1] = ((unsigned int)led_msg[(msg_pos + 1) % msg_size]) - ASCII_OFFSET;
+.line 218
+	LD	R1,_msg_pos:RAM
+	ADD	R1,#1
+	LD	R0,_msg_size:RAM
+	UDIV	R1,R0
+	ADD.SW	R0,_led_msg:RAM
+	LD.UB	R0,(R0)
+	ADD	R0,#-32
+	LD	_draw_char+4:RAM,R0
+;  219		}
+;  220		else {
+.line 220
+	JP	_10_L_32
+_10_L_28:
+;  221			draw_char[1] = ASCII_SPACE;
+.line 221
+	CLR	_draw_char+4:RAM
+;  222		}
+_10_L_32:
+.line 222
+;  223		
+;  224		if(msg_size > 2) {
+.line 224
+	LD	R0,#2
+	CP	_msg_size:RAM,R0
+	JP	ULE,_10_L_31
+;  225			draw_char[2] = ((unsigned int)led_msg[(msg_pos + 2) % msg_size]) - ASCII_OFFSET;
+.line 225
+	LD	R1,_msg_pos:RAM
+	ADD	R1,#2
+	LD	R0,_msg_size:RAM
+	UDIV	R1,R0
+	ADD.SW	R0,_led_msg:RAM
+	LD.UB	R0,(R0)
+	ADD	R0,#-32
+	LD	_draw_char+8:RAM,R0
+;  226		}
+;  227		else {
+.line 227
+	JP	_10_L_35
+_10_L_31:
+;  228			draw_char[2] = ASCII_SPACE;
+.line 228
+	CLR	_draw_char+8:RAM
+;  229		}
+_10_L_35:
+.line 229
+;  230		
+;  231		if(msg_size > 3) {
+.line 231
+	LD	R0,#3
+	CP	_msg_size:RAM,R0
+	JP	ULE,_10_L_34
+;  232			draw_char[3] = ((unsigned int)led_msg[(msg_pos + 3) % msg_size]) - ASCII_OFFSET;
+.line 232
+	LD	R1,_msg_pos:RAM
+	ADD	R1,#3
+	LD	R0,_msg_size:RAM
+	UDIV	R1,R0
+	ADD.SW	R0,_led_msg:RAM
+	LD.UB	R0,(R0)
+	ADD	R0,#-32
+	LD	_draw_char+12:RAM,R0
+;  233		}
+;  234		else {
+.line 234
+	JP	_10_L_36
+_10_L_34:
+;  235			draw_char[3] = ASCII_SPACE;
+.line 235
+	CLR	_draw_char+12:RAM
+;  236		}
+;  237	}
+_10_L_36:
+.line 237
+	UNLINK	
+	RET	
+
+
+;**************************** _led_set_draw_chars ***************************
+;Name                         Addr/Register   Size   Type
+;_draw_char                          STATIC     16   variable
+;_msg_pos                            STATIC      4   variable
+;_led_msg                            STATIC      2   variable
+;_msg_size                           STATIC      4   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "led_set_draw_chars",237,"_led_set_draw_chars"
+	XREF _memcpy:EROM
+	XREF _strlen:EROM
+	XREF __u_dtof:EROM
+	XREF __u_ustoa:EROM
+	XREF __u_stoa:EROM
+	XREF ___print_sputch:EROM
+	XREF ___print_out:RAM
+	XREF ___print_fmt:RAM
+	XREF _malloc:EROM
+	XREF _free:EROM
+	XREF _timer_interval_int:EROM
+	XDEF _led_display_int_hex
+	XDEF _led_display_int
+	XDEF _led_display_double
+	XDEF _led_display_text
+	XDEF _led_set_scroll_cutoff
+	XDEF _led_update
+	XDEF _init_leds
+	XDEF _char_data
+	END

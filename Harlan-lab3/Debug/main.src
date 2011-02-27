@@ -1,0 +1,208 @@
+; ZiLOG ZNEO ANSI C Compiler Release 1.11
+; -nolocalcse -optsize -model=S -nomodsect -noregvar
+; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+	FILE	"..\MAIN.C"
+.debug "C"
+	SEGMENT CODE
+.begrec "fmt_type",16
+.define "status"
+.value 0
+.class 8
+.type 12
+.type 0
+.endef
+.define "flags"
+.value 1
+.class 8
+.type 12
+.type 0
+.endef
+.define "size"
+.value 2
+.class 8
+.type 12
+.type 0
+.endef
+.define "chr"
+.value 3
+.class 8
+.type 12
+.type 0
+.endef
+.define "type"
+.value 4
+.class 8
+.type 12
+.type 0
+.endef
+.define "field_width"
+.value 5
+.class 8
+.type 2
+.type 0
+.endef
+.define "precision"
+.value 6
+.class 8
+.type 2
+.type 0
+.endef
+.define "set_begin"
+.value 7
+.class 8
+.type 140
+.type 0
+.endef
+.define "set_end"
+.value 9
+.class 8
+.type 140
+.type 0
+.endef
+.define "pad_whole"
+.value 11
+.class 8
+.type 12
+.type 0
+.endef
+.define "pad_pre_fract"
+.value 12
+.class 8
+.type 12
+.type 0
+.endef
+.define "pad_post_fract"
+.value 13
+.class 8
+.type 12
+.type 0
+.endef
+.define "pad_at"
+.value 14
+.class 8
+.type 140
+.type 0
+.endef
+.endrec "fmt_type"
+.begrec "flt_info",12
+.define "flags"
+.value 0
+.class 8
+.type 12
+.type 0
+.endef
+.define "exp"
+.value 1
+.class 8
+.type 2
+.type 0
+.endef
+.define "digits"
+.value 2
+.class 8
+.dim 10
+.type 108
+.type 0
+.endef
+.endrec "flt_info"
+;    1	/*
+;    2		Author: Matthew Harlan
+;    3		Email:  mharlan@gwmail.gwu.edu
+;    4		Class:  CSCI-4415
+;    5		Date: 	February 22nd, 2011
+;    6		Lab:    2
+;    7		
+;    8		Description: This program plays three RTTL ringtones. Ringtones are
+;    9		selected by pressing the buttons. The ringtone will loop with a one
+;   10		measure rest between each playthrough until a button is double tapped.
+;   11		The currently playing note and its duration is displayed on the LCD.
+;   12	
+;   13		Other files: buttons.c buttons.h LED.c LED.h notes.h oscillator.c oscillator.h ringtones.h
+;   14		rttl.c rttl.h speaker.c speaker.h timer.c timer.h
+;   15	
+;   16		Compile: Set the user include path to the include directory.
+;   17		
+;   18		Problems: I didn't run in to any significant problems.
+;   19	
+;   20		Comments: Another fun and challenging lab.
+;   21	
+;   22		Enhancements: None.
+;   23	 */
+;   24	
+;   25	#include "LED.h"
+;   26	#include "oscillator.h"
+;   27	#include "buttons.h"
+;   28	#include "timer.h"
+;   29	#include "cli.h"
+;   30	
+;   31	#include <zneo.h>
+;   32	#include <stdio.h>
+;   33	
+;   34	/*
+;   35		Intializes the LED, sets the default value, and loops.
+;   36	 */
+;   37	void main(void)
+;   38	{
+_main:
+.define "_main"
+.value _main
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "main",38,"_main"
+	LINK	#0
+;   39		//initialize the oscillator and global timer
+;   40		init_oscillator(OSC_5_52MHZ);
+.line 40
+	LD	R1,#1
+	CALL	_init_oscillator
+;   41		init_timer(TIMER_2MS);
+.line 41
+	LD	R1,#2
+	CALL	_init_timer
+;   42	
+;   43		//initialize the command line interface
+;   44		init_cli();
+.line 44
+	CALL	_init_cli
+;   45	
+;   46		//initialize button functionality
+;   47		init_buttons();
+.line 47
+	CALL	_init_buttons
+;   48	
+;   49		//enable interrupts
+;   50		EI();
+.line 50
+	EI
+;   51	
+;   52		cli_loop();
+.line 52
+	CALL	_cli_loop
+.line 53
+	UNLINK	
+	RET	
+
+
+;**************************** _main ***************************
+;Name                         Addr/Register   Size   Type
+;_cli_loop                           IMPORT  -----   function
+;_EI                                 IMPORT  -----   function
+;_init_buttons                       IMPORT  -----   function
+;_init_cli                           IMPORT  -----   function
+;_init_timer                         IMPORT  -----   function
+;_init_oscillator                    IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "main",53,"_main"
+	XREF _cli_loop:EROM
+	XREF _init_cli:EROM
+	XREF _init_timer:EROM
+	XREF _init_buttons:EROM
+	XREF _init_oscillator:EROM
+	XDEF _main
+	END

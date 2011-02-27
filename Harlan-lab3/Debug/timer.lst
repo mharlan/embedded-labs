@@ -1,0 +1,368 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\TIMER.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT NEAR_BSS
+00000000                   A     7    _timer_state:
+00000000                   A     8    	DS	4*1
+                           A     9    .define "timer_state"
+                           A    10    .alias "_timer_state"
+                           A    11    .class 147
+                           A    12    .value _timer_state
+                           A    13    .type 5
+                           A    14    .type 0
+                           A    15    .endef
+                           A    16    ;    1	#include "timer.h"
+                           A    17    ;    2	#include "oscillator.h"
+                           A    18    ;    3	#include "LED.h"
+                           A    19    ;    4	#include "buttons.h"
+                           A    20    ;    5	
+                           A    21    ;    6	#include <zneo.h>
+                           A    22    ;    7	
+                           A    23    ;    8	#define INTERVAL_1MS_INT 1
+                           A    24    ;    9	#define INTERVAL_2MS_INT 2
+                           A    25    ;   10	#define INTERVAL_4MS_INT 4
+                           A    26    ;   11	
+                           A    27    ;   12	#define INTERVAL_1MS_FLOAT 0.001f
+                           A    28    ;   13	#define INTERVAL_2MS_FLOAT 0.002f
+                           A    29    ;   14	#define INTERVAL_4MS_FLOAT 0.004f
+                           A    30    ;   15	
+                           A    31    ;   16	static int timer_state;
+                           A    32    	SEGMENT CODE
+                           A    33    ;   17	
+                           A    34    ;   18	/*
+                           A    35    ;   19		Interrupt for timer events.
+                           A    36    ;   20	
+                           A    37    ;   21		Used for updating the LED, polling the buttons, and responding
+                           A    38    ;   22		to note change events for the speaker..
+                           A    39    ;   23	 */
+                           A    40    ;   24	void interrupt timer_isr(void)
+                           A    41    ;   25	{
+00000000                   A    42    _timer_isr:
+                           A    43    .define "_timer_isr"
+                           A    44    .value _timer_isr
+                           A    45    .class 2
+                           A    46    .type 65
+                           A    47    .type 0
+                           A    48    .endef
+                           A    49    .begfunc "timer_isr",25,"_timer_isr"
+00000000 0800              A    50    	LINK	#0
+00000002 04FF              A    51    	PUSHMLO	#255
+                           A    52    ;   26		//enable interrupts for speaker interrupt
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   2
+
+
+PC     Object              I  Line    Source timer.src
+                           A    53    ;   27		EI();
+                           A    54    .line 27
+00000004 FFFA              A    55    	EI
+                           A    56    ;   28	
+                           A    57    ;   29		led_update();
+                           A    58    .line 29
+00000006 F1 FFFFFB         A    59    	CALL	_led_update
+                           A    60    ;   30		button_events();
+                           A    61    .line 30
+0000000A F1 FFFFF9         A    62    	CALL	_button_events
+                           A    63    ;   31	}
+                           A    64    .line 31
+0000000E 06FF              A    65    	POPMLO	#255
+00000010 0001              A    66    	UNLINK	
+00000012 FFFD              A    67    	IRET	
+                           A    68    
+                           A    69    
+                           A    70    ;**************************** _timer_isr ***************************
+                           A    71    ;Name                         Addr/Register   Size   Type
+                           A    72    ;_button_events                      IMPORT  -----   function
+                           A    73    ;_led_update                         IMPORT  -----   function
+                           A    74    ;_EI                                 IMPORT  -----   function
+                           A    75    
+                           A    76    
+                           A    77    ; Aggregate Stack Size: 0 (words)
+                           A    78    
+                           A    79    
+                           A    80    .endfunc "timer_isr",31,"_timer_isr"
+                           A    81    ;   32	
+                           A    82    ;   33	void init_timer(int mode)
+                           A    83    ;   34	{
+00000014                   A    84    _init_timer:
+                           A    85    .define "_init_timer"
+                           A    86    .value _init_timer
+                           A    87    .class 2
+                           A    88    .type 65
+                           A    89    .type 0
+                           A    90    .endef
+                           A    91    .begfunc "init_timer",34,"_init_timer"
+00000014 0804              A    92    	LINK	#4
+00000016 05C0              A    93    	PUSHMHI	#3
+                           A    94    .line 34
+00000018 5BC1              A    95    	LD	-4(R14),R1
+                           A    96    .define "mode"
+                           A    97    .class 9
+                           A    98    .value -4
+                           A    99    .type 5
+                           A   100    .type 0
+                           A   101    .endef
+                           A   102    ;   35		timer_state = mode;
+                           A   103    .line 35
+0000001A 5FC0              A   104    	LD	R0,-4(R14)
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   3
+
+
+PC     Object              I  Line    Source timer.src
+0000001C 0370 0000         A   105    	LD	_timer_state:RAM,R0
+                           A   106    ;   36	
+                           A   107    ;   37		T0CTL1 |= TIMER_DISABLE;
+                           A   108    .line 37
+00000020 0310 E307         A   109    	LD.SB	R0,58119:RAM
+                           A   110    ;   38	    T0CTL1 = TIMER_MODE_CONTINUOUS + TIMER_PRESCALE_128;
+                           A   111    .line 38
+00000024 3039              A   112    	LD	R0,#57
+00000026 0350 E307         A   113    	LD.B	58119:RAM,R0
+                           A   114    ;   39	
+                           A   115    ;   40	    // Initial counter value
+                           A   116    ;   41	    T0HL = 0x00;
+                           A   117    .line 41
+0000002A ADA4 E300         A   118    	CLR.W	58112:RAM
+                           A   119    ;   42	
+                           A   120    ;   43		if(timer_state == TIMER_4MS) {
+                           A   121    .line 43
+0000002E 3004              A   122    	LD	R0,#4
+00000030 7570 0000         A   123    	CP	_timer_state:RAM,R0
+00000034 EE 14             A   124    	JP	NE,_2_L_4
+                           A   125    ;   44			// Timer reload
+                           A   126    ;   45	    	//   reload = clock / prescale * timeout  
+                           A   127    ;   46	   	 	T0R = (get_osc_clock() / 128) * INTERVAL_4MS_FLOAT;
+                           A   128    .line 46
+00000036 F1 FFFFE3         A   129    	CALL	_get_osc_clock
+0000003A 4501 0080         A   130    	LD	R1,#128
+0000003E AF10              A   131    	SDIV	R0,R1
+00000040 4408              A   132    	LD	R8,R0
+00000042 F1 FFFFDD         A   133    	CALL	__fpltof
+00000046 4408              A   134    	LD	R8,R0
+00000048 4529 3B83126F     A   135    	LD	R9,#998445679
+0000004E F1 FFFFD7         A   136    	CALL	__fpmul
+00000052 4408              A   137    	LD	R8,R0
+00000054 F1 FFFFD4         A   138    	CALL	__fpftol
+00000058 0360 E302         A   139    	LD.W	58114:RAM,R0
+                           A   140    ;   47		}
+                           A   141    ;   48		else if(timer_state == TIMER_1MS) {
+                           A   142    .line 48
+0000005C C02B              A   143    	JP	_2_L_5
+0000005E                   A   144    _2_L_4:
+0000005E 3001              A   145    	LD	R0,#1
+00000060 7570 0000         A   146    	CP	_timer_state:RAM,R0
+00000064 EE 14             A   147    	JP	NE,_2_L_2
+                           A   148    ;   49			T0R = (get_osc_clock() / 128) * INTERVAL_1MS_FLOAT;
+                           A   149    .line 49
+00000066 F1 FFFFCB         A   150    	CALL	_get_osc_clock
+0000006A 4501 0080         A   151    	LD	R1,#128
+0000006E AF10              A   152    	SDIV	R0,R1
+00000070 4408              A   153    	LD	R8,R0
+00000072 F1 FFFFC5         A   154    	CALL	__fpltof
+00000076 4408              A   155    	LD	R8,R0
+00000078 4529 3A83126F     A   156    	LD	R9,#981668463
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   4
+
+
+PC     Object              I  Line    Source timer.src
+0000007E F1 FFFFBF         A   157    	CALL	__fpmul
+00000082 4408              A   158    	LD	R8,R0
+00000084 F1 FFFFBC         A   159    	CALL	__fpftol
+00000088 0360 E302         A   160    	LD.W	58114:RAM,R0
+                           A   161    ;   50		}
+                           A   162    ;   51		//default timer is 2ms
+                           A   163    ;   52		else {
+                           A   164    .line 52
+0000008C C013              A   165    	JP	_2_L_5
+0000008E                   A   166    _2_L_2:
+                           A   167    ;   53			T0R = (get_osc_clock() / 128) * INTERVAL_2MS_FLOAT;
+                           A   168    .line 53
+0000008E F1 FFFFB7         A   169    	CALL	_get_osc_clock
+00000092 4501 0080         A   170    	LD	R1,#128
+00000096 AF10              A   171    	SDIV	R0,R1
+00000098 4408              A   172    	LD	R8,R0
+0000009A F1 FFFFB1         A   173    	CALL	__fpltof
+0000009E 4408              A   174    	LD	R8,R0
+000000A0 4529 3B03126F     A   175    	LD	R9,#990057071
+000000A6 F1 FFFFAB         A   176    	CALL	__fpmul
+000000AA 4408              A   177    	LD	R8,R0
+000000AC F1 FFFFA8         A   178    	CALL	__fpftol
+000000B0 0360 E302         A   179    	LD.W	58114:RAM,R0
+                           A   180    ;   54		}
+000000B4                   A   181    _2_L_5:
+                           A   182    .line 54
+                           A   183    ;   55	
+                           A   184    ;   56		// Enable Timer0 interrupt
+                           A   185    ;   57	    IRQ0EN |= IRQ_Timer0;
+                           A   186    .line 57
+000000B4 3020              A   187    	LD	R0,#32
+000000B6 7360 E032         A   188    	OR.W	57394:RAM,R0
+                           A   189    ;   58	
+                           A   190    ;   59		T0CTL1 |= TIMER_ENABLE;
+                           A   191    .line 59
+000000BA 4500 0080         A   192    	LD	R0,#128
+000000BE 7350 E307         A   193    	OR.B	58119:RAM,R0
+                           A   194    ;   60	
+                           A   195    ;   61		SET_VECTOR(TIMER0, timer_isr);
+                           A   196    ;   62	}
+                           A   197    .line 62
+000000C2 0703              A   198    	POPMHI	#3
+000000C4 0001              A   199    	UNLINK	
+000000C6 FFFC              A   200    	RET	
+                           A   201    
+                           A   202    
+                           A   203    ;**************************** _init_timer ***************************
+                           A   204    ;Name                         Addr/Register   Size   Type
+                           A   205    ;_SET_VECTOR                         IMPORT  -----   function
+                           A   206    ;_get_osc_clock                      IMPORT  -----   function
+                           A   207    ;_timer_state                        STATIC      4   variable
+                           A   208    ;mode                                 R14-4      4   parameter
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   5
+
+
+PC     Object              I  Line    Source timer.src
+                           A   209    
+                           A   210    
+                           A   211    ; Aggregate Stack Size: -4 (words)
+                           A   212    
+                           A   213    
+                           A   214    .endfunc "init_timer",62,"_init_timer"
+                           A   215    ;   63	
+                           A   216    ;   64	int timer_interval_int(void)
+                           A   217    ;   65	{
+000000C8                   A   218    _timer_interval_int:
+                           A   219    .define "_timer_interval_int"
+                           A   220    .value _timer_interval_int
+                           A   221    .class 2
+                           A   222    .type 69
+                           A   223    .type 0
+                           A   224    .endef
+                           A   225    .begfunc "timer_interval_int",65,"_timer_interval_int"
+000000C8 0800              A   226    	LINK	#0
+                           A   227    ;   66		if(timer_state == TIMER_1MS) {
+                           A   228    .line 66
+000000CA 3001              A   229    	LD	R0,#1
+000000CC 7570 0000         A   230    	CP	_timer_state:RAM,R0
+000000D0 EE 01             A   231    	JP	NE,_3_L_10
+                           A   232    ;   67			return INTERVAL_1MS_INT;
+                           A   233    .line 67
+000000D2 C006              A   234    	JP	_3_L_11
+                           A   235    ;   68		}
+                           A   236    ;   69		else if(timer_state == TIMER_2MS) {
+000000D4                   A   237    _3_L_10:
+                           A   238    .line 69
+000000D4 3002              A   239    	LD	R0,#2
+000000D6 7570 0000         A   240    	CP	_timer_state:RAM,R0
+000000DA EE 01             A   241    	JP	NE,_3_L_8
+                           A   242    ;   70			return INTERVAL_2MS_INT;
+                           A   243    .line 70
+000000DC C001              A   244    	JP	_3_L_11
+                           A   245    ;   71		}
+                           A   246    ;   72		else {
+000000DE                   A   247    _3_L_8:
+                           A   248    .line 72
+                           A   249    ;   73			return INTERVAL_4MS_INT;
+                           A   250    .line 73
+000000DE 3004              A   251    	LD	R0,#4
+                           A   252    ;   74		}
+                           A   253    ;   75	}
+000000E0                   A   254    _3_L_11:
+                           A   255    .line 75
+000000E0 0001              A   256    	UNLINK	
+000000E2 FFFC              A   257    	RET	
+                           A   258    
+                           A   259    
+                           A   260    ;**************************** _timer_interval_int ***************************
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   6
+
+
+PC     Object              I  Line    Source timer.src
+                           A   261    ;Name                         Addr/Register   Size   Type
+                           A   262    ;_timer_state                        STATIC      4   variable
+                           A   263    
+                           A   264    
+                           A   265    ; Aggregate Stack Size: 0 (words)
+                           A   266    
+                           A   267    
+                           A   268    .endfunc "timer_interval_int",75,"_timer_interval_int"
+                           A   269    ;   76	
+                           A   270    ;   77	float timer_interval_float(void)
+                           A   271    ;   78	{
+000000E4                   A   272    _timer_interval_float:
+                           A   273    .define "_timer_interval_float"
+                           A   274    .value _timer_interval_float
+                           A   275    .class 2
+                           A   276    .type 70
+                           A   277    .type 0
+                           A   278    .endef
+                           A   279    .begfunc "timer_interval_float",78,"_timer_interval_float"
+000000E4 0800              A   280    	LINK	#0
+                           A   281    ;   79		if(timer_state == TIMER_1MS) {
+                           A   282    .line 79
+000000E6 3001              A   283    	LD	R0,#1
+000000E8 7570 0000         A   284    	CP	_timer_state:RAM,R0
+000000EC EE 04             A   285    	JP	NE,_4_L_15
+                           A   286    ;   80			return INTERVAL_1MS_FLOAT;
+                           A   287    .line 80
+000000EE 4520 3A83126F     A   288    	LD	R0,#981668463
+000000F4 C00B              A   289    	JP	_4_L_16
+                           A   290    ;   81		}
+                           A   291    ;   82		else if(timer_state == TIMER_2MS) {
+000000F6                   A   292    _4_L_15:
+                           A   293    .line 82
+000000F6 3002              A   294    	LD	R0,#2
+000000F8 7570 0000         A   295    	CP	_timer_state:RAM,R0
+000000FC EE 04             A   296    	JP	NE,_4_L_13
+                           A   297    ;   83			return INTERVAL_2MS_FLOAT;
+                           A   298    .line 83
+000000FE 4520 3B03126F     A   299    	LD	R0,#990057071
+00000104 C003              A   300    	JP	_4_L_16
+                           A   301    ;   84		}
+                           A   302    ;   85		else {
+00000106                   A   303    _4_L_13:
+                           A   304    .line 85
+                           A   305    ;   86			return INTERVAL_4MS_FLOAT;
+                           A   306    .line 86
+00000106 4520 3B83126F     A   307    	LD	R0,#998445679
+                           A   308    ;   87		}
+0000010C                   A   309    _4_L_16:
+                           A   310    .line 88
+0000010C 0001              A   311    	UNLINK	
+0000010E FFFC              A   312    	RET	
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   7
+
+
+PC     Object              I  Line    Source timer.src
+                           A   313    
+                           A   314    
+                           A   315    ;**************************** _timer_interval_float ***************************
+                           A   316    ;Name                         Addr/Register   Size   Type
+                           A   317    ;_timer_state                        STATIC      4   variable
+                           A   318    
+                           A   319    
+                           A   320    ; Aggregate Stack Size: 0 (words)
+                           A   321    
+                           A   322    
+                           A   323    .endfunc "timer_interval_float",88,"_timer_interval_float"
+00000018 00000000          A   324    	VECTOR	TIMER0=_timer_isr
+                           A   325    	XREF _button_events:EROM
+                           A   326    	XREF _led_update:EROM
+                           A   327    	XREF _get_osc_clock:EROM
+                           A   328    	XREF __fpltof:EROM
+                           A   329    	XREF __fpftol:EROM
+                           A   330    	XREF __fpmul:EROM
+                           A   331    	XDEF _timer_interval_float
+                           A   332    	XDEF _timer_interval_int
+                           A   333    	XDEF _init_timer
+                           A   334    	XDEF _timer_isr
+                           A   335    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 336

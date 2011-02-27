@@ -1,0 +1,192 @@
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 1
+Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
+
+     1	    1	#include "cli.h"
+     2	   13	#include "LED.h"
+     3	   58	#include "oscillator.h"
+     4	   79	#include "uart.h"
+     5	  111	
+     6	  112	#include <stdlib.h>
+     7	  235	#include <string.h>
+     8	  327	#include <ctype.h>
+     9	  354	
+    10	  355	#define CLI_PROMPT      "> "
+    11	  356	#define CLI_BUFFER_SIZE 256
+    12	  357	
+    13	  358	static char cli_prompt[CLI_BUFFER_SIZE];
+    14	  359	
+    15	  360	static void cli_process_command(const char *command);
+    16	  361	static void cli_display(char *text);
+    17	  362	static void cli_question(void);
+    18	  363	
+    19	  364	void init_cli(void)
+    20	  365	{
+    21	  366		//initialize the hardware
+    22	  367		init_leds();
+    23	  368		init_uart();
+    24	  369	
+    25	  370		strcpy(cli_prompt, CLI_PROMPT);
+    26	  371	}
+    27	  372	
+    28	  373	void cli_loop(void)
+    29	  374	{
+    30	  375		char buffer[CLI_BUFFER_SIZE];
+    31	  376		char c;
+    32	  377	
+    33	  378		int buffer_pos;
+    34	  379	
+    35	  380		uart_printf("%s", cli_prompt);
+    36	  381	
+    37	  382		buffer_pos = 0;
+    38	  383		while(1) {
+    39	  384			//wait until a character is available
+    40	  385			while((c = uart_getchar()) == 0) { ; }
+    41	  386	
+    42	  387			//new line means end of the command
+    43	  388			if(c == '\n') {
+    44	  389				buffer[buffer_pos] = '\0';
+    45	  390				cli_process_command(buffer);
+    46	  391	
+    47	  392				buffer_pos = 0;
+    48	  393				uart_printf("%s", cli_prompt);
+    49	  394			}
+    50	  395			//there is more to come...
+    51	  396			else {
+    52	  397				buffer[buffer_pos++] = c;
+    53	  398			}
+    54	  399	
+    55	  400			//is the command too long?
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 2
+Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
+
+    56	  401			if(buffer_pos >= CLI_BUFFER_SIZE) {
+    57	  402				uart_printf("\n--Error--, command is too long. Command ignored.\n");
+    58	  403				buffer_pos = 0;
+    59	  404	
+    60	  405				uart_printf("%s", cli_prompt);
+    61	  406			}
+    62	  407		}
+    63	  408	}
+    64	  409	
+    65	  410	static void cli_process_command(char *command)
+    66	  411	{
+    67	  412		char *token_end;
+    68	  413	
+    69	  414		token_end = command;
+    70	  415	
+    71	  416		while(isgraph(*token_end)) {
+    72	  417			token_end++;
+    73	  418		}
+    74	  419	
+    75	  420		if(token_end != command) {
+    76	  421			if(*token_end == '\0') {
+    77	  422				if(strcmp(command, "info") == 0) {
+    78	  423				
+    79	  424				}
+    80	  425				else if(strcmp(command, "?") == 0) {
+    81	  426					cli_question();
+    82	  427				}
+    83	  428				else {
+    84	  429					uart_printf("--Command:%s, not found. Enter \"?\" to see a list of available commands.\n");
+    85	  430				}
+    86	  431			}
+    87	  432			else {
+    88	  433				*token_end = '\0';
+    89	  434	
+    90	  435				if(strcmp(command, "echo") == 0) {
+    91	  436					
+    92	  437				}
+    93	  438				else if(strcmp(command, "display") == 0) {
+    94	  439					cli_display(++token_end);
+    95	  440				}
+    96	  441				else if(strcmp(command, "set") == 0) {
+    97	  442					
+    98	  443				}
+    99	  444				else if(strcmp(command, "hex") == 0) {
+   100	  445					
+   101	  446				}
+   102	  447				else if(strcmp(command, "set") == 0) {
+   103	  448					
+   104	  449				}
+   105	  450				else if(strcmp(command, "switch") == 0) {
+   106	  451					
+   107	  452				}
+   108	  453				else if(strcmp(command, "port") == 0) {
+   109	  454					
+   110	  455				}
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 3
+Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
+
+   111	  456				else if(strcmp(command, "timer") == 0) {
+   112	  457					
+   113	  458				}
+   114	  459				else if(strcmp(command, "uart0") == 0) {
+   115	  460					
+   116	  461				}
+   117	  462				else {
+   118	  463					uart_printf("--Command:%s, not found. Enter \"?\" to see a list of available commands.\n");
+   119	  464				}
+   120	  465			}
+   121	  466		}
+   122	  467	}
+   123	  468	
+   124	  469	static void cli_display(char *text)
+   125	  470	{
+   126	  471		char *end;
+   127	  472	
+   128	  473		size_t token_len;
+   129	  474	
+   130	  475		if(*text != '"') {
+   131	  476			uart_printf("Incorrect format, display [\"text\"]\n");
+   132	  477			return;
+   133	  478		}
+   134	  479		text++;
+   135	  480	
+   136	  481		end = strchr(text, '"');
+   137	  482		if(*end != '"') {
+   138	  483			uart_printf("Incorrect format, display [\"text\"]\n");
+   139	  484			return;
+   140	  485		}
+   141	  486		*end = '\0';
+   142	  487	
+   143	  488		led_display_text(text);
+   144	  489	}
+   145	  490	
+   146	  491	static void cli_question(void)
+   147	  492	{
+   148	  493		uart_printf("\nAvailable Commands:\n\n");
+   149	  494	
+   150	  495		uart_printf("echo [\"text\"]\n");
+   151	  496		uart_printf(" -Echos text back to the serial port.\n");
+   152	  497	
+   153	  498		uart_printf("display [\"text\"]\n");
+   154	  499		uart_printf(" -Display text on the LEDs.\n");
+   155	  500	
+   156	  501		uart_printf("set prompt [\"text\"]\n");
+   157	  502		uart_printf(" -Set the CLI prompt to text.\n");
+   158	  503	
+   159	  504		uart_printf("hex [decimal number]\n");
+   160	  505		uart_printf(" -Display a decimal number in hex on the LEDs.\n");
+   161	  506	
+   162	  507		uart_printf("switch [0-2] [\"text\"]\n");
+   163	  508		uart_printf(" -Assigns the text macro to a button.\n");
+   164	  509	
+   165	  510		uart_printf("port [A-K]\n");
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 4
+Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
+
+   166	  511		uart_printf(" -Display the current state of the port.\n");
+   167	  512	
+   168	  513		uart_printf("timer [0-2]\n");
+   169	  514		uart_printf(" -Display the current state of the timer.\n");
+   170	  515	
+   171	  516		uart_printf("uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+   172	  517		uart_printf(" -Set the uart0 settings.\n");
+   173	  518	
+   174	  519		uart_printf("info\n");
+   175	  520		uart_printf(" -Displays various system information.\n");
+   176	  521	
+   177	  522		uart_printf("?\n");
+   178	  523		uart_printf(" -Displays a menu of CLI commands.\n");
+   179	  524	}
+   180	  525	ÿ

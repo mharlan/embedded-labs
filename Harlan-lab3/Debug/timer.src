@@ -1,0 +1,335 @@
+; ZiLOG ZNEO ANSI C Compiler Release 1.11
+; -nolocalcse -optsize -model=S -nomodsect -noregvar
+; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+	FILE	"..\TIMER.C"
+.debug "C"
+	SEGMENT NEAR_BSS
+_timer_state:
+	DS	4*1
+.define "timer_state"
+.alias "_timer_state"
+.class 147
+.value _timer_state
+.type 5
+.type 0
+.endef
+;    1	#include "timer.h"
+;    2	#include "oscillator.h"
+;    3	#include "LED.h"
+;    4	#include "buttons.h"
+;    5	
+;    6	#include <zneo.h>
+;    7	
+;    8	#define INTERVAL_1MS_INT 1
+;    9	#define INTERVAL_2MS_INT 2
+;   10	#define INTERVAL_4MS_INT 4
+;   11	
+;   12	#define INTERVAL_1MS_FLOAT 0.001f
+;   13	#define INTERVAL_2MS_FLOAT 0.002f
+;   14	#define INTERVAL_4MS_FLOAT 0.004f
+;   15	
+;   16	static int timer_state;
+	SEGMENT CODE
+;   17	
+;   18	/*
+;   19		Interrupt for timer events.
+;   20	
+;   21		Used for updating the LED, polling the buttons, and responding
+;   22		to note change events for the speaker..
+;   23	 */
+;   24	void interrupt timer_isr(void)
+;   25	{
+_timer_isr:
+.define "_timer_isr"
+.value _timer_isr
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "timer_isr",25,"_timer_isr"
+	LINK	#0
+	PUSHMLO	#255
+;   26		//enable interrupts for speaker interrupt
+;   27		EI();
+.line 27
+	EI
+;   28	
+;   29		led_update();
+.line 29
+	CALL	_led_update
+;   30		button_events();
+.line 30
+	CALL	_button_events
+;   31	}
+.line 31
+	POPMLO	#255
+	UNLINK	
+	IRET	
+
+
+;**************************** _timer_isr ***************************
+;Name                         Addr/Register   Size   Type
+;_button_events                      IMPORT  -----   function
+;_led_update                         IMPORT  -----   function
+;_EI                                 IMPORT  -----   function
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "timer_isr",31,"_timer_isr"
+;   32	
+;   33	void init_timer(int mode)
+;   34	{
+_init_timer:
+.define "_init_timer"
+.value _init_timer
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "init_timer",34,"_init_timer"
+	LINK	#4
+	PUSHMHI	#3
+.line 34
+	LD	-4(R14),R1
+.define "mode"
+.class 9
+.value -4
+.type 5
+.type 0
+.endef
+;   35		timer_state = mode;
+.line 35
+	LD	R0,-4(R14)
+	LD	_timer_state:RAM,R0
+;   36	
+;   37		T0CTL1 |= TIMER_DISABLE;
+.line 37
+	LD.SB	R0,58119:RAM
+;   38	    T0CTL1 = TIMER_MODE_CONTINUOUS + TIMER_PRESCALE_128;
+.line 38
+	LD	R0,#57
+	LD.B	58119:RAM,R0
+;   39	
+;   40	    // Initial counter value
+;   41	    T0HL = 0x00;
+.line 41
+	CLR.W	58112:RAM
+;   42	
+;   43		if(timer_state == TIMER_4MS) {
+.line 43
+	LD	R0,#4
+	CP	_timer_state:RAM,R0
+	JP	NE,_2_L_4
+;   44			// Timer reload
+;   45	    	//   reload = clock / prescale * timeout  
+;   46	   	 	T0R = (get_osc_clock() / 128) * INTERVAL_4MS_FLOAT;
+.line 46
+	CALL	_get_osc_clock
+	LD	R1,#128
+	SDIV	R0,R1
+	LD	R8,R0
+	CALL	__fpltof
+	LD	R8,R0
+	LD	R9,#998445679
+	CALL	__fpmul
+	LD	R8,R0
+	CALL	__fpftol
+	LD.W	58114:RAM,R0
+;   47		}
+;   48		else if(timer_state == TIMER_1MS) {
+.line 48
+	JP	_2_L_5
+_2_L_4:
+	LD	R0,#1
+	CP	_timer_state:RAM,R0
+	JP	NE,_2_L_2
+;   49			T0R = (get_osc_clock() / 128) * INTERVAL_1MS_FLOAT;
+.line 49
+	CALL	_get_osc_clock
+	LD	R1,#128
+	SDIV	R0,R1
+	LD	R8,R0
+	CALL	__fpltof
+	LD	R8,R0
+	LD	R9,#981668463
+	CALL	__fpmul
+	LD	R8,R0
+	CALL	__fpftol
+	LD.W	58114:RAM,R0
+;   50		}
+;   51		//default timer is 2ms
+;   52		else {
+.line 52
+	JP	_2_L_5
+_2_L_2:
+;   53			T0R = (get_osc_clock() / 128) * INTERVAL_2MS_FLOAT;
+.line 53
+	CALL	_get_osc_clock
+	LD	R1,#128
+	SDIV	R0,R1
+	LD	R8,R0
+	CALL	__fpltof
+	LD	R8,R0
+	LD	R9,#990057071
+	CALL	__fpmul
+	LD	R8,R0
+	CALL	__fpftol
+	LD.W	58114:RAM,R0
+;   54		}
+_2_L_5:
+.line 54
+;   55	
+;   56		// Enable Timer0 interrupt
+;   57	    IRQ0EN |= IRQ_Timer0;
+.line 57
+	LD	R0,#32
+	OR.W	57394:RAM,R0
+;   58	
+;   59		T0CTL1 |= TIMER_ENABLE;
+.line 59
+	LD	R0,#128
+	OR.B	58119:RAM,R0
+;   60	
+;   61		SET_VECTOR(TIMER0, timer_isr);
+;   62	}
+.line 62
+	POPMHI	#3
+	UNLINK	
+	RET	
+
+
+;**************************** _init_timer ***************************
+;Name                         Addr/Register   Size   Type
+;_SET_VECTOR                         IMPORT  -----   function
+;_get_osc_clock                      IMPORT  -----   function
+;_timer_state                        STATIC      4   variable
+;mode                                 R14-4      4   parameter
+
+
+; Aggregate Stack Size: -4 (words)
+
+
+.endfunc "init_timer",62,"_init_timer"
+;   63	
+;   64	int timer_interval_int(void)
+;   65	{
+_timer_interval_int:
+.define "_timer_interval_int"
+.value _timer_interval_int
+.class 2
+.type 69
+.type 0
+.endef
+.begfunc "timer_interval_int",65,"_timer_interval_int"
+	LINK	#0
+;   66		if(timer_state == TIMER_1MS) {
+.line 66
+	LD	R0,#1
+	CP	_timer_state:RAM,R0
+	JP	NE,_3_L_10
+;   67			return INTERVAL_1MS_INT;
+.line 67
+	JP	_3_L_11
+;   68		}
+;   69		else if(timer_state == TIMER_2MS) {
+_3_L_10:
+.line 69
+	LD	R0,#2
+	CP	_timer_state:RAM,R0
+	JP	NE,_3_L_8
+;   70			return INTERVAL_2MS_INT;
+.line 70
+	JP	_3_L_11
+;   71		}
+;   72		else {
+_3_L_8:
+.line 72
+;   73			return INTERVAL_4MS_INT;
+.line 73
+	LD	R0,#4
+;   74		}
+;   75	}
+_3_L_11:
+.line 75
+	UNLINK	
+	RET	
+
+
+;**************************** _timer_interval_int ***************************
+;Name                         Addr/Register   Size   Type
+;_timer_state                        STATIC      4   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "timer_interval_int",75,"_timer_interval_int"
+;   76	
+;   77	float timer_interval_float(void)
+;   78	{
+_timer_interval_float:
+.define "_timer_interval_float"
+.value _timer_interval_float
+.class 2
+.type 70
+.type 0
+.endef
+.begfunc "timer_interval_float",78,"_timer_interval_float"
+	LINK	#0
+;   79		if(timer_state == TIMER_1MS) {
+.line 79
+	LD	R0,#1
+	CP	_timer_state:RAM,R0
+	JP	NE,_4_L_15
+;   80			return INTERVAL_1MS_FLOAT;
+.line 80
+	LD	R0,#981668463
+	JP	_4_L_16
+;   81		}
+;   82		else if(timer_state == TIMER_2MS) {
+_4_L_15:
+.line 82
+	LD	R0,#2
+	CP	_timer_state:RAM,R0
+	JP	NE,_4_L_13
+;   83			return INTERVAL_2MS_FLOAT;
+.line 83
+	LD	R0,#990057071
+	JP	_4_L_16
+;   84		}
+;   85		else {
+_4_L_13:
+.line 85
+;   86			return INTERVAL_4MS_FLOAT;
+.line 86
+	LD	R0,#998445679
+;   87		}
+_4_L_16:
+.line 88
+	UNLINK	
+	RET	
+
+
+;**************************** _timer_interval_float ***************************
+;Name                         Addr/Register   Size   Type
+;_timer_state                        STATIC      4   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "timer_interval_float",88,"_timer_interval_float"
+	VECTOR	TIMER0=_timer_isr
+	XREF _button_events:EROM
+	XREF _led_update:EROM
+	XREF _get_osc_clock:EROM
+	XREF __fpltof:EROM
+	XREF __fpftol:EROM
+	XREF __fpmul:EROM
+	XDEF _timer_interval_float
+	XDEF _timer_interval_int
+	XDEF _init_timer
+	XDEF _timer_isr
+	END

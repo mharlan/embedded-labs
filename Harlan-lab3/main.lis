@@ -1,0 +1,56 @@
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	00:45:40	page: 1
+Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\MAIN.C
+
+     1	    1	/*
+     2	    2		Author: Matthew Harlan
+     3	    3		Email:  mharlan@gwmail.gwu.edu
+     4	    4		Class:  CSCI-4415
+     5	    5		Date: 	February 22nd, 2011
+     6	    6		Lab:    2
+     7	    7		
+     8	    8		Description: This program plays three RTTL ringtones. Ringtones are
+     9	    9		selected by pressing the buttons. The ringtone will loop with a one
+    10	   10		measure rest between each playthrough until a button is double tapped.
+    11	   11		The currently playing note and its duration is displayed on the LCD.
+    12	   12	
+    13	   13		Other files: buttons.c buttons.h LED.c LED.h notes.h oscillator.c oscillator.h ringtones.h
+    14	   14		rttl.c rttl.h speaker.c speaker.h timer.c timer.h
+    15	   15	
+    16	   16		Compile: Set the user include path to the include directory.
+    17	   17		
+    18	   18		Problems: I didn't run in to any significant problems.
+    19	   19	
+    20	   20		Comments: Another fun and challenging lab.
+    21	   21	
+    22	   22		Enhancements: None.
+    23	   23	 */
+    24	   24	
+    25	   25	#include "LED.h"
+    26	   70	#include "oscillator.h"
+    27	   91	#include "buttons.h"
+    28	  106	#include "timer.h"
+    29	  185	#include "cli.h"
+    30	  197	
+    31	  198	#include <zneo.h>
+    32	  724	#include <stdio.h>
+    33	 1570	
+    34	 1571	/*
+    35	 1572		Intializes the LED, sets the default value, and loops.
+    36	 1573	 */
+    37	 1574	void main(void)
+    38	 1575	{
+    39	 1576		//initialize the oscillator and global timer
+    40	 1577		init_oscillator(OSC_5_52MHZ);
+    41	 1578		init_timer(TIMER_2MS);
+    42	 1579	
+    43	 1580		//initialize the command line interface
+    44	 1581		init_cli();
+    45	 1582	
+    46	 1583		//initialize button functionality
+    47	 1584		init_buttons();
+    48	 1585	
+    49	 1586		//enable interrupts
+    50	 1587		EI();
+    51	 1588	
+    52	 1589		cli_loop();
+    53	 1590	}ÿ

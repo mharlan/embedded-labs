@@ -1,0 +1,139 @@
+; ZiLOG ZNEO ANSI C Compiler Release 1.11
+; -nolocalcse -optsize -model=S -nomodsect -noregvar
+; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+	FILE	"..\OSCILLATOR.C"
+.debug "C"
+	SEGMENT NEAR_BSS
+_osc_clock:
+	DS	4*1
+.define "osc_clock"
+.alias "_osc_clock"
+.class 147
+.value _osc_clock
+.type 5
+.type 0
+.endef
+;    1	#include "oscillator.h"
+;    2	
+;    3	#include <zneo.h>
+;    4	
+;    5	static int osc_clock;
+	SEGMENT CODE
+;    6	
+;    7	#define CLOCK_5_52MHZ   5520000
+;    8	#define CLOCK_18_432MHZ 18432000
+;    9	
+;   10	/*
+;   11		Unlocks the oscillator control register and selects either
+;   12		the 5.5 or 18.43 mHz oscillator.
+;   13	
+;   14		OSC_5_52MHZ or OSC_18_432MHZ
+;   15	 */
+;   16	void init_oscillator(int osc)
+;   17	{
+_init_oscillator:
+.define "_init_oscillator"
+.value _init_oscillator
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "init_oscillator",17,"_init_oscillator"
+.line 17
+.define "osc"
+.class 17
+.reg 2
+.type 5
+.type 0
+.endef
+	LINK	#0
+;   18		// unlock the oscillator control register
+;   19		OSCCTL = 0xE7; OSCCTL = 0x18;  
+.line 19
+	LD	R0,#231
+	LD.B	57504:RAM,R0
+	LD	R0,#24
+	LD.B	57504:RAM,R0
+;   20	   
+;   21		if(osc == OSC_18_432MHZ) {                 
+.line 21
+	CP	R1,#2
+	JP	NE,_1_L_1
+;   22			// 61 = 0110_0001 = external 18.432 Hz
+;   23			OSCCTL = 0x61;
+.line 23
+	LD	R0,#97
+	LD.B	57504:RAM,R0
+;   24			osc_clock = CLOCK_18_432MHZ;
+.line 24
+	LD	R0,#18432000
+	LD	_osc_clock:RAM,R0
+;   25		}
+;   26		//default oscillator setting
+;   27		else {
+.line 27
+	JP	_1_L_2
+_1_L_1:
+;   28			// A0 = 1010_0000 = internal 5.52 MHz
+;   29			OSCCTL = 0xA0;
+.line 29
+	LD	R0,#160
+	LD.B	57504:RAM,R0
+;   30			osc_clock = CLOCK_5_52MHZ;
+.line 30
+	LD	R0,#5520000
+	LD	_osc_clock:RAM,R0
+;   31		}
+;   32	}
+_1_L_2:
+.line 32
+	UNLINK	
+	RET	
+
+
+;**************************** _init_oscillator ***************************
+;Name                         Addr/Register   Size   Type
+;_osc_clock                          STATIC      4   variable
+;osc                                     R1      4   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "init_oscillator",32,"_init_oscillator"
+;   33	
+;   34	/*
+;   35	 	Return the current oscillator clockspeed in Hz.
+;   36	 */
+;   37	int get_osc_clock(void)
+;   38	{
+_get_osc_clock:
+.define "_get_osc_clock"
+.value _get_osc_clock
+.class 2
+.type 69
+.type 0
+.endef
+.begfunc "get_osc_clock",38,"_get_osc_clock"
+	LINK	#0
+;   39		return osc_clock;
+.line 39
+	LD	R0,_osc_clock:RAM
+;   40	}
+.line 40
+	UNLINK	
+	RET	
+
+
+;**************************** _get_osc_clock ***************************
+;Name                         Addr/Register   Size   Type
+;_osc_clock                          STATIC      4   variable
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "get_osc_clock",40,"_get_osc_clock"
+	XDEF _get_osc_clock
+	XDEF _init_oscillator
+	END

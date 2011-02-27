@@ -1,0 +1,922 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\UART.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT NEAR_BSS
+00000000                   A     7    _trans_buffer:
+00000000                   A     8    	DS	512
+                           A     9    .define "trans_buffer"
+                           A    10    .alias "_trans_buffer"
+                           A    11    .class 147
+                           A    12    .value _trans_buffer
+                           A    13    .dim 512
+                           A    14    .type 108
+                           A    15    .type 0
+                           A    16    .endef
+                           A    17    	SEGMENT CODE
+                           A    18    .begrec "fmt_type",16
+                           A    19    .define "status"
+                           A    20    .value 0
+                           A    21    .class 8
+                           A    22    .type 12
+                           A    23    .type 0
+                           A    24    .endef
+                           A    25    .define "flags"
+                           A    26    .value 1
+                           A    27    .class 8
+                           A    28    .type 12
+                           A    29    .type 0
+                           A    30    .endef
+                           A    31    .define "size"
+                           A    32    .value 2
+                           A    33    .class 8
+                           A    34    .type 12
+                           A    35    .type 0
+                           A    36    .endef
+                           A    37    .define "chr"
+                           A    38    .value 3
+                           A    39    .class 8
+                           A    40    .type 12
+                           A    41    .type 0
+                           A    42    .endef
+                           A    43    .define "type"
+                           A    44    .value 4
+                           A    45    .class 8
+                           A    46    .type 12
+                           A    47    .type 0
+                           A    48    .endef
+                           A    49    .define "field_width"
+                           A    50    .value 5
+                           A    51    .class 8
+                           A    52    .type 2
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   2
+
+
+PC     Object              I  Line    Source uart.src
+                           A    53    .type 0
+                           A    54    .endef
+                           A    55    .define "precision"
+                           A    56    .value 6
+                           A    57    .class 8
+                           A    58    .type 2
+                           A    59    .type 0
+                           A    60    .endef
+                           A    61    .define "set_begin"
+                           A    62    .value 7
+                           A    63    .class 8
+                           A    64    .type 140
+                           A    65    .type 0
+                           A    66    .endef
+                           A    67    .define "set_end"
+                           A    68    .value 9
+                           A    69    .class 8
+                           A    70    .type 140
+                           A    71    .type 0
+                           A    72    .endef
+                           A    73    .define "pad_whole"
+                           A    74    .value 11
+                           A    75    .class 8
+                           A    76    .type 12
+                           A    77    .type 0
+                           A    78    .endef
+                           A    79    .define "pad_pre_fract"
+                           A    80    .value 12
+                           A    81    .class 8
+                           A    82    .type 12
+                           A    83    .type 0
+                           A    84    .endef
+                           A    85    .define "pad_post_fract"
+                           A    86    .value 13
+                           A    87    .class 8
+                           A    88    .type 12
+                           A    89    .type 0
+                           A    90    .endef
+                           A    91    .define "pad_at"
+                           A    92    .value 14
+                           A    93    .class 8
+                           A    94    .type 140
+                           A    95    .type 0
+                           A    96    .endef
+                           A    97    .endrec "fmt_type"
+                           A    98    .begrec "flt_info",12
+                           A    99    .define "flags"
+                           A   100    .value 0
+                           A   101    .class 8
+                           A   102    .type 12
+                           A   103    .type 0
+                           A   104    .endef
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   3
+
+
+PC     Object              I  Line    Source uart.src
+                           A   105    .define "exp"
+                           A   106    .value 1
+                           A   107    .class 8
+                           A   108    .type 2
+                           A   109    .type 0
+                           A   110    .endef
+                           A   111    .define "digits"
+                           A   112    .value 2
+                           A   113    .class 8
+                           A   114    .dim 10
+                           A   115    .type 108
+                           A   116    .type 0
+                           A   117    .endef
+                           A   118    .endrec "flt_info"
+                           A   119    	SEGMENT NEAR_BSS
+00000200                   A   120    _rec_buffer:
+00000200                   A   121    	DS	512
+                           A   122    .define "rec_buffer"
+                           A   123    .alias "_rec_buffer"
+                           A   124    .class 147
+                           A   125    .value _rec_buffer
+                           A   126    .dim 512
+                           A   127    .type 108
+                           A   128    .type 0
+                           A   129    .endef
+00000400                   A   130    _trans_buffer_size:
+00000400                   A   131    	DS	4*1
+                           A   132    .define "trans_buffer_size"
+                           A   133    .alias "_trans_buffer_size"
+                           A   134    .class 147
+                           A   135    .value _trans_buffer_size
+                           A   136    .type 5
+                           A   137    .type 0
+                           A   138    .endef
+00000404                   A   139    _rec_buffer_size:
+00000404                   A   140    	DS	4*1
+                           A   141    .define "rec_buffer_size"
+                           A   142    .alias "_rec_buffer_size"
+                           A   143    .class 147
+                           A   144    .value _rec_buffer_size
+                           A   145    .type 5
+                           A   146    .type 0
+                           A   147    .endef
+00000408                   A   148    _trans_buffer_current:
+00000408                   A   149    	DS	4*1
+                           A   150    .define "trans_buffer_current"
+                           A   151    .alias "_trans_buffer_current"
+                           A   152    .class 147
+                           A   153    .value _trans_buffer_current
+                           A   154    .type 5
+                           A   155    .type 0
+                           A   156    .endef
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   4
+
+
+PC     Object              I  Line    Source uart.src
+0000040C                   A   157    _rec_buffer_current:
+0000040C                   A   158    	DS	4*1
+                           A   159    .define "rec_buffer_current"
+                           A   160    .alias "_rec_buffer_current"
+                           A   161    .class 147
+                           A   162    .value _rec_buffer_current
+                           A   163    .type 5
+                           A   164    .type 0
+                           A   165    .endef
+                           A   166    ;    1	#include "uart.h"
+                           A   167    ;    2	
+                           A   168    ;    3	#include <zneo.h>
+                           A   169    ;    4	#include <string.h>
+                           A   170    ;    5	#include <stdio.h>
+                           A   171    ;    6	#include <stdarg.h>
+                           A   172    ;    7	
+                           A   173    ;    8	#define BUFFER_SIZE 512
+                           A   174    ;    9	
+                           A   175    ;   10	#define FREQ         5529600UL  //use internal oscillator
+                           A   176    ;   11	#define DEFAULT_BAUD 57600UL    //our desired baud rate
+                           A   177    ;   12	
+                           A   178    ;   13	//alternate function enable for PA for uart0
+                           A   179    ;   14	#define PORTA_UART_RXD	0x10	
+                           A   180    ;   15	#define PORTA_UART_TXD	0x20
+                           A   181    ;   16	
+                           A   182    ;   17	#define UART_TXD_EN		0x80	//transmit enable
+                           A   183    ;   18	#define UART_RXD_EN		0x40	//receive enable
+                           A   184    ;   19	
+                           A   185    ;   20	#define UART_TRAN_RDY 0x04
+                           A   186    ;   21	
+                           A   187    ;   22	#define UART_IRQ_EN   0x18
+                           A   188    ;   23	
+                           A   189    ;   24	#define UART_IRQ_TRAN 0x08
+                           A   190    ;   25	#define UART_IRQ_REC  0x10
+                           A   191    ;   26	
+                           A   192    ;   27	static unsigned char trans_buffer[BUFFER_SIZE];
+                           A   193    ;   28	static unsigned char rec_buffer[BUFFER_SIZE];
+                           A   194    ;   29	
+                           A   195    ;   30	static volatile int trans_buffer_size;
+                           A   196    ;   31	static volatile int rec_buffer_size;
+                           A   197    ;   32	
+                           A   198    ;   33	static volatile int trans_buffer_current;
+                           A   199    ;   34	static volatile int rec_buffer_current;
+                           A   200    	SEGMENT CODE
+                           A   201    ;   35	
+                           A   202    ;   36	void interrupt uart_receive(void)
+                           A   203    ;   37	{
+00000000                   A   204    _uart_receive:
+                           A   205    .define "_uart_receive"
+                           A   206    .value _uart_receive
+                           A   207    .class 2
+                           A   208    .type 65
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   5
+
+
+PC     Object              I  Line    Source uart.src
+                           A   209    .type 0
+                           A   210    .endef
+                           A   211    .begfunc "uart_receive",37,"_uart_receive"
+                           A   212    .line 37
+                           A   213    .define "c"
+                           A   214    .class 1
+                           A   215    .value -1
+                           A   216    .type 12
+                           A   217    .type 0
+                           A   218    .endef
+                           A   219    .define "buffer_loc"
+                           A   220    .class 1
+                           A   221    .value -5
+                           A   222    .type 5
+                           A   223    .type 0
+                           A   224    .endef
+00000000 0805              A   225    	LINK	#5
+00000002 04FF              A   226    	PUSHMLO	#255
+                           A   227    ;   38		int buffer_loc;
+                           A   228    ;   39		unsigned char c;
+                           A   229    ;   40	
+                           A   230    ;   41		c = U0RXD;
+                           A   231    .line 41
+00000004 0310 E200         A   232    	LD.SB	R0,57856:RAM
+00000008 53F0              A   233    	LD.B	-1(R14),R0
+                           A   234    ;   42		if(c == '\r' || c == '\n') {
+                           A   235    .line 42
+0000000A 300D              A   236    	LD	R0,#13
+0000000C 7D0E BFFF         A   237    	CP.B	-1(R14),R0
+00000010 E6 04             A   238    	JP	EQ,_1_L_1
+00000012 300A              A   239    	LD	R0,#10
+00000014 7D0E BFFF         A   240    	CP.B	-1(R14),R0
+00000018 EE 07             A   241    	JP	NE,_1_L_2
+0000001A                   A   242    _1_L_1:
+                           A   243    ;   43			c = '\n';
+                           A   244    .line 43
+0000001A 300A              A   245    	LD	R0,#10
+0000001C 53F0              A   246    	LD.B	-1(R14),R0
+                           A   247    ;   44			uart_putchar('\r');
+                           A   248    .line 44
+0000001E 310D              A   249    	LD	R1,#13
+00000020 D065              A   250    	CALL	_uart_putchar
+                           A   251    ;   45			uart_putchar('\n');	
+                           A   252    .line 45
+00000022 310A              A   253    	LD	R1,#10
+00000024 D063              A   254    	CALL	_uart_putchar
+                           A   255    ;   46		}
+                           A   256    ;   47		else {
+                           A   257    .line 47
+00000026 C002              A   258    	JP	_1_L_5
+00000028                   A   259    _1_L_2:
+                           A   260    ;   48			uart_putchar(c);
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   6
+
+
+PC     Object              I  Line    Source uart.src
+                           A   261    .line 48
+00000028 6BF1              A   262    	LD.SB	R1,-1(R14)
+0000002A D060              A   263    	CALL	_uart_putchar
+                           A   264    ;   49		}
+0000002C                   A   265    _1_L_5:
+                           A   266    .line 49
+                           A   267    ;   50	
+                           A   268    ;   51		if(rec_buffer_size < BUFFER_SIZE) {
+                           A   269    .line 51
+0000002C 4500 0200         A   270    	LD	R0,#512
+00000030 7570 0404         A   271    	CP	_rec_buffer_size:RAM,R0
+00000034 E9 12             A   272    	JP	GE,_1_L_6
+                           A   273    ;   52			buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
+                           A   274    .line 52
+00000036 0340 040C         A   275    	LD	R0,_rec_buffer_current:RAM
+0000003A 7040 0404         A   276    	ADD	R0,_rec_buffer_size:RAM
+0000003E 4501 0200         A   277    	LD	R1,#512
+00000042 AF10              A   278    	SDIV	R0,R1
+00000044 5BB1              A   279    	LD	-5(R14),R1
+                           A   280    ;   53	
+                           A   281    ;   54			rec_buffer[buffer_loc] = c;
+                           A   282    .line 54
+00000046 6FD0              A   283    	LD.SW	R0,-3(R14)
+00000048 4511 0200         A   284    	LD	R1,#_rec_buffer
+0000004C A010              A   285    	ADD	R0,R1
+0000004E 6BF1              A   286    	LD.SB	R1,-1(R14)
+00000050 0E10              A   287    	LD.B	(R0),R1
+                           A   288    ;   55			rec_buffer_size++;
+                           A   289    .line 55
+00000052 0340 0404         A   290    	LD	R0,_rec_buffer_size:RAM
+00000056 ADAA 0404         A   291    	INC	_rec_buffer_size:RAM
+                           A   292    ;   56		}
+                           A   293    ;   57	}
+0000005A                   A   294    _1_L_6:
+                           A   295    .line 57
+0000005A 06FF              A   296    	POPMLO	#255
+0000005C 0001              A   297    	UNLINK	
+0000005E FFFD              A   298    	IRET	
+                           A   299    
+                           A   300    
+                           A   301    ;**************************** _uart_receive ***************************
+                           A   302    ;Name                         Addr/Register   Size   Type
+                           A   303    ;_rec_buffer                         STATIC    512   variable
+                           A   304    ;_rec_buffer_current                 STATIC      4   variable
+                           A   305    ;_rec_buffer_size                    STATIC      4   variable
+                           A   306    ;_uart_putchar                       IMPORT  -----   function
+                           A   307    ;buffer_loc                           R14-5      4   variable
+                           A   308    ;c                                    R14-1      1   variable
+                           A   309    
+                           A   310    
+                           A   311    ; Aggregate Stack Size: -5 (words)
+                           A   312    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   7
+
+
+PC     Object              I  Line    Source uart.src
+                           A   313    
+                           A   314    .endfunc "uart_receive",57,"_uart_receive"
+                           A   315    ;   58	
+                           A   316    ;   59	void interrupt uart_transfer(void)
+                           A   317    ;   60	{
+00000060                   A   318    _uart_transfer:
+                           A   319    .define "_uart_transfer"
+                           A   320    .value _uart_transfer
+                           A   321    .class 2
+                           A   322    .type 65
+                           A   323    .type 0
+                           A   324    .endef
+                           A   325    .begfunc "uart_transfer",60,"_uart_transfer"
+00000060 0800              A   326    	LINK	#0
+00000062 04C0              A   327    	PUSHMLO	#3
+                           A   328    ;   61		if(trans_buffer_size) {
+                           A   329    .line 61
+00000064 ADA9 0400         A   330    	CPZ	_trans_buffer_size:RAM
+00000068 E6 14             A   331    	JP	EQ,_2_L_9
+                           A   332    ;   62			U0TXD = trans_buffer[trans_buffer_current];
+                           A   333    .line 62
+0000006A 0330 040A         A   334    	LD.SW	R0,_trans_buffer_current+2:RAM
+0000006E 4511 0000         A   335    	LD	R1,#_trans_buffer
+00000072 A010              A   336    	ADD	R0,R1
+00000074 1C00              A   337    	LD.SB	R0,(R0)
+00000076 0350 E200         A   338    	LD.B	57856:RAM,R0
+                           A   339    ;   63	
+                           A   340    ;   64			trans_buffer_current = (trans_buffer_current + 1) % BUFFER_SIZE;
+                           A   341    .line 64
+0000007A 0340 0408         A   342    	LD	R0,_trans_buffer_current:RAM
+0000007E 8001              A   343    	ADD	R0,#1
+00000080 4501 0200         A   344    	LD	R1,#512
+00000084 AF10              A   345    	SDIV	R0,R1
+00000086 0371 0408         A   346    	LD	_trans_buffer_current:RAM,R1
+                           A   347    ;   65			trans_buffer_size--;
+                           A   348    .line 65
+0000008A 0340 0400         A   349    	LD	R0,_trans_buffer_size:RAM
+0000008E ADAB 0400         A   350    	DEC	_trans_buffer_size:RAM
+                           A   351    ;   66		}
+                           A   352    ;   67	}
+00000092                   A   353    _2_L_9:
+                           A   354    .line 67
+00000092 0603              A   355    	POPMLO	#3
+00000094 0001              A   356    	UNLINK	
+00000096 FFFD              A   357    	IRET	
+                           A   358    
+                           A   359    
+                           A   360    ;**************************** _uart_transfer ***************************
+                           A   361    ;Name                         Addr/Register   Size   Type
+                           A   362    ;_trans_buffer_current               STATIC      4   variable
+                           A   363    ;_trans_buffer                       STATIC    512   variable
+                           A   364    ;_trans_buffer_size                  STATIC      4   variable
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   8
+
+
+PC     Object              I  Line    Source uart.src
+                           A   365    
+                           A   366    
+                           A   367    ; Aggregate Stack Size: 0 (words)
+                           A   368    
+                           A   369    
+                           A   370    .endfunc "uart_transfer",67,"_uart_transfer"
+                           A   371    ;   68	
+                           A   372    ;   69	/*
+                           A   373    ;   70		Configure UART0.
+                           A   374    ;   71	 */
+                           A   375    ;   72	void init_uart(void)
+                           A   376    ;   73	{
+00000098                   A   377    _init_uart:
+                           A   378    .define "_init_uart"
+                           A   379    .value _init_uart
+                           A   380    .class 2
+                           A   381    .type 65
+                           A   382    .type 0
+                           A   383    .endef
+                           A   384    .begfunc "init_uart",73,"_init_uart"
+00000098 0800              A   385    	LINK	#0
+                           A   386    ;   74		memset(rec_buffer, 0, BUFFER_SIZE);
+                           A   387    .line 74
+0000009A 4511 0200         A   388    	LD	R1,#_rec_buffer
+0000009E 3200              A   389    	LD	R2,#0
+000000A0 4503 0200         A   390    	LD	R3,#512
+000000A4 F1 FFFFAC         A   391    	CALL	_memset
+                           A   392    ;   75		memset(trans_buffer, 0, BUFFER_SIZE);
+                           A   393    .line 75
+000000A8 4511 0000         A   394    	LD	R1,#_trans_buffer
+000000AC 3200              A   395    	LD	R2,#0
+000000AE 4503 0200         A   396    	LD	R3,#512
+000000B2 F1 FFFFA5         A   397    	CALL	_memset
+                           A   398    ;   76	
+                           A   399    ;   77		// Set the alternate function on port A
+                           A   400    ;   78	    // Enable UART0 TxD0/RxD0 pins (bits 4 & 5)
+                           A   401    ;   79		PAAFH &= ~(PORTA_UART_TXD | PORTA_UART_RXD);
+                           A   402    .line 79
+000000B6 30CF              A   403    	LD	R0,#-49
+000000B8 7250 E104         A   404    	AND.B	57604:RAM,R0
+                           A   405    ;   80	    PAAFL |= PORTA_UART_TXD | PORTA_UART_RXD;
+                           A   406    .line 80
+000000BC 3030              A   407    	LD	R0,#48
+000000BE 7350 E105         A   408    	OR.B	57605:RAM,R0
+                           A   409    ;   81	
+                           A   410    ;   82	    // Set the baud rate
+                           A   411    ;   83	    // BRG = freq/( baud * 16)
+                           A   412    ;   84	    U0BR = FREQ/((unsigned long)DEFAULT_BAUD * 16UL);
+                           A   413    .line 84
+000000C2 3006              A   414    	LD	R0,#6
+000000C4 0360 E206         A   415    	LD.W	57862:RAM,R0
+                           A   416    ;   85	
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:   9
+
+
+PC     Object              I  Line    Source uart.src
+                           A   417    ;   86	    // U0 control
+                           A   418    ;   87	    // Transmit enable, Receive Enable, No Parity, 1 Stop
+                           A   419    ;   88	    U0CTL0 = UART_RXD_EN | UART_TXD_EN;
+                           A   420    .line 88
+000000C8 4500 00C0         A   421    	LD	R0,#192
+000000CC 0350 E202         A   422    	LD.B	57858:RAM,R0
+                           A   423    ;   89	    U0CTL1 = 0;
+                           A   424    .line 89
+000000D0 ADA0 E203         A   425    	CLR.B	57859:RAM
+                           A   426    ;   90	
+                           A   427    ;   91		//set nominal priority
+                           A   428    ;   92		IRQ0ENH |= UART_IRQ_EN;
+                           A   429    .line 92
+000000D4 3018              A   430    	LD	R0,#24
+000000D6 7350 E032         A   431    	OR.B	57394:RAM,R0
+                           A   432    ;   93		IRQ0ENL &= ~UART_IRQ_EN;
+                           A   433    .line 93
+000000DA 30E7              A   434    	LD	R0,#-25
+000000DC 7250 E033         A   435    	AND.B	57395:RAM,R0
+                           A   436    ;   94	
+                           A   437    ;   95		PAIMUX &= ~UART_IRQ_EN;		//Port A (0) for interrupts
+                           A   438    .line 95
+000000E0 7250 E10E         A   439    	AND.B	57614:RAM,R0
+                           A   440    ;   96		PAIEDGE &= ~UART_IRQ_EN;	//negedge (0) interrupt
+                           A   441    .line 96
+000000E4 7250 E10F         A   442    	AND.B	57615:RAM,R0
+                           A   443    ;   97	
+                           A   444    ;   98		SET_VECTOR(UART0_RX, uart_receive);
+                           A   445    ;   99		SET_VECTOR(UART0_TX, uart_transfer);
+                           A   446    ;  100	}
+                           A   447    .line 100
+000000E8 0001              A   448    	UNLINK	
+000000EA FFFC              A   449    	RET	
+                           A   450    
+                           A   451    
+                           A   452    ;**************************** _init_uart ***************************
+                           A   453    ;Name                         Addr/Register   Size   Type
+                           A   454    ;_SET_VECTOR                         IMPORT  -----   function
+                           A   455    ;_trans_buffer                       STATIC    512   variable
+                           A   456    ;_rec_buffer                         STATIC    512   variable
+                           A   457    ;_memset                             IMPORT  -----   function
+                           A   458    
+                           A   459    
+                           A   460    ; Aggregate Stack Size: 0 (words)
+                           A   461    
+                           A   462    
+                           A   463    .endfunc "init_uart",100,"_init_uart"
+                           A   464    ;  101	
+                           A   465    ;  102	int uart_putchar(unsigned char c)
+                           A   466    ;  103	{
+000000EC                   A   467    _uart_putchar:
+                           A   468    .define "_uart_putchar"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:  10
+
+
+PC     Object              I  Line    Source uart.src
+                           A   469    .value _uart_putchar
+                           A   470    .class 2
+                           A   471    .type 69
+                           A   472    .type 0
+                           A   473    .endef
+                           A   474    .begfunc "uart_putchar",103,"_uart_putchar"
+000000EC 0805              A   475    	LINK	#5
+                           A   476    .line 103
+000000EE 53F1              A   477    	LD.B	-1(R14),R1
+                           A   478    .define "c"
+                           A   479    .class 9
+                           A   480    .value -1
+                           A   481    .type 12
+                           A   482    .type 0
+                           A   483    .endef
+                           A   484    .define "buffer_loc"
+                           A   485    .class 1
+                           A   486    .value -5
+                           A   487    .type 5
+                           A   488    .type 0
+                           A   489    .endef
+                           A   490    ;  104		int buffer_loc;
+                           A   491    ;  105	
+                           A   492    ;  106		if(c == '\n') {
+                           A   493    .line 106
+000000F0 300A              A   494    	LD	R0,#10
+000000F2 7D0E BFFF         A   495    	CP.B	-1(R14),R0
+000000F6 EE 04             A   496    	JP	NE,_4_L_20
+                           A   497    ;  107			while(uart_putchar('\r')) { ; }
+000000F8                   A   498    _4_L_11:
+                           A   499    .line 107
+000000F8 310D              A   500    	LD	R1,#13
+000000FA DFF8              A   501    	CALL	_uart_putchar
+000000FC 9000              A   502    	CP	R0,#0
+000000FE EE FC             A   503    	JP	NE,_4_L_11
+                           A   504    ;  108		}
+00000100                   A   505    _4_L_20:
+                           A   506    .line 108
+                           A   507    ;  109	
+                           A   508    ;  110		if(trans_buffer_size < BUFFER_SIZE) {
+                           A   509    .line 110
+00000100 4500 0200         A   510    	LD	R0,#512
+00000104 7570 0400         A   511    	CP	_trans_buffer_size:RAM,R0
+00000108 E9 1F             A   512    	JP	GE,_4_L_19
+                           A   513    ;  111			DI();
+                           A   514    .line 111
+0000010A FFFB              A   515    	DI
+                           A   516    ;  112			
+                           A   517    ;  113			buffer_loc = (trans_buffer_current + trans_buffer_size) % BUFFER_SIZE;
+                           A   518    .line 113
+0000010C 0340 0408         A   519    	LD	R0,_trans_buffer_current:RAM
+00000110 7040 0400         A   520    	ADD	R0,_trans_buffer_size:RAM
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:  11
+
+
+PC     Object              I  Line    Source uart.src
+00000114 4501 0200         A   521    	LD	R1,#512
+00000118 AF10              A   522    	SDIV	R0,R1
+0000011A 5BB1              A   523    	LD	-5(R14),R1
+                           A   524    ;  114			trans_buffer[buffer_loc] = c;
+                           A   525    .line 114
+0000011C 6FD0              A   526    	LD.SW	R0,-3(R14)
+0000011E 4511 0000         A   527    	LD	R1,#_trans_buffer
+00000122 A010              A   528    	ADD	R0,R1
+00000124 6BF1              A   529    	LD.SB	R1,-1(R14)
+00000126 0E10              A   530    	LD.B	(R0),R1
+                           A   531    ;  115			trans_buffer_size++;
+                           A   532    .line 115
+00000128 0340 0400         A   533    	LD	R0,_trans_buffer_size:RAM
+0000012C ADAA 0400         A   534    	INC	_trans_buffer_size:RAM
+                           A   535    ;  116	
+                           A   536    ;  117			//trigger the interrupt if already ready to transmit
+                           A   537    ;  118			if((U0STAT0 & UART_TRAN_RDY) && 
+                           A   538    .line 118
+00000130 3004              A   539    	LD	R0,#4
+00000132 7650 E201         A   540    	TM.B	57857:RAM,R0
+00000136 E6 06             A   541    	JP	EQ,_4_L_17
+                           A   542    ;  119			   ((IRQ0SET & UART_IRQ_TRAN) == 0)) {
+                           A   543    .line 119
+00000138 3008              A   544    	LD	R0,#8
+0000013A 7650 E031         A   545    	TM.B	57393:RAM,R0
+0000013E EE 02             A   546    	JP	NE,_4_L_17
+                           A   547    ;  120				IRQ0SET |= UART_IRQ_TRAN;
+                           A   548    .line 120
+00000140 7350 E031         A   549    	OR.B	57393:RAM,R0
+                           A   550    ;  121			}
+00000144                   A   551    _4_L_17:
+                           A   552    .line 121
+                           A   553    ;  122	
+                           A   554    ;  123			EI();
+                           A   555    .line 123
+00000144 FFFA              A   556    	EI
+                           A   557    ;  124		}
+                           A   558    ;  125		else {
+                           A   559    .line 125
+00000146 C002              A   560    	JP	_4_L_21
+00000148                   A   561    _4_L_19:
+                           A   562    ;  126			return 1;
+                           A   563    .line 126
+00000148 3001              A   564    	LD	R0,#1
+0000014A C001              A   565    	JP	_4_L_22
+                           A   566    ;  127		}
+0000014C                   A   567    _4_L_21:
+                           A   568    .line 127
+                           A   569    ;  128	
+                           A   570    ;  129		return 0;
+                           A   571    .line 129
+0000014C 3000              A   572    	LD	R0,#0
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:  12
+
+
+PC     Object              I  Line    Source uart.src
+                           A   573    ;  130	}
+0000014E                   A   574    _4_L_22:
+                           A   575    .line 130
+0000014E 0001              A   576    	UNLINK	
+00000150 FFFC              A   577    	RET	
+                           A   578    
+                           A   579    
+                           A   580    ;**************************** _uart_putchar ***************************
+                           A   581    ;Name                         Addr/Register   Size   Type
+                           A   582    ;_EI                                 IMPORT  -----   function
+                           A   583    ;_trans_buffer                       STATIC    512   variable
+                           A   584    ;_trans_buffer_current               STATIC      4   variable
+                           A   585    ;_DI                                 IMPORT  -----   function
+                           A   586    ;_trans_buffer_size                  STATIC      4   variable
+                           A   587    ;buffer_loc                           R14-5      4   variable
+                           A   588    ;c                                    R14-1      1   parameter
+                           A   589    
+                           A   590    
+                           A   591    ; Aggregate Stack Size: -5 (words)
+                           A   592    
+                           A   593    
+                           A   594    .endfunc "uart_putchar",130,"_uart_putchar"
+                           A   595    ;  131	
+                           A   596    ;  132	unsigned char uart_getchar(void)
+                           A   597    ;  133	{
+00000152                   A   598    _uart_getchar:
+                           A   599    .define "_uart_getchar"
+                           A   600    .value _uart_getchar
+                           A   601    .class 2
+                           A   602    .type 76
+                           A   603    .type 0
+                           A   604    .endef
+                           A   605    .begfunc "uart_getchar",133,"_uart_getchar"
+                           A   606    .line 133
+                           A   607    .define "c"
+                           A   608    .class 1
+                           A   609    .value -1
+                           A   610    .type 12
+                           A   611    .type 0
+                           A   612    .endef
+00000152 0801              A   613    	LINK	#1
+                           A   614    ;  134		unsigned char c;
+                           A   615    ;  135	
+                           A   616    ;  136		if(rec_buffer_size) {
+                           A   617    .line 136
+00000154 ADA9 0404         A   618    	CPZ	_rec_buffer_size:RAM
+00000158 E6 17             A   619    	JP	EQ,_5_L_25
+                           A   620    ;  137			DI();
+                           A   621    .line 137
+0000015A FFFB              A   622    	DI
+                           A   623    ;  138	
+                           A   624    ;  139			c = rec_buffer[rec_buffer_current];
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:  13
+
+
+PC     Object              I  Line    Source uart.src
+                           A   625    .line 139
+0000015C 0330 040E         A   626    	LD.SW	R0,_rec_buffer_current+2:RAM
+00000160 4511 0200         A   627    	LD	R1,#_rec_buffer
+00000164 A010              A   628    	ADD	R0,R1
+00000166 1C00              A   629    	LD.SB	R0,(R0)
+00000168 53F0              A   630    	LD.B	-1(R14),R0
+                           A   631    ;  140			rec_buffer_current = (rec_buffer_current + 1) % BUFFER_SIZE;
+                           A   632    .line 140
+0000016A 0340 040C         A   633    	LD	R0,_rec_buffer_current:RAM
+0000016E 8001              A   634    	ADD	R0,#1
+00000170 4501 0200         A   635    	LD	R1,#512
+00000174 AF10              A   636    	SDIV	R0,R1
+00000176 0371 040C         A   637    	LD	_rec_buffer_current:RAM,R1
+                           A   638    ;  141			rec_buffer_size--;
+                           A   639    .line 141
+0000017A 0340 0404         A   640    	LD	R0,_rec_buffer_size:RAM
+0000017E ADAB 0404         A   641    	DEC	_rec_buffer_size:RAM
+                           A   642    ;  142	
+                           A   643    ;  143			EI();
+                           A   644    .line 143
+00000182 FFFA              A   645    	EI
+                           A   646    ;  144	
+                           A   647    ;  145			return c;
+                           A   648    .line 145
+00000184 6BF0              A   649    	LD.SB	R0,-1(R14)
+00000186 C001              A   650    	JP	_5_L_26
+                           A   651    ;  146		}
+00000188                   A   652    _5_L_25:
+                           A   653    .line 146
+                           A   654    ;  147	
+                           A   655    ;  148		return 0;
+                           A   656    .line 148
+00000188 3000              A   657    	LD	R0,#0
+                           A   658    ;  149	}
+0000018A                   A   659    _5_L_26:
+                           A   660    .line 149
+0000018A 0001              A   661    	UNLINK	
+0000018C FFFC              A   662    	RET	
+                           A   663    
+                           A   664    
+                           A   665    ;**************************** _uart_getchar ***************************
+                           A   666    ;Name                         Addr/Register   Size   Type
+                           A   667    ;_EI                                 IMPORT  -----   function
+                           A   668    ;_rec_buffer_current                 STATIC      4   variable
+                           A   669    ;_rec_buffer                         STATIC    512   variable
+                           A   670    ;_DI                                 IMPORT  -----   function
+                           A   671    ;_rec_buffer_size                    STATIC      4   variable
+                           A   672    ;c                                    R14-1      1   variable
+                           A   673    
+                           A   674    
+                           A   675    ; Aggregate Stack Size: -1 (words)
+                           A   676    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:  14
+
+
+PC     Object              I  Line    Source uart.src
+                           A   677    
+                           A   678    .endfunc "uart_getchar",149,"_uart_getchar"
+                           A   679    ;  150	
+                           A   680    ;  151	void uart_printf(const char *format, ...)
+                           A   681    ;  152	{
+0000018E                   A   682    _uart_printf:
+                           A   683    .define "_uart_printf"
+                           A   684    .value _uart_printf
+                           A   685    .class 2
+                           A   686    .type 65
+                           A   687    .type 0
+                           A   688    .endef
+                           A   689    .begfunc "uart_printf",152,"_uart_printf"
+                           A   690    .line 152
+                           A   691    .define "format"
+                           A   692    .class 9
+                           A   693    .value 8
+                           A   694    .type 140
+                           A   695    .type 0
+                           A   696    .endef
+                           A   697    .define "args"
+                           A   698    .class 1
+                           A   699    .value -2
+                           A   700    .type 140
+                           A   701    .type 0
+                           A   702    .endef
+                           A   703    .define "buffer"
+                           A   704    .class 1
+                           A   705    .value -514
+                           A   706    .dim 512
+                           A   707    .type 108
+                           A   708    .type 0
+                           A   709    .endef
+0000018E 0800              A   710    	LINK	#0
+00000190 AA1F 0202         A   711    	SUB	R15,#514
+                           A   712    ;  153		char buffer[BUFFER_SIZE];
+                           A   713    ;  154		va_list args;
+                           A   714    ;  155		int i;
+                           A   715    ;  156	
+                           A   716    ;  157		va_start(args, format);
+                           A   717    .line 157
+00000194 4CA0              A   718    	LEA	R0,10(R14)
+00000196 57E0              A   719    	LD.W	-2(R14),R0
+                           A   720    ;  158		vsprintf(buffer, format, args);
+                           A   721    .line 158
+00000198 48E1 BDFE         A   722    	LEA	R1,-514(R14)
+0000019C 6C82              A   723    	LD.SW	R2,8(R14)
+0000019E 6FE3              A   724    	LD.SW	R3,-2(R14)
+000001A0 F1 FFFF2E         A   725    	CALL	_vsprintf
+                           A   726    ;  159		va_end(args);
+                           A   727    ;  160	
+                           A   728    ;  161		uart_transfer_msg(buffer);
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:  15
+
+
+PC     Object              I  Line    Source uart.src
+                           A   729    .line 161
+000001A4 48E1 BDFE         A   730    	LEA	R1,-514(R14)
+000001A8 D002              A   731    	CALL	_uart_transfer_msg
+                           A   732    ;  162	}
+                           A   733    .line 162
+000001AA 0001              A   734    	UNLINK	
+000001AC FFFC              A   735    	RET	
+                           A   736    
+                           A   737    
+                           A   738    ;**************************** _uart_printf ***************************
+                           A   739    ;Name                         Addr/Register   Size   Type
+                           A   740    ;_uart_transfer_msg                  IMPORT  -----   function
+                           A   741    ;_vsprintf                           IMPORT  -----   function
+                           A   742    ;buffer                             R14-514    512   variable
+                           A   743    ;args                                 R14-2      2   variable
+                           A   744    ;format                               R14+8      2   parameter
+                           A   745    
+                           A   746    
+                           A   747    ; Aggregate Stack Size: -514 (words)
+                           A   748    
+                           A   749    
+                           A   750    .endfunc "uart_printf",162,"_uart_printf"
+                           A   751    ;  163	
+                           A   752    ;  164	void uart_transfer_msg(char *text)
+                           A   753    ;  165	{
+000001AE                   A   754    _uart_transfer_msg:
+                           A   755    .define "_uart_transfer_msg"
+                           A   756    .value _uart_transfer_msg
+                           A   757    .class 2
+                           A   758    .type 65
+                           A   759    .type 0
+                           A   760    .endef
+                           A   761    .begfunc "uart_transfer_msg",165,"_uart_transfer_msg"
+000001AE 0808              A   762    	LINK	#8
+                           A   763    .line 165
+000001B0 57E1              A   764    	LD.W	-2(R14),R1
+                           A   765    .define "text"
+                           A   766    .class 9
+                           A   767    .value -2
+                           A   768    .type 140
+                           A   769    .type 0
+                           A   770    .endef
+                           A   771    .define "msg"
+                           A   772    .class 1
+                           A   773    .value -4
+                           A   774    .type 140
+                           A   775    .type 0
+                           A   776    .endef
+                           A   777    .define "i"
+                           A   778    .class 1
+                           A   779    .value -8
+                           A   780    .type 5
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:  16
+
+
+PC     Object              I  Line    Source uart.src
+                           A   781    .type 0
+                           A   782    .endef
+                           A   783    ;  166		int i;
+                           A   784    ;  167		char *msg;
+                           A   785    ;  168		
+                           A   786    ;  169		msg = text;
+                           A   787    .line 169
+000001B2 6FE0              A   788    	LD.SW	R0,-2(R14)
+000001B4 57C0              A   789    	LD.W	-4(R14),R0
+000001B6 C009              A   790    	JP	_7_L_34
+                           A   791    ;  170		for(i = 0; *msg && i < BUFFER_SIZE; i++) {
+000001B8                   A   792    _7_L_35:
+                           A   793    .line 170
+000001B8 6FC0              A   794    	LD.SW	R0,-4(R14)
+000001BA AC10              A   795    	CPZ.B	(R0)
+000001BC E6 13             A   796    	JP	EQ,_7_L_38
+000001BE 4500 0200         A   797    	LD	R0,#512
+000001C2 7D0E FFF8         A   798    	CP	-8(R14),R0
+000001C6 E1 04             A   799    	JP	LT,_7_L_30
+000001C8 C00D              A   800    	JP	_7_L_38
+000001CA                   A   801    _7_L_34:
+000001CA ADCE BFF8         A   802    	CLR	-8(R14)
+000001CE CFF4              A   803    	JP	_7_L_35
+                           A   804    ;  171			while(uart_putchar(*msg)) { ; }	//wait if the buffer is full
+000001D0                   A   805    _7_L_30:
+                           A   806    .line 171
+000001D0 6FC0              A   807    	LD.SW	R0,-4(R14)
+000001D2 1C01              A   808    	LD.SB	R1,(R0)
+000001D4 DF8B              A   809    	CALL	_uart_putchar
+000001D6 9000              A   810    	CP	R0,#0
+000001D8 EE FB             A   811    	JP	NE,_7_L_30
+                           A   812    ;  172			msg++;
+                           A   813    .line 172
+000001DA ADEE 7FFC         A   814    	INC.W	-4(R14)
+000001DE ADEE BFF8         A   815    	INC	-8(R14)
+                           A   816    ;  173		}
+                           A   817    .line 173
+000001E2 CFEA              A   818    	JP	_7_L_35
+                           A   819    ;  174	}
+000001E4                   A   820    _7_L_38:
+                           A   821    .line 174
+000001E4 0001              A   822    	UNLINK	
+000001E6 FFFC              A   823    	RET	
+                           A   824    
+                           A   825    
+                           A   826    ;**************************** _uart_transfer_msg ***************************
+                           A   827    ;Name                         Addr/Register   Size   Type
+                           A   828    ;_uart_putchar                       IMPORT  -----   function
+                           A   829    ;i                                    R14-8      4   variable
+                           A   830    ;msg                                  R14-4      2   variable
+                           A   831    ;text                                 R14-2      2   parameter
+                           A   832    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     00:45:40     page:  17
+
+
+PC     Object              I  Line    Source uart.src
+                           A   833    
+                           A   834    ; Aggregate Stack Size: -8 (words)
+                           A   835    
+                           A   836    
+                           A   837    .endfunc "uart_transfer_msg",174,"_uart_transfer_msg"
+00000020 00000060          A   838    	VECTOR	UART0_TX=_uart_transfer
+0000001C 00000000          A   839    	VECTOR	UART0_RX=_uart_receive
+                           A   840    	XREF _vsprintf:EROM
+                           A   841    	XREF _memset:EROM
+                           A   842    	XDEF _uart_transfer_msg
+                           A   843    	XDEF _uart_printf
+                           A   844    	XDEF _uart_getchar
+                           A   845    	XDEF _uart_putchar
+                           A   846    	XDEF _init_uart
+                           A   847    	XDEF _uart_transfer
+                           A   848    	XDEF _uart_receive
+                           A   849    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 850
