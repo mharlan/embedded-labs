@@ -134,15 +134,16 @@
 ;   27	#include "buttons.h"
 ;   28	#include "timer.h"
 ;   29	#include "cli.h"
-;   30	
-;   31	#include <zneo.h>
-;   32	#include <stdio.h>
-;   33	
-;   34	/*
-;   35		Intializes the LED, sets the default value, and loops.
-;   36	 */
-;   37	void main(void)
-;   38	{
+;   30	#include "macro.h"
+;   31	
+;   32	#include <zneo.h>
+;   33	#include <stdio.h>
+;   34	
+;   35	/*
+;   36		Intializes the LED, sets the default value, and loops.
+;   37	 */
+;   38	void main(void)
+;   39	{
 _main:
 .define "_main"
 .value _main
@@ -150,37 +151,39 @@ _main:
 .type 65
 .type 0
 .endef
-.begfunc "main",38,"_main"
+.begfunc "main",39,"_main"
 	LINK	#0
-;   39		//initialize the oscillator and global timer
-;   40		init_oscillator(OSC_5_52MHZ);
-.line 40
+;   40		//initialize the oscillator and global timer
+;   41		init_oscillator(OSC_5_52MHZ);
+.line 41
 	LD	R1,#1
 	CALL	_init_oscillator
-;   41		init_timer(TIMER_2MS);
-.line 41
+;   42		init_timer(TIMER_2MS);
+.line 42
 	LD	R1,#2
 	CALL	_init_timer
-;   42	
-;   43		//initialize the command line interface
-;   44		init_cli();
-.line 44
+;   43	
+;   44		//initialize the command line interface
+;   45		init_cli();
+.line 45
 	CALL	_init_cli
-;   45	
-;   46		//initialize button functionality
-;   47		init_buttons();
-.line 47
+;   46	
+;   47		//initialize button functionality
+;   48		init_buttons();
+.line 48
 	CALL	_init_buttons
-;   48	
-;   49		//enable interrupts
-;   50		EI();
-.line 50
+;   49	
+;   50		//enable interrupts
+;   51		EI();
+.line 51
 	EI
-;   51	
-;   52		cli_loop();
-.line 52
+;   52	
+;   53		//macro_set(0, "info");
+;   54		//macro_execute(0);
+;   55		cli_loop();
+.line 55
 	CALL	_cli_loop
-.line 53
+.line 56
 	UNLINK	
 	RET	
 
@@ -198,7 +201,7 @@ _main:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "main",53,"_main"
+.endfunc "main",56,"_main"
 	XREF _cli_loop:EROM
 	XREF _init_cli:EROM
 	XREF _init_timer:EROM

@@ -1,4 +1,4 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\MAIN.C
 
      1	    1	/*
@@ -30,27 +30,33 @@ Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\MAIN.C
     27	   91	#include "buttons.h"
     28	  106	#include "timer.h"
     29	  185	#include "cli.h"
-    30	  197	
-    31	  198	#include <zneo.h>
-    32	  724	#include <stdio.h>
-    33	 1570	
-    34	 1571	/*
-    35	 1572		Intializes the LED, sets the default value, and loops.
-    36	 1573	 */
-    37	 1574	void main(void)
-    38	 1575	{
-    39	 1576		//initialize the oscillator and global timer
-    40	 1577		init_oscillator(OSC_5_52MHZ);
-    41	 1578		init_timer(TIMER_2MS);
-    42	 1579	
-    43	 1580		//initialize the command line interface
-    44	 1581		init_cli();
-    45	 1582	
-    46	 1583		//initialize button functionality
-    47	 1584		init_buttons();
-    48	 1585	
-    49	 1586		//enable interrupts
-    50	 1587		EI();
-    51	 1588	
-    52	 1589		cli_loop();
-    53	 1590	}ÿ
+    30	  236	#include "macro.h"
+    31	  257	
+    32	  258	#include <zneo.h>
+    33	  784	#include <stdio.h>
+    34	 1630	
+    35	 1631	/*
+    36	 1632		Intializes the LED, sets the default value, and loops.
+    37	 1633	 */
+    38	 1634	void main(void)
+    39	 1635	{
+    40	 1636		//initialize the oscillator and global timer
+    41	 1637		init_oscillator(OSC_5_52MHZ);
+    42	 1638		init_timer(TIMER_2MS);
+    43	 1639	
+    44	 1640		//initialize the command line interface
+    45	 1641		init_cli();
+    46	 1642	
+    47	 1643		//initialize button functionality
+    48	 1644		init_buttons();
+    49	 1645	
+    50	 1646		//enable interrupts
+    51	 1647		EI();
+    52	 1648	
+    53	 1649		//macro_set(0, "info");
+    54	 1650		//macro_execute(0);
+    55	 1651		cli_loop();
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 2
+Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\MAIN.C
+
+    56	 1652	}ÿ

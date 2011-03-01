@@ -1,4 +1,4 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
 
      1	    1	#include "LED.h"
@@ -56,7 +56,7 @@ Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
     53	 2618	
     54	 2619	void init_leds(void) 
     55	 2620	{ 
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 2
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 2
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
 
     56	 2621	    PEDD = 0x00;	// data direction = outputs	
@@ -114,7 +114,7 @@ Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
    108	 2673		else {
    109	 2674			memcpy(new_msg, msg, msg_size);
    110	 2675	
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 3
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 3
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
 
    111	 2676			//space pads the wrap-around
@@ -172,7 +172,7 @@ Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
    163	 2728	static void led_draw_row(int led_id)
    164	 2729	{
    165	 2730		// set cathodes
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 4
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 4
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
 
    166	 2731		PEOUT |= 0x1F;
@@ -230,7 +230,7 @@ Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
    218	 2783			draw_char[1] = ((unsigned int)led_msg[(msg_pos + 1) % msg_size]) - ASCII_OFFSET;
    219	 2784		}
    220	 2785		else {
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 5
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 5
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
 
    221	 2786			draw_char[1] = ASCII_SPACE;

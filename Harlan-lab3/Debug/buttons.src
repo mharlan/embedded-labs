@@ -78,38 +78,39 @@ _button_state:
 .endef
 ;    1	#include "buttons.h"
 ;    2	#include "timer.h"
-;    3	
-;    4	#include <zneo.h>
-;    5	
-;    6	#define DEBOUNCE_CUTOFF     40 	//40 ms
-;    7	#define BUTTON_TWICE_CUTOFF 500	//500 ms
-;    8	
-;    9	#define BUTTON_NONE  0xC8
-;   10	#define BUTTON_ONE   0xC0
-;   11	#define BUTTON_TWO   0x88
-;   12	#define BUTTON_THREE 0x48
-;   13	
-;   14	#define BUTTON_PRESSED     1
-;   15	#define BUTTON_NOT_PRESSED 0
-;   16	
-;   17	static volatile int button_timer;
-;   18	static int debounce_cutoff;
-;   19	static volatile int button_twice_timer;
-;   20	static int button_twice_cutoff;
-;   21	
-;   22	static volatile unsigned char last_button;
-;   23	static volatile unsigned char current;
-;   24	static volatile unsigned char previous;
-;   25	static volatile unsigned short button_state;
+;    3	#include "macro.h"
+;    4	
+;    5	#include <zneo.h>
+;    6	
+;    7	#define DEBOUNCE_CUTOFF     40 	//40 ms
+;    8	#define BUTTON_TWICE_CUTOFF 500	//500 ms
+;    9	
+;   10	#define BUTTON_NONE  0xC8
+;   11	#define BUTTON_ONE   0xC0
+;   12	#define BUTTON_TWO   0x88
+;   13	#define BUTTON_THREE 0x48
+;   14	
+;   15	#define BUTTON_PRESSED     1
+;   16	#define BUTTON_NOT_PRESSED 0
+;   17	
+;   18	static volatile int button_timer;
+;   19	static int debounce_cutoff;
+;   20	static volatile int button_twice_timer;
+;   21	static int button_twice_cutoff;
+;   22	
+;   23	static volatile unsigned char last_button;
+;   24	static volatile unsigned char current;
+;   25	static volatile unsigned char previous;
+;   26	static volatile unsigned short button_state;
 	SEGMENT CODE
-;   26	
-;   27	static void handle_button_events(void);
-;   28	
-;   29	/*
-;   30		Initializes the buttons.
-;   31	 */
-;   32	void init_buttons(void)
-;   33	{
+;   27	
+;   28	static void handle_button_events(void);
+;   29	
+;   30	/*
+;   31		Initializes the buttons.
+;   32	 */
+;   33	void init_buttons(void)
+;   34	{
 _init_buttons:
 .define "_init_buttons"
 .value _init_buttons
@@ -117,49 +118,49 @@ _init_buttons:
 .type 65
 .type 0
 .endef
-.begfunc "init_buttons",33,"_init_buttons"
+.begfunc "init_buttons",34,"_init_buttons"
 	LINK	#0
-;   34		//set as inputs
-;   35		PDDD |= BUTTON_ONE;
-.line 35
+;   35		//set as inputs
+;   36		PDDD |= BUTTON_ONE;
+.line 36
 	LD	R0,#192
 	OR.B	57650:RAM,R0
-;   36		PFDD |= BUTTON_TWO + BUTTON_THREE;
-.line 36
+;   37		PFDD |= BUTTON_TWO + BUTTON_THREE;
+.line 37
 	LD	R0,#208
 	OR.B	57682:RAM,R0
-;   37	
-;   38		current = BUTTON_NONE;
-.line 38
+;   38	
+;   39		current = BUTTON_NONE;
+.line 39
 	LD	R0,#200
 	LD.B	_current:RAM,R0
-;   39		previous = BUTTON_NONE;
-.line 39
-	LD.B	_previous:RAM,R0
-;   40		button_state = BUTTON_NOT_PRESSED;
+;   40		previous = BUTTON_NONE;
 .line 40
-	CLR.W	_button_state:RAM
-;   41		last_button = BUTTON_NONE;
+	LD.B	_previous:RAM,R0
+;   41		button_state = BUTTON_NOT_PRESSED;
 .line 41
+	CLR.W	_button_state:RAM
+;   42		last_button = BUTTON_NONE;
+.line 42
 	LD.B	_last_button:RAM,R0
-;   42	
-;   43		button_timer = 0;
-.line 43
-	CLR	_button_timer:RAM
-;   44		debounce_cutoff = DEBOUNCE_CUTOFF;
+;   43	
+;   44		button_timer = 0;
 .line 44
+	CLR	_button_timer:RAM
+;   45		debounce_cutoff = DEBOUNCE_CUTOFF;
+.line 45
 	LD	R0,#40
 	LD	_debounce_cutoff:RAM,R0
-;   45	
-;   46		button_twice_timer = 0;
-.line 46
-	CLR	_button_twice_timer:RAM
-;   47		button_twice_cutoff = BUTTON_TWICE_CUTOFF;
+;   46	
+;   47		button_twice_timer = 0;
 .line 47
+	CLR	_button_twice_timer:RAM
+;   48		button_twice_cutoff = BUTTON_TWICE_CUTOFF;
+.line 48
 	LD	R0,#500
 	LD	_button_twice_cutoff:RAM,R0
-;   48	}
-.line 48
+;   49	}
+.line 49
 	UNLINK	
 	RET	
 
@@ -179,13 +180,13 @@ _init_buttons:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "init_buttons",48,"_init_buttons"
-;   49	
-;   50	/*
-;   51		Processes button events.
-;   52	 */
-;   53	void button_events(void)
-;   54	{
+.endfunc "init_buttons",49,"_init_buttons"
+;   50	
+;   51	/*
+;   52		Processes button events.
+;   53	 */
+;   54	void button_events(void)
+;   55	{
 _button_events:
 .define "_button_events"
 .value _button_events
@@ -193,56 +194,56 @@ _button_events:
 .type 65
 .type 0
 .endef
-.begfunc "button_events",54,"_button_events"
+.begfunc "button_events",55,"_button_events"
 	LINK	#0
-;   55		button_timer += timer_interval_int();
-.line 55
+;   56		button_timer += timer_interval_int();
+.line 56
 	CALL	_timer_interval_int
 	ADD	_button_timer:RAM,R0
-;   56	
-;   57		if(button_twice_timer >= button_twice_cutoff) {
-.line 57
+;   57	
+;   58		if(button_twice_timer >= button_twice_cutoff) {
+.line 58
 	LD	R0,_button_twice_cutoff:RAM
 	CP	_button_twice_timer:RAM,R0
 	JP	LT,_2_L_3
-;   58			button_twice_timer = 0;
-.line 58
-	CLR	_button_twice_timer:RAM
-;   59			last_button = BUTTON_NONE;
+;   59			button_twice_timer = 0;
 .line 59
+	CLR	_button_twice_timer:RAM
+;   60			last_button = BUTTON_NONE;
+.line 60
 	LD	R0,#200
 	LD.B	_last_button:RAM,R0
-;   60		}
-;   61		else if(button_twice_timer > 0) {
-.line 61
+;   61		}
+;   62		else if(button_twice_timer > 0) {
+.line 62
 	JP	_2_L_10
 _2_L_3:
 	CPZ	_button_twice_timer:RAM
 	JP	LE,_2_L_10
-;   62			button_twice_timer += timer_interval_int();
-.line 62
+;   63			button_twice_timer += timer_interval_int();
+.line 63
 	CALL	_timer_interval_int
 	ADD	_button_twice_timer:RAM,R0
-;   63		}
+;   64		}
 _2_L_10:
-.line 63
-;   64	
-;   65		//check buttons every debounce interval
-;   66		if(button_timer >= debounce_cutoff) {
-.line 66
+.line 64
+;   65	
+;   66		//check buttons every debounce interval
+;   67		if(button_timer >= debounce_cutoff) {
+.line 67
 	LD	R0,_debounce_cutoff:RAM
 	CP	_button_timer:RAM,R0
 	JP	LT,_2_L_11
-;   67			button_timer = 0;
-.line 67
+;   68			button_timer = 0;
+.line 68
 	CLR	_button_timer:RAM
-;   68			
-;   69			previous = current;
-.line 69
+;   69			
+;   70			previous = current;
+.line 70
 	LD.SB	R0,_current:RAM
 	LD.B	_previous:RAM,R0
-;   70			current = (PDIN & 0x08) | (PFIN & 0xC0);	//gets the state of all buttons
-.line 70
+;   71			current = (PDIN & 0x08) | (PFIN & 0xC0);	//gets the state of all buttons
+.line 71
 	LD.SB	R1,57680:RAM
 	AND	R1,#192
 	LD.SB	R0,57648:RAM
@@ -250,50 +251,50 @@ _2_L_10:
 	LD	R2,R0
 	OR	R0,R1
 	LD.B	_current:RAM,R0
-;   71			
-;   72			if(current == previous) {
-.line 72
+;   72			
+;   73			if(current == previous) {
+.line 73
 	LD.SB	R0,_previous:RAM
 	CP.B	_current:RAM,R0
 	JP	NE,_2_L_11
-;   73				if(current != BUTTON_NONE) {
-.line 73
+;   74				if(current != BUTTON_NONE) {
+.line 74
 	LD	R0,#200
 	CP.B	_current:RAM,R0
 	JP	EQ,_2_L_7
-;   74					if(button_state == BUTTON_NOT_PRESSED) {
-.line 74
+;   75					if(button_state == BUTTON_NOT_PRESSED) {
+.line 75
 	CPZ.W	_button_state:RAM
 	JP	NE,_2_L_11
-;   75						button_state = BUTTON_PRESSED;
-.line 75
+;   76						button_state = BUTTON_PRESSED;
+.line 76
 	LD	R0,#1
 	LD.W	_button_state:RAM,R0
-;   76						handle_button_events();
-.line 76
+;   77						handle_button_events();
+.line 77
 	CALL	_handle_button_events
-;   77					}
-;   78				}
-;   79				else if(button_state == BUTTON_PRESSED) {
-.line 79
+;   78					}
+;   79				}
+;   80				else if(button_state == BUTTON_PRESSED) {
+.line 80
 	JP	_2_L_11
 _2_L_7:
 	LD	R0,#1
 	CP.W	_button_state:RAM,R0
 	JP	NE,_2_L_11
-;   80					button_twice_timer += timer_interval_int();
-.line 80
+;   81					button_twice_timer += timer_interval_int();
+.line 81
 	CALL	_timer_interval_int
 	ADD	_button_twice_timer:RAM,R0
-;   81					button_state = BUTTON_NOT_PRESSED;
-.line 81
+;   82					button_state = BUTTON_NOT_PRESSED;
+.line 82
 	CLR.W	_button_state:RAM
-;   82				}
-;   83			}
-;   84		}
-;   85	}
+;   83				}
+;   84			}
+;   85		}
+;   86	}
 _2_L_11:
-.line 85
+.line 86
 	UNLINK	
 	RET	
 
@@ -315,13 +316,13 @@ _2_L_11:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "button_events",85,"_button_events"
-;   86	
-;   87	/*
-;   88		Handles the button event.
-;   89	 */
-;   90	static void handle_button_events(void)
-;   91	{
+.endfunc "button_events",86,"_button_events"
+;   87	
+;   88	/*
+;   89		Handles the button event.
+;   90	 */
+;   91	static void handle_button_events(void)
+;   92	{
 _handle_button_events:
 .define "_handle_button_events"
 .value _handle_button_events
@@ -329,111 +330,126 @@ _handle_button_events:
 .type 65
 .type 0
 .endef
-.begfunc "handle_button_events",91,"_handle_button_events"
+.begfunc "handle_button_events",92,"_handle_button_events"
 	LINK	#0
-;   92		if(current == BUTTON_ONE) {
-.line 92
+;   93		if(current == BUTTON_ONE) {
+.line 93
 	LD	R0,#192
 	CP.B	_current:RAM,R0
 	JP	NE,_3_L_26
-;   93			if(button_twice_timer && (last_button == BUTTON_ONE)) {
-.line 93
+;   94			if(button_twice_timer && (last_button == BUTTON_ONE)) {
+.line 94
 	CPZ	_button_twice_timer:RAM
 	JP	EQ,_3_L_14
 	CP.B	_last_button:RAM,R0
 	JP	NE,_3_L_14
-;   94				button_twice_timer = 0;
-.line 94
-	CLR	_button_twice_timer:RAM
-;   95				last_button = BUTTON_NONE;
+;   95				button_twice_timer = 0;
 .line 95
+	CLR	_button_twice_timer:RAM
+;   96				last_button = BUTTON_NONE;
+.line 96
 	LD	R0,#200
 	LD.B	_last_button:RAM,R0
-;   96			}
-;   97			else {
-.line 97
+;   97			}
+;   98			else {
+.line 98
 	JP	_3_L_27
 _3_L_14:
-;   98				last_button = BUTTON_ONE;
-.line 98
+;   99				last_button = BUTTON_ONE;
+.line 99
 	LD	R0,#192
 	LD.B	_last_button:RAM,R0
-;   99			}
-;  100		}
-;  101		else if(current == BUTTON_TWO) {
+;  100	
+;  101				macro_execute(MACRO0);
 .line 101
+	LD	R1,#0
+	CALL	_macro_execute
+;  102			}
+;  103		}
+;  104		else if(current == BUTTON_TWO) {
+.line 104
 	JP	_3_L_27
 _3_L_26:
 	LD	R0,#136
 	CP.B	_current:RAM,R0
 	JP	NE,_3_L_24
-;  102			if(button_twice_timer && (last_button == BUTTON_TWO)) {
-.line 102
+;  105			if(button_twice_timer && (last_button == BUTTON_TWO)) {
+.line 105
 	CPZ	_button_twice_timer:RAM
 	JP	EQ,_3_L_17
 	CP.B	_last_button:RAM,R0
 	JP	NE,_3_L_17
-;  103				button_twice_timer = 0;
-.line 103
+;  106				button_twice_timer = 0;
+.line 106
 	CLR	_button_twice_timer:RAM
-;  104				last_button = BUTTON_NONE;
-.line 104
+;  107				last_button = BUTTON_NONE;
+.line 107
 	LD	R0,#200
 	LD.B	_last_button:RAM,R0
-;  105			}
-;  106			else {
-.line 106
+;  108			}
+;  109			else {
+.line 109
 	JP	_3_L_27
 _3_L_17:
-;  107				last_button = BUTTON_TWO;
-.line 107
+;  110				last_button = BUTTON_TWO;
+.line 110
 	LD	R0,#136
 	LD.B	_last_button:RAM,R0
-;  108			}
-;  109		}
-;  110		else if(current == BUTTON_THREE) {
-.line 110
+;  111	
+;  112				macro_execute(MACRO1);
+.line 112
+	LD	R1,#1
+	CALL	_macro_execute
+;  113			}
+;  114		}
+;  115		else if(current == BUTTON_THREE) {
+.line 115
 	JP	_3_L_27
 _3_L_24:
 	LD	R0,#72
 	CP.B	_current:RAM,R0
 	JP	NE,_3_L_22
-;  111			if(button_twice_timer && (last_button == BUTTON_THREE)) {
-.line 111
+;  116			if(button_twice_timer && (last_button == BUTTON_THREE)) {
+.line 116
 	CPZ	_button_twice_timer:RAM
 	JP	EQ,_3_L_20
 	CP.B	_last_button:RAM,R0
 	JP	NE,_3_L_20
-;  112				button_twice_timer = 0;
-.line 112
+;  117				button_twice_timer = 0;
+.line 117
 	CLR	_button_twice_timer:RAM
-;  113				last_button = BUTTON_NONE;
-.line 113
+;  118				last_button = BUTTON_NONE;
+.line 118
 	LD	R0,#200
 	LD.B	_last_button:RAM,R0
-;  114			}
-;  115			else {
-.line 115
-	JP	_3_L_27
-_3_L_20:
-;  116				last_button = BUTTON_THREE;
-.line 116
-	LD	R0,#72
-	LD.B	_last_button:RAM,R0
-;  117			}
-;  118		}
-;  119		//don't do anything if multiple buttons are pressed
-;  120		else {
+;  119			}
+;  120			else {
 .line 120
 	JP	_3_L_27
-_3_L_22:
-;  121			button_state = BUTTON_NOT_PRESSED;
+_3_L_20:
+;  121				last_button = BUTTON_THREE;
 .line 121
-	CLR.W	_button_state:RAM
-;  122		}
-;  123	}
-_3_L_27:
+	LD	R0,#72
+	LD.B	_last_button:RAM,R0
+;  122	
+;  123				macro_execute(MACRO2);
 .line 123
+	LD	R1,#2
+	CALL	_macro_execute
+;  124			}
+;  125		}
+;  126		//don't do anything if multiple buttons are pressed
+;  127		else {
+.line 127
+	JP	_3_L_27
+_3_L_22:
+;  128			button_state = BUTTON_NOT_PRESSED;
+.line 128
+	CLR.W	_button_state:RAM
+;  129		}
+;  130	}
+_3_L_27:
+.line 130
 	UNLINK	
 	RET	
 
@@ -441,6 +457,7 @@ _3_L_27:
 ;**************************** _handle_button_events ***************************
 ;Name                         Addr/Register   Size   Type
 ;_button_state                       STATIC      2   variable
+;_macro_execute                      IMPORT  -----   function
 ;_last_button                        STATIC      1   variable
 ;_button_twice_timer                 STATIC      4   variable
 ;_current                            STATIC      1   variable
@@ -449,7 +466,8 @@ _3_L_27:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "handle_button_events",123,"_handle_button_events"
+.endfunc "handle_button_events",130,"_handle_button_events"
+	XREF _macro_execute:EROM
 	XREF _timer_interval_int:EROM
 	XDEF _button_events
 	XDEF _init_buttons

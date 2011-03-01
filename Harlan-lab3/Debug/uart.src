@@ -883,10 +883,93 @@ _uart_get_baud_rate:
 
 
 .endfunc "uart_get_baud_rate",185,"_uart_get_baud_rate"
+;  186	
+;  187	void uart_dummy_receive(char c)
+;  188	{
+_uart_dummy_receive:
+.define "_uart_dummy_receive"
+.value _uart_dummy_receive
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "uart_dummy_receive",188,"_uart_dummy_receive"
+	LINK	#5
+.line 188
+	LD.B	-1(R14),R1
+.define "c"
+.class 9
+.value -1
+.type 12
+.type 0
+.endef
+.define "buffer_loc"
+.class 1
+.value -5
+.type 5
+.type 0
+.endef
+;  189		int buffer_loc;
+;  190	
+;  191		DI();
+.line 191
+	DI
+;  192	
+;  193		if(rec_buffer_size < BUFFER_SIZE) {
+.line 193
+	LD	R0,#512
+	CP	_rec_buffer_size:RAM,R0
+	JP	GE,_9_L_40
+;  194			buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
+.line 194
+	LD	R0,_rec_buffer_current:RAM
+	ADD	R0,_rec_buffer_size:RAM
+	LD	R1,#512
+	SDIV	R0,R1
+	LD	-5(R14),R1
+;  195			
+;  196			rec_buffer[buffer_loc] = c;
+.line 196
+	LD.SW	R0,-3(R14)
+	LD	R1,#_rec_buffer
+	ADD	R0,R1
+	LD.SB	R1,-1(R14)
+	LD.B	(R0),R1
+;  197			++rec_buffer_size;
+.line 197
+	INC	_rec_buffer_size:RAM
+;  198		}
+_9_L_40:
+.line 198
+;  199	
+;  200		EI();
+.line 200
+	EI
+.line 201
+	UNLINK	
+	RET	
+
+
+;**************************** _uart_dummy_receive ***************************
+;Name                         Addr/Register   Size   Type
+;_EI                                 IMPORT  -----   function
+;_rec_buffer                         STATIC    512   variable
+;_rec_buffer_current                 STATIC      4   variable
+;_rec_buffer_size                    STATIC      4   variable
+;_DI                                 IMPORT  -----   function
+;buffer_loc                           R14-5      4   variable
+;c                                    R14-1      1   parameter
+
+
+; Aggregate Stack Size: -5 (words)
+
+
+.endfunc "uart_dummy_receive",201,"_uart_dummy_receive"
 	VECTOR	UART0_TX=_uart_transfer
 	VECTOR	UART0_RX=_uart_receive
 	XREF _vsprintf:EROM
 	XREF _memset:EROM
+	XDEF _uart_dummy_receive
 	XDEF _uart_get_baud_rate
 	XDEF _uart_transfer_msg
 	XDEF _uart_printf

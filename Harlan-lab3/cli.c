@@ -2,6 +2,7 @@
 #include "LED.h"
 #include "uart.h"
 #include "info.h"
+#include "macro.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -28,9 +29,14 @@ static void cli_command_question(void);
 	Multiple arguements encoded as strings, separated by
 	whitespace and quotes.
  */
-static void cli_command_echo(char *text);
-static void cli_command_display(char *text);
-static void cli_command_hex(char *text);
+static void cli_command_echo(char *args);
+static void cli_command_display(char *args);
+static void cli_command_hex(char *args);
+static void cli_command_set(char *args);
+static void cli_command_switch(char *args);
+static void cli_command_port(char *args);
+static void cli_command_timer(char *args);
+static void cli_command_uart0(char *args);
 
 void init_cli(void)
 {
@@ -98,24 +104,106 @@ void cli_loop(void)
 	}
 }
 
+int cli_strip_quotes(char **args)
+{
+	char *c;
+
+	c = *args;
+	if(*c != '"') {
+		return 1;
+	}
+	++c;
+
+	c = strchr(c, '"');
+	if(c == NULL) {
+		return 1;
+	}
+	*c = '\0';
+
+	*args = c;
+
+	return 0;
+}
+
+int cli_strip_word(char **args) 
+{
+	char *c;
+
+	c = *args;
+	while(isalpha(*c)) {
+		++c;
+	}
+
+	if(*c == '\0') {
+		return 1;
+	}
+	*c = '\0';
+
+	*args = c;
+
+	return 0;
+}
+
+int cli_strip_decimal_number(char **args)
+{
+	char *c;
+
+	c = *args;
+	while(isdigit(*c)) {
+		++c;
+	}
+	*c = '\0';
+
+	//is there a number at all
+	if(*args == c) {
+		return 1;
+	}
+	*args = c;
+
+	return 0;
+}
+
+void cli_strip_spaces(char **args)
+{
+	char *c;
+
+	c = *args;
+	while(isspace(*c)) {
+		++c;
+	}
+
+	*args = c;
+}
+
+void cli_set_prompt(const char *text)
+{
+	size_t prompt_len;
+
+	prompt_len = strlen(text) + 1;
+	if(prompt_len >= CLI_BUFFER_SIZE) {
+		prompt_len = CLI_BUFFER_SIZE;
+	}
+
+	memcpy(cli_prompt, text, prompt_len);
+	cli_prompt[prompt_len-1] = '\0';
+}
+
 static void cli_process_command(char *command)
 {
-	char *token_end;
+	char *args;
 
 	//strip spaces and tabs
-	while(isspace(*command)) {
-		++command;
+	cli_strip_spaces(&command);
+
+	args = command;
+	while(isgraph(*args) && *args != '\t') {	//bug with isgraph, returns true on \t and it shouldn't
+		++args;
 	}
 
-	token_end = command;
-	while(isgraph(*token_end) && *token_end != '\t') {	//bug with isgraph, returns true on \t, and it shouldn't
-		token_end++;
-	}
+	if(args != command) {
+		*args = '\0';
 
-	if(token_end != command) {
-		*token_end = '\0';
-
-		++token_end;
+		++args;
 		if(strcmp(command, "info") == 0) {
 			cli_command_info();
 		}
@@ -123,31 +211,28 @@ static void cli_process_command(char *command)
 			cli_command_question();
 		}
 		else if(strcmp(command, "echo") == 0) {
-			cli_command_echo(token_end);
+			cli_command_echo(args);
 		}
 		else if(strcmp(command, "display") == 0) {
-			cli_command_display(token_end);
+			cli_command_display(args);
 		}
 		else if(strcmp(command, "set") == 0) {
-			
+			cli_command_set(args);
 		}
 		else if(strcmp(command, "hex") == 0) {
-			cli_command_hex(token_end);
-		}
-		else if(strcmp(command, "set") == 0) {
-			
+			cli_command_hex(args);
 		}
 		else if(strcmp(command, "switch") == 0) {
-			
+			cli_command_switch(args);
 		}
 		else if(strcmp(command, "port") == 0) {
-			
+			cli_command_port(args);
 		}
 		else if(strcmp(command, "timer") == 0) {
-			
+			cli_command_timer(args);
 		}
 		else if(strcmp(command, "uart0") == 0) {
-			
+			cli_command_uart0(args);
 		}
 		else {
 			uart_printf("--Command:%s, not found. Enter \"?\" to see a list of available commands.\n", command);
@@ -195,85 +280,125 @@ static void cli_command_info(void)
 	info_display();
 }
 
-static void cli_command_echo(char *text)
+static void cli_command_echo(char *args)
 {
-	char *end;
+	char *token;
 
-	//strip spaces and tabs
-	while(isspace(*text)) {
-		++text;
-	}
+	cli_strip_spaces(&args);
 
-	if(*text != '"') {
-		uart_printf("1 Incorrect format, echo [\"text\"]\n");
+	token = args;
+	if(cli_strip_quotes(&args)) {
+		uart_printf("Incorrect format, echo [\"text\"]\n");
 		return;
 	}
-	text++;
 
-	end = strchr(text, '"');
-	if(end == NULL) {
-		uart_printf("2 Incorrect format, echo [\"text\"]\n");
-		return;
-	}
-	*end = '\0';
-
-	uart_printf("%s\n", text);
+	uart_printf("%s\n", ++token);
 }
 
-static void cli_command_display(char *text)
+static void cli_command_display(char *args)
 {
-	char *end;
+	char *token;
 
-	//strip spaces and tabs
-	while(isspace(*text)) {
-		++text;
-	}
+	cli_strip_spaces(&args);
 
-	if(*text != '"') {
-		uart_printf("1 Incorrect format, display [\"text\"]\n");
+	token = args;
+	if(cli_strip_quotes(&args)) {
+		uart_printf("Incorrect format, display [\"text\"]\n");
 		return;
 	}
-	text++;
 
-	end = strchr(text, '"');
-	if(end == NULL) {
-		uart_printf("2 Incorrect format, display [\"text\"]\n");
-		return;
-	}
-	*end = '\0';
-
-	led_display_text(text);
+	led_display_text(++token);
 }
 
-static void cli_command_hex(char *text)
+static void cli_command_hex(char *args)
 {
-	char *end;
+	char *token;
 	int value;
 
-	//strip spaces and tabs
-	while(isspace(*text)) {
-		++text;
-	}
+	cli_strip_spaces(&args);
 
-	end = text;
-	while(isdigit(*end)) {
-		++end;
-	}
-	*end = '\0';
-
-	//is there a number at all
-	if(text == end) {
+	token = args;
+	if(cli_strip_decimal_number(&args)) {
 		uart_printf("1 Incorrect format, hex [decimal number]\n");
 		return;
 	}
 
-	//convert string to int
-	value = atoi(text);
-	if(value == 0) {
-		uart_printf("2 Incorrect format, hex [decimal number]\n");
-		return;
-	}
-
+	value = atoi(token);
 	led_display_int_hex(value);
 }
 
+static void cli_command_set(char *args)
+{
+	char *token;
+
+	cli_strip_spaces(&args);
+
+	token = args;
+	if(cli_strip_word(&args)) {
+		uart_printf("1 Incorrect format, set prompt [\"text\"]\n");
+		return;
+	}
+
+	if(strcmp(token, "prompt") == 0) {
+		++args;
+		cli_strip_spaces(&args);
+
+		token = args;
+		if(cli_strip_quotes(&args)) {
+			uart_printf("2 Incorrect format, set prompt [\"text\"]\n");
+			return;
+		}
+
+		cli_set_prompt(++token);
+	}
+	else {
+		uart_printf("3 Incorrect format, set prompt [\"text\"]\n");
+		return;
+	}
+}
+
+static void cli_command_switch(char *args)
+{
+	char *token;
+	int value;
+
+	cli_strip_spaces(&args);
+
+	token = args;
+	if(cli_strip_decimal_number(&args)) {
+		uart_printf("1 Incorrect format, switch [n] [\"text\"]\n");
+		return;
+	}
+	value = atoi(token);
+
+	if(value < 0 || value >= MACRO_MAX) {
+		uart_printf("2 Incorrect format, switch [n] [\"text\"]\n");
+		return;
+	}
+
+	++args;
+	cli_strip_spaces(&args);
+
+	token = args;
+	if(cli_strip_quotes(&args)) {
+		uart_printf("3 Incorrect format, switch [n] [\"text\"]\n");
+		return;
+	}
+
+	macro_set(value, ++token);
+}
+
+static void cli_command_port(char *args)
+{
+	
+}
+
+static void cli_command_timer(char *args)
+{
+	
+}
+
+static void cli_command_uart0(char *args)
+{
+	
+}

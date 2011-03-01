@@ -27,6 +27,7 @@
 #include "buttons.h"
 #include "timer.h"
 #include "cli.h"
+#include "macro.h"
 
 #include <zneo.h>
 #include <stdio.h>
@@ -49,5 +50,7 @@ void main(void)
 	//enable interrupts
 	EI();
 
+	//macro_set(0, "info");
+	//macro_execute(0);
 	cli_loop();
 }

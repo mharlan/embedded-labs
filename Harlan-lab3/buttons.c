@@ -1,5 +1,6 @@
 #include "buttons.h"
 #include "timer.h"
+#include "macro.h"
 
 #include <zneo.h>
 
@@ -96,6 +97,8 @@ static void handle_button_events(void)
 		}
 		else {
 			last_button = BUTTON_ONE;
+
+			macro_execute(MACRO0);
 		}
 	}
 	else if(current == BUTTON_TWO) {
@@ -105,6 +108,8 @@ static void handle_button_events(void)
 		}
 		else {
 			last_button = BUTTON_TWO;
+
+			macro_execute(MACRO1);
 		}
 	}
 	else if(current == BUTTON_THREE) {
@@ -114,6 +119,8 @@ static void handle_button_events(void)
 		}
 		else {
 			last_button = BUTTON_THREE;
+
+			macro_execute(MACRO2);
 		}
 	}
 	//don't do anything if multiple buttons are pressed

@@ -1,4 +1,4 @@
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     17:33:57     page:   1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               01-Mar-11     04:58:45     page:   1
 
 
 PC     Object              I  Line    Source 
@@ -54,7 +54,7 @@ PC     Object              I  Line    Source
                            A    50    ;   18		// unlock the oscillator control register
                            A    51    ;   19		OSCCTL = 0xE7; OSCCTL = 0x18;  
                            A    52    .line 19
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     17:33:57     page:   2
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               01-Mar-11     04:58:45     page:   2
 
 
 PC     Object              I  Line    Source oscillator.src
@@ -110,7 +110,7 @@ PC     Object              I  Line    Source oscillator.src
                            A   102    
                            A   103    .endfunc "init_oscillator",32,"_init_oscillator"
                            A   104    ;   33	
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     17:33:57     page:   3
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               01-Mar-11     04:58:45     page:   3
 
 
 PC     Object              I  Line    Source oscillator.src
@@ -166,7 +166,7 @@ PC     Object              I  Line    Source oscillator.src
                            A   154    
                            A   155    
                            A   156    ;**************************** _oscillator_settings_display ***************************
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               27-Feb-11     17:33:57     page:   4
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               01-Mar-11     04:58:45     page:   4
 
 
 PC     Object              I  Line    Source oscillator.src

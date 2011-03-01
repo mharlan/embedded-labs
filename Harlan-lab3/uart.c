@@ -183,3 +183,19 @@ unsigned long uart_get_baud_rate(void)
 {
 	return baud_rate;
 }
+
+void uart_dummy_receive(char c)
+{
+	int buffer_loc;
+
+	DI();
+
+	if(rec_buffer_size < BUFFER_SIZE) {
+		buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
+		
+		rec_buffer[buffer_loc] = c;
+		++rec_buffer_size;
+	}
+
+	EI();
+}

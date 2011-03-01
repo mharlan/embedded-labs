@@ -1,133 +1,140 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\BUTTONS.C
 
      1	    1	#include "buttons.h"
      2	   16	#include "timer.h"
-     3	   95	
-     4	   96	#include <zneo.h>
-     5	  622	
-     6	  623	#define DEBOUNCE_CUTOFF     40 	//40 ms
-     7	  624	#define BUTTON_TWICE_CUTOFF 500	//500 ms
-     8	  625	
-     9	  626	#define BUTTON_NONE  0xC8
-    10	  627	#define BUTTON_ONE   0xC0
-    11	  628	#define BUTTON_TWO   0x88
-    12	  629	#define BUTTON_THREE 0x48
-    13	  630	
-    14	  631	#define BUTTON_PRESSED     1
-    15	  632	#define BUTTON_NOT_PRESSED 0
-    16	  633	
-    17	  634	static volatile int button_timer;
-    18	  635	static int debounce_cutoff;
-    19	  636	static volatile int button_twice_timer;
-    20	  637	static int button_twice_cutoff;
-    21	  638	
-    22	  639	static volatile unsigned char last_button;
-    23	  640	static volatile unsigned char current;
-    24	  641	static volatile unsigned char previous;
-    25	  642	static volatile unsigned short button_state;
-    26	  643	
-    27	  644	static void handle_button_events(void);
-    28	  645	
-    29	  646	/*
-    30	  647		Initializes the buttons.
-    31	  648	 */
-    32	  649	void init_buttons(void)
-    33	  650	{
-    34	  651		//set as inputs
-    35	  652		PDDD |= BUTTON_ONE;
-    36	  653		PFDD |= BUTTON_TWO + BUTTON_THREE;
-    37	  654	
-    38	  655		current = BUTTON_NONE;
-    39	  656		previous = BUTTON_NONE;
-    40	  657		button_state = BUTTON_NOT_PRESSED;
-    41	  658		last_button = BUTTON_NONE;
-    42	  659	
-    43	  660		button_timer = 0;
-    44	  661		debounce_cutoff = DEBOUNCE_CUTOFF;
-    45	  662	
-    46	  663		button_twice_timer = 0;
-    47	  664		button_twice_cutoff = BUTTON_TWICE_CUTOFF;
-    48	  665	}
-    49	  666	
-    50	  667	/*
-    51	  668		Processes button events.
-    52	  669	 */
-    53	  670	void button_events(void)
-    54	  671	{
-    55	  672		button_timer += timer_interval_int();
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 2
+     3	   95	#include "macro.h"
+     4	  116	
+     5	  117	#include <zneo.h>
+     6	  643	
+     7	  644	#define DEBOUNCE_CUTOFF     40 	//40 ms
+     8	  645	#define BUTTON_TWICE_CUTOFF 500	//500 ms
+     9	  646	
+    10	  647	#define BUTTON_NONE  0xC8
+    11	  648	#define BUTTON_ONE   0xC0
+    12	  649	#define BUTTON_TWO   0x88
+    13	  650	#define BUTTON_THREE 0x48
+    14	  651	
+    15	  652	#define BUTTON_PRESSED     1
+    16	  653	#define BUTTON_NOT_PRESSED 0
+    17	  654	
+    18	  655	static volatile int button_timer;
+    19	  656	static int debounce_cutoff;
+    20	  657	static volatile int button_twice_timer;
+    21	  658	static int button_twice_cutoff;
+    22	  659	
+    23	  660	static volatile unsigned char last_button;
+    24	  661	static volatile unsigned char current;
+    25	  662	static volatile unsigned char previous;
+    26	  663	static volatile unsigned short button_state;
+    27	  664	
+    28	  665	static void handle_button_events(void);
+    29	  666	
+    30	  667	/*
+    31	  668		Initializes the buttons.
+    32	  669	 */
+    33	  670	void init_buttons(void)
+    34	  671	{
+    35	  672		//set as inputs
+    36	  673		PDDD |= BUTTON_ONE;
+    37	  674		PFDD |= BUTTON_TWO + BUTTON_THREE;
+    38	  675	
+    39	  676		current = BUTTON_NONE;
+    40	  677		previous = BUTTON_NONE;
+    41	  678		button_state = BUTTON_NOT_PRESSED;
+    42	  679		last_button = BUTTON_NONE;
+    43	  680	
+    44	  681		button_timer = 0;
+    45	  682		debounce_cutoff = DEBOUNCE_CUTOFF;
+    46	  683	
+    47	  684		button_twice_timer = 0;
+    48	  685		button_twice_cutoff = BUTTON_TWICE_CUTOFF;
+    49	  686	}
+    50	  687	
+    51	  688	/*
+    52	  689		Processes button events.
+    53	  690	 */
+    54	  691	void button_events(void)
+    55	  692	{
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 2
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\BUTTONS.C
 
-    56	  673	
-    57	  674		if(button_twice_timer >= button_twice_cutoff) {
-    58	  675			button_twice_timer = 0;
-    59	  676			last_button = BUTTON_NONE;
-    60	  677		}
-    61	  678		else if(button_twice_timer > 0) {
-    62	  679			button_twice_timer += timer_interval_int();
-    63	  680		}
-    64	  681	
-    65	  682		//check buttons every debounce interval
-    66	  683		if(button_timer >= debounce_cutoff) {
-    67	  684			button_timer = 0;
-    68	  685			
-    69	  686			previous = current;
-    70	  687			current = (PDIN & 0x08) | (PFIN & 0xC0);	//gets the state of all buttons
-    71	  688			
-    72	  689			if(current == previous) {
-    73	  690				if(current != BUTTON_NONE) {
-    74	  691					if(button_state == BUTTON_NOT_PRESSED) {
-    75	  692						button_state = BUTTON_PRESSED;
-    76	  693						handle_button_events();
-    77	  694					}
-    78	  695				}
-    79	  696				else if(button_state == BUTTON_PRESSED) {
-    80	  697					button_twice_timer += timer_interval_int();
-    81	  698					button_state = BUTTON_NOT_PRESSED;
-    82	  699				}
-    83	  700			}
-    84	  701		}
-    85	  702	}
-    86	  703	
-    87	  704	/*
-    88	  705		Handles the button event.
-    89	  706	 */
-    90	  707	static void handle_button_events(void)
-    91	  708	{
-    92	  709		if(current == BUTTON_ONE) {
-    93	  710			if(button_twice_timer && (last_button == BUTTON_ONE)) {
-    94	  711				button_twice_timer = 0;
-    95	  712				last_button = BUTTON_NONE;
-    96	  713			}
-    97	  714			else {
-    98	  715				last_button = BUTTON_ONE;
-    99	  716			}
-   100	  717		}
-   101	  718		else if(current == BUTTON_TWO) {
-   102	  719			if(button_twice_timer && (last_button == BUTTON_TWO)) {
-   103	  720				button_twice_timer = 0;
-   104	  721				last_button = BUTTON_NONE;
-   105	  722			}
-   106	  723			else {
-   107	  724				last_button = BUTTON_TWO;
-   108	  725			}
-   109	  726		}
-   110	  727		else if(current == BUTTON_THREE) {
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Feb 27 2011	17:33:57	page: 3
+    56	  693		button_timer += timer_interval_int();
+    57	  694	
+    58	  695		if(button_twice_timer >= button_twice_cutoff) {
+    59	  696			button_twice_timer = 0;
+    60	  697			last_button = BUTTON_NONE;
+    61	  698		}
+    62	  699		else if(button_twice_timer > 0) {
+    63	  700			button_twice_timer += timer_interval_int();
+    64	  701		}
+    65	  702	
+    66	  703		//check buttons every debounce interval
+    67	  704		if(button_timer >= debounce_cutoff) {
+    68	  705			button_timer = 0;
+    69	  706			
+    70	  707			previous = current;
+    71	  708			current = (PDIN & 0x08) | (PFIN & 0xC0);	//gets the state of all buttons
+    72	  709			
+    73	  710			if(current == previous) {
+    74	  711				if(current != BUTTON_NONE) {
+    75	  712					if(button_state == BUTTON_NOT_PRESSED) {
+    76	  713						button_state = BUTTON_PRESSED;
+    77	  714						handle_button_events();
+    78	  715					}
+    79	  716				}
+    80	  717				else if(button_state == BUTTON_PRESSED) {
+    81	  718					button_twice_timer += timer_interval_int();
+    82	  719					button_state = BUTTON_NOT_PRESSED;
+    83	  720				}
+    84	  721			}
+    85	  722		}
+    86	  723	}
+    87	  724	
+    88	  725	/*
+    89	  726		Handles the button event.
+    90	  727	 */
+    91	  728	static void handle_button_events(void)
+    92	  729	{
+    93	  730		if(current == BUTTON_ONE) {
+    94	  731			if(button_twice_timer && (last_button == BUTTON_ONE)) {
+    95	  732				button_twice_timer = 0;
+    96	  733				last_button = BUTTON_NONE;
+    97	  734			}
+    98	  735			else {
+    99	  736				last_button = BUTTON_ONE;
+   100	  737	
+   101	  738				macro_execute(MACRO0);
+   102	  739			}
+   103	  740		}
+   104	  741		else if(current == BUTTON_TWO) {
+   105	  742			if(button_twice_timer && (last_button == BUTTON_TWO)) {
+   106	  743				button_twice_timer = 0;
+   107	  744				last_button = BUTTON_NONE;
+   108	  745			}
+   109	  746			else {
+   110	  747				last_button = BUTTON_TWO;
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 3
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\BUTTONS.C
 
-   111	  728			if(button_twice_timer && (last_button == BUTTON_THREE)) {
-   112	  729				button_twice_timer = 0;
-   113	  730				last_button = BUTTON_NONE;
-   114	  731			}
-   115	  732			else {
-   116	  733				last_button = BUTTON_THREE;
-   117	  734			}
-   118	  735		}
-   119	  736		//don't do anything if multiple buttons are pressed
-   120	  737		else {
-   121	  738			button_state = BUTTON_NOT_PRESSED;
-   122	  739		}
-   123	  740	}
-   124	  741	ÿ
+   111	  748	
+   112	  749				macro_execute(MACRO1);
+   113	  750			}
+   114	  751		}
+   115	  752		else if(current == BUTTON_THREE) {
+   116	  753			if(button_twice_timer && (last_button == BUTTON_THREE)) {
+   117	  754				button_twice_timer = 0;
+   118	  755				last_button = BUTTON_NONE;
+   119	  756			}
+   120	  757			else {
+   121	  758				last_button = BUTTON_THREE;
+   122	  759	
+   123	  760				macro_execute(MACRO2);
+   124	  761			}
+   125	  762		}
+   126	  763		//don't do anything if multiple buttons are pressed
+   127	  764		else {
+   128	  765			button_state = BUTTON_NOT_PRESSED;
+   129	  766		}
+   130	  767	}
+   131	  768	ÿ

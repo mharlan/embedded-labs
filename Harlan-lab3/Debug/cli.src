@@ -51,39 +51,45 @@ L__0:
 ;    2	#include "LED.h"
 ;    3	#include "uart.h"
 ;    4	#include "info.h"
-;    5	
-;    6	#include <stdlib.h>
-;    7	#include <string.h>
-;    8	#include <ctype.h>
-;    9	
-;   10	#define CLI_PROMPT      "> "
-;   11	#define CLI_BUFFER_SIZE 256
-;   12	
-;   13	#define ASCII_DEL 0x7F
-;   14	
-;   15	static char cli_prompt[CLI_BUFFER_SIZE];
+;    5	#include "macro.h"
+;    6	
+;    7	#include <stdlib.h>
+;    8	#include <string.h>
+;    9	#include <ctype.h>
+;   10	
+;   11	#define CLI_PROMPT      "> "
+;   12	#define CLI_BUFFER_SIZE 256
+;   13	
+;   14	#define ASCII_DEL 0x7F
+;   15	
+;   16	static char cli_prompt[CLI_BUFFER_SIZE];
 	SEGMENT CODE
-;   16	
-;   17	static void cli_process_command(const char *command);
-;   18	
-;   19	/*
-;   20		Zero arguement CLI functions.
-;   21	 */
-;   22	static void cli_command_info(void);
-;   23	static void cli_command_question(void);
-;   24	
-;   25	/*
-;   26		Variable arguement CLI functions.
-;   27	
-;   28		Multiple arguements encoded as strings, separated by
-;   29		whitespace and quotes.
-;   30	 */
-;   31	static void cli_command_echo(char *text);
-;   32	static void cli_command_display(char *text);
-;   33	static void cli_command_hex(char *text);
-;   34	
-;   35	void init_cli(void)
-;   36	{
+;   17	
+;   18	static void cli_process_command(const char *command);
+;   19	
+;   20	/*
+;   21		Zero arguement CLI functions.
+;   22	 */
+;   23	static void cli_command_info(void);
+;   24	static void cli_command_question(void);
+;   25	
+;   26	/*
+;   27		Variable arguement CLI functions.
+;   28	
+;   29		Multiple arguements encoded as strings, separated by
+;   30		whitespace and quotes.
+;   31	 */
+;   32	static void cli_command_echo(char *args);
+;   33	static void cli_command_display(char *args);
+;   34	static void cli_command_hex(char *args);
+;   35	static void cli_command_set(char *args);
+;   36	static void cli_command_switch(char *args);
+;   37	static void cli_command_port(char *args);
+;   38	static void cli_command_timer(char *args);
+;   39	static void cli_command_uart0(char *args);
+;   40	
+;   41	void init_cli(void)
+;   42	{
 _init_cli:
 .define "_init_cli"
 .value _init_cli
@@ -91,26 +97,26 @@ _init_cli:
 .type 65
 .type 0
 .endef
-.begfunc "init_cli",36,"_init_cli"
+.begfunc "init_cli",42,"_init_cli"
 	LINK	#0
-;   37		//initialize the hardware
-;   38		init_leds();
-.line 38
+;   43		//initialize the hardware
+;   44		init_leds();
+.line 44
 	CALL	_init_leds
-;   39		init_uart();
-.line 39
+;   45		init_uart();
+.line 45
 	CALL	_init_uart
-;   40		init_info();
-.line 40
+;   46		init_info();
+.line 46
 	CALL	_init_info
-;   41	
-;   42		strcpy(cli_prompt, CLI_PROMPT);
-.line 42
+;   47	
+;   48		strcpy(cli_prompt, CLI_PROMPT);
+.line 48
 	LD	R1,#_cli_prompt
 	LD	R2,#L__0
 	CALL	_strcpy
-;   43	}
-.line 43
+;   49	}
+.line 49
 	UNLINK	
 	RET	
 
@@ -127,7 +133,7 @@ _init_cli:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "init_cli",43,"_init_cli"
+.endfunc "init_cli",49,"_init_cli"
 	SEGMENT ROM_TEXT
 L__2:
 	DB	"%s"
@@ -143,9 +149,9 @@ L__13:
 	DB	"%s"
 	DB	0
 	SEGMENT CODE
-;   44	
-;   45	void cli_loop(void)
-;   46	{
+;   50	
+;   51	void cli_loop(void)
+;   52	{
 _cli_loop:
 .define "_cli_loop"
 .value _cli_loop
@@ -153,8 +159,8 @@ _cli_loop:
 .type 65
 .type 0
 .endef
-.begfunc "cli_loop",46,"_cli_loop"
-.line 46
+.begfunc "cli_loop",52,"_cli_loop"
+.line 52
 .define "c"
 .class 1
 .value -1
@@ -176,79 +182,79 @@ _cli_loop:
 .endef
 	LINK	#0
 	SUB	R15,#261
-;   47		char buffer[CLI_BUFFER_SIZE];
-;   48		char c;
-;   49	
-;   50		int buffer_pos;
-;   51	
-;   52		uart_printf("%s", cli_prompt);
-.line 52
+;   53		char buffer[CLI_BUFFER_SIZE];
+;   54		char c;
+;   55	
+;   56		int buffer_pos;
+;   57	
+;   58		uart_printf("%s", cli_prompt);
+.line 58
 	PUSH.W	#_cli_prompt
 	PUSH.W	#L__2
 	CALL	_uart_printf
 	ADD	R15,#4
-;   53	
-;   54		buffer_pos = 0;
-.line 54
+;   59	
+;   60		buffer_pos = 0;
+.line 60
 	CLR	-5(R14)
-;   55	
-;   56		while(1) {
+;   61	
+;   62		while(1) {
 _2_L_18:
-.line 56
-;   57			//wait until a character is available
-;   58			while((c = uart_getchar()) == 0) { ; }
+.line 62
+;   63			//wait until a character is available
+;   64			while((c = uart_getchar()) == 0) { ; }
 _2_L_1:
-.line 58
+.line 64
 	CALL	_uart_getchar
 	LD.B	-1(R14),R0
 	CPZ.B	-1(R14)
 	JP	EQ,_2_L_1
-;   59	
-;   60			//new line means end of the command
-;   61			if(c == '\n') {
-.line 61
+;   65	
+;   66			//new line means end of the command
+;   67			if(c == '\n') {
+.line 67
 	LD	R0,#10
 	CP.B	-1(R14),R0
 	JP	NE,_2_L_14
-;   62				//only process a command if something was entered
-;   63				if(buffer_pos) {
-.line 63
+;   68				//only process a command if something was entered
+;   69				if(buffer_pos) {
+.line 69
 	CPZ	-5(R14)
 	JP	EQ,_2_L_4
-;   64					buffer[buffer_pos] = '\0';
-.line 64
+;   70					buffer[buffer_pos] = '\0';
+.line 70
 	LD.SW	R0,-3(R14)
 	LEA	R1,-261(R14)
 	ADD	R0,R1
 	CLR.B	(R0)
-;   65					cli_process_command(buffer);
-.line 65
+;   71					cli_process_command(buffer);
+.line 71
 	LEA	R1,-261(R14)
 	CALL	_cli_process_command
-;   66				}
+;   72				}
 _2_L_4:
-.line 66
-;   67	
-;   68				buffer_pos = 0;
-.line 68
+.line 72
+;   73	
+;   74				buffer_pos = 0;
+.line 74
 	CLR	-5(R14)
-;   69				memset(buffer, 0, CLI_BUFFER_SIZE);
-.line 69
+;   75				memset(buffer, 0, CLI_BUFFER_SIZE);
+.line 75
 	LEA	R1,-261(R14)
 	LD	R2,#0
 	LD	R3,#256
 	CALL	_memset
-;   70	
-;   71				uart_printf("%s", cli_prompt);
-.line 71
+;   76	
+;   77				uart_printf("%s", cli_prompt);
+.line 77
 	PUSH.W	#_cli_prompt
 	PUSH.W	#L__6
 	CALL	_uart_printf
 	ADD	R15,#4
-;   72			}
-;   73			//there is more to come...
-;   74			else if(isgraph(c) || isspace(c)) {
-.line 74
+;   78			}
+;   79			//there is more to come...
+;   80			else if(isgraph(c) || isspace(c)) {
+.line 80
 	JP	_2_L_17
 _2_L_14:
 	LD.UB	R1,-1(R14)
@@ -260,80 +266,80 @@ _2_L_14:
 	CP	R0,#0
 	JP	EQ,_2_L_12
 _2_L_11:
-;   75				buffer[buffer_pos++] = c;
-.line 75
+;   81				buffer[buffer_pos++] = c;
+.line 81
 	LD	R0,-5(R14)
 	LEA	R1,-261(R14)
 	ADD	R0,R1
 	LD.SB	R1,-1(R14)
 	LD.B	(R0),R1
 	INC	-5(R14)
-;   76			}
-;   77			//
-;   78			else if(c == ASCII_DEL) {
-.line 78
+;   82			}
+;   83			//
+;   84			else if(c == ASCII_DEL) {
+.line 84
 	JP	_2_L_17
 _2_L_12:
 	LD	R0,#127
 	CP.B	-1(R14),R0
 	JP	NE,_2_L_18
-;   79				if(buffer_pos) {
-.line 79
+;   85				if(buffer_pos) {
+.line 85
 	CPZ	-5(R14)
 	JP	EQ,_2_L_17
-;   80					buffer_pos--;
-.line 80
+;   86					buffer_pos--;
+.line 86
 	DEC	-5(R14)
-;   81					buffer[buffer_pos] = '\0';
-.line 81
+;   87					buffer[buffer_pos] = '\0';
+.line 87
 	LD.SW	R0,-3(R14)
 	LEA	R1,-261(R14)
 	ADD	R0,R1
 	CLR.B	(R0)
-;   82				}
-;   83			}
-;   84			//ignore for now
-;   85			else {
-.line 85
-;   86				continue;
-;   87			}
+;   88				}
+;   89			}
+;   90			//ignore for now
+;   91			else {
+.line 91
+;   92				continue;
+;   93			}
 _2_L_17:
-.line 87
-;   88	
-;   89			//is the command too long?
-;   90			if(buffer_pos >= CLI_BUFFER_SIZE) {
-.line 90
+.line 93
+;   94	
+;   95			//is the command too long?
+;   96			if(buffer_pos >= CLI_BUFFER_SIZE) {
+.line 96
 	LD	R0,#256
 	CP	-5(R14),R0
 	JP	LT,_2_L_18
-;   91				uart_printf("\n--Error--, command is too long. Command ignored.\n");
-.line 91
+;   97				uart_printf("\n--Error--, command is too long. Command ignored.\n");
+.line 97
 	PUSH.W	#L__12
 	CALL	_uart_printf
 	ADD	R15,#2
-;   92				
-;   93				buffer_pos = 0;
-.line 93
+;   98				
+;   99				buffer_pos = 0;
+.line 99
 	CLR	-5(R14)
-;   94				memset(buffer, 0, CLI_BUFFER_SIZE);
-.line 94
+;  100				memset(buffer, 0, CLI_BUFFER_SIZE);
+.line 100
 	LEA	R1,-261(R14)
 	LD	R2,#0
 	LD	R3,#256
 	CALL	_memset
-;   95	
-;   96				uart_printf("%s", cli_prompt);
-.line 96
+;  101	
+;  102				uart_printf("%s", cli_prompt);
+.line 102
 	PUSH.W	#_cli_prompt
 	PUSH.W	#L__13
 	CALL	_uart_printf
 	ADD	R15,#4
-;   97			}
-;   98		}
-.line 98
+;  103			}
+;  104		}
+.line 104
 	JP	_2_L_18
-;   99	}
-.line 99
+;  105	}
+.line 105
 	UNLINK	
 	RET	
 
@@ -355,48 +361,480 @@ _2_L_17:
 ; Aggregate Stack Size: -261 (words)
 
 
-.endfunc "cli_loop",99,"_cli_loop"
+.endfunc "cli_loop",105,"_cli_loop"
+;  106	
+;  107	int cli_strip_quotes(char **args)
+;  108	{
+_cli_strip_quotes:
+.define "_cli_strip_quotes"
+.value _cli_strip_quotes
+.class 2
+.type 69
+.type 0
+.endef
+.begfunc "cli_strip_quotes",108,"_cli_strip_quotes"
+	LINK	#4
+.line 108
+	LD.W	-2(R14),R1
+.define "args"
+.class 9
+.value -2
+.type 1164
+.type 0
+.endef
+.define "c"
+.class 1
+.value -4
+.type 140
+.type 0
+.endef
+;  109		char *c;
+;  110	
+;  111		c = *args;
+.line 111
+	LD.SW	R0,-2(R14)
+	LD.SW	R0,(R0)
+	LD.W	-4(R14),R0
+;  112		if(*c != '"') {
+.line 112
+	LD.SW	R0,-4(R14)
+	LD.UB	R0,(R0)
+	CP	R0,#34
+	JP	EQ,_3_L_22
+;  113			return 1;
+.line 113
+	LD	R0,#1
+	JP	_3_L_25
+;  114		}
+_3_L_22:
+.line 114
+;  115		++c;
+.line 115
+	INC.W	-4(R14)
+;  116	
+;  117		c = strchr(c, '"');
+.line 117
+	LD.SW	R1,-4(R14)
+	LD	R2,#34
+	CALL	_strchr
+	LD.W	-4(R14),R0
+;  118		if(c == NULL) {
+.line 118
+	CPZ.W	-4(R14)
+	JP	NE,_3_L_24
+;  119			return 1;
+.line 119
+	LD	R0,#1
+	JP	_3_L_25
+;  120		}
+_3_L_24:
+.line 120
+;  121		*c = '\0';
+.line 121
+	LD.SW	R0,-4(R14)
+	CLR.B	(R0)
+;  122	
+;  123		*args = c;
+.line 123
+	LD.SW	R0,-2(R14)
+	LD.SW	R1,-4(R14)
+	LD.W	(R0),R1
+;  124	
+;  125		return 0;
+.line 125
+	LD	R0,#0
+;  126	}
+_3_L_25:
+.line 126
+	UNLINK	
+	RET	
+
+
+;**************************** _cli_strip_quotes ***************************
+;Name                         Addr/Register   Size   Type
+;_strchr                             IMPORT  -----   function
+;c                                    R14-4      2   variable
+;args                                 R14-2      2   parameter
+
+
+; Aggregate Stack Size: -4 (words)
+
+
+.endfunc "cli_strip_quotes",126,"_cli_strip_quotes"
+;  127	
+;  128	int cli_strip_word(char **args) 
+;  129	{
+_cli_strip_word:
+.define "_cli_strip_word"
+.value _cli_strip_word
+.class 2
+.type 69
+.type 0
+.endef
+.begfunc "cli_strip_word",129,"_cli_strip_word"
+	LINK	#4
+.line 129
+	LD.W	-2(R14),R1
+.define "args"
+.class 9
+.value -2
+.type 1164
+.type 0
+.endef
+.define "c"
+.class 1
+.value -4
+.type 140
+.type 0
+.endef
+;  130		char *c;
+;  131	
+;  132		c = *args;
+.line 132
+	LD.SW	R0,-2(R14)
+	LD.SW	R0,(R0)
+	LD.W	-4(R14),R0
+;  133		while(isalpha(*c)) {
+_4_L_26:
+.line 133
+	LD.SW	R0,-4(R14)
+	LD.UB	R1,(R0)
+	CALL	_isalpha
+	CP	R0,#0
+	JP	EQ,_4_L_29
+;  134			++c;
+.line 134
+	INC.W	-4(R14)
+;  135		}
+.line 135
+	JP	_4_L_26
+_4_L_29:
+;  136	
+;  137		if(*c == '\0') {
+.line 137
+	LD.SW	R0,-4(R14)
+	CPZ.B	(R0)
+	JP	NE,_4_L_30
+;  138			return 1;
+.line 138
+	LD	R0,#1
+	JP	_4_L_31
+;  139		}
+_4_L_30:
+.line 139
+;  140		*c = '\0';
+.line 140
+	LD.SW	R0,-4(R14)
+	CLR.B	(R0)
+;  141	
+;  142		*args = c;
+.line 142
+	LD.SW	R0,-2(R14)
+	LD.SW	R1,-4(R14)
+	LD.W	(R0),R1
+;  143	
+;  144		return 0;
+.line 144
+	LD	R0,#0
+;  145	}
+_4_L_31:
+.line 145
+	UNLINK	
+	RET	
+
+
+;**************************** _cli_strip_word ***************************
+;Name                         Addr/Register   Size   Type
+;_isalpha                            IMPORT  -----   function
+;c                                    R14-4      2   variable
+;args                                 R14-2      2   parameter
+
+
+; Aggregate Stack Size: -4 (words)
+
+
+.endfunc "cli_strip_word",145,"_cli_strip_word"
+;  146	
+;  147	int cli_strip_decimal_number(char **args)
+;  148	{
+_cli_strip_decimal_number:
+.define "_cli_strip_decimal_number"
+.value _cli_strip_decimal_number
+.class 2
+.type 69
+.type 0
+.endef
+.begfunc "cli_strip_decimal_number",148,"_cli_strip_decimal_number"
+	LINK	#4
+.line 148
+	LD.W	-2(R14),R1
+.define "args"
+.class 9
+.value -2
+.type 1164
+.type 0
+.endef
+.define "c"
+.class 1
+.value -4
+.type 140
+.type 0
+.endef
+;  149		char *c;
+;  150	
+;  151		c = *args;
+.line 151
+	LD.SW	R0,-2(R14)
+	LD.SW	R0,(R0)
+	LD.W	-4(R14),R0
+;  152		while(isdigit(*c)) {
+_5_L_32:
+.line 152
+	LD.SW	R0,-4(R14)
+	LD.UB	R1,(R0)
+	CALL	_isdigit
+	CP	R0,#0
+	JP	EQ,_5_L_34
+;  153			++c;
+.line 153
+	INC.W	-4(R14)
+;  154		}
+.line 154
+	JP	_5_L_32
+_5_L_34:
+;  155		*c = '\0';
+.line 155
+	LD.SW	R0,-4(R14)
+	CLR.B	(R0)
+;  156	
+;  157		//is there a number at all
+;  158		if(*args == c) {
+.line 158
+	LD.SW	R0,-2(R14)
+	LD.SW	R1,-4(R14)
+	CP.W	(R0),R1
+	JP	NE,_5_L_36
+;  159			return 1;
+.line 159
+	LD	R0,#1
+	JP	_5_L_37
+;  160		}
+_5_L_36:
+.line 160
+;  161		*args = c;
+.line 161
+	LD.SW	R0,-2(R14)
+	LD.SW	R1,-4(R14)
+	LD.W	(R0),R1
+;  162	
+;  163		return 0;
+.line 163
+	LD	R0,#0
+;  164	}
+_5_L_37:
+.line 164
+	UNLINK	
+	RET	
+
+
+;**************************** _cli_strip_decimal_number ***************************
+;Name                         Addr/Register   Size   Type
+;_isdigit                            IMPORT  -----   function
+;c                                    R14-4      2   variable
+;args                                 R14-2      2   parameter
+
+
+; Aggregate Stack Size: -4 (words)
+
+
+.endfunc "cli_strip_decimal_number",164,"_cli_strip_decimal_number"
+;  165	
+;  166	void cli_strip_spaces(char **args)
+;  167	{
+_cli_strip_spaces:
+.define "_cli_strip_spaces"
+.value _cli_strip_spaces
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "cli_strip_spaces",167,"_cli_strip_spaces"
+	LINK	#4
+.line 167
+	LD.W	-2(R14),R1
+.define "args"
+.class 9
+.value -2
+.type 1164
+.type 0
+.endef
+.define "c"
+.class 1
+.value -4
+.type 140
+.type 0
+.endef
+;  168		char *c;
+;  169	
+;  170		c = *args;
+.line 170
+	LD.SW	R0,-2(R14)
+	LD.SW	R0,(R0)
+	LD.W	-4(R14),R0
+;  171		while(isspace(*c)) {
+_6_L_38:
+.line 171
+	LD.SW	R0,-4(R14)
+	LD.UB	R1,(R0)
+	CALL	_isspace
+	CP	R0,#0
+	JP	EQ,_6_L_40
+;  172			++c;
+.line 172
+	INC.W	-4(R14)
+;  173		}
+.line 173
+	JP	_6_L_38
+_6_L_40:
+;  174	
+;  175		*args = c;
+.line 175
+	LD.SW	R0,-2(R14)
+	LD.SW	R1,-4(R14)
+	LD.W	(R0),R1
+;  176	}
+.line 176
+	UNLINK	
+	RET	
+
+
+;**************************** _cli_strip_spaces ***************************
+;Name                         Addr/Register   Size   Type
+;_isspace                            IMPORT  -----   function
+;c                                    R14-4      2   variable
+;args                                 R14-2      2   parameter
+
+
+; Aggregate Stack Size: -4 (words)
+
+
+.endfunc "cli_strip_spaces",176,"_cli_strip_spaces"
+;  177	
+;  178	void cli_set_prompt(const char *text)
+;  179	{
+_cli_set_prompt:
+.define "_cli_set_prompt"
+.value _cli_set_prompt
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "cli_set_prompt",179,"_cli_set_prompt"
+	LINK	#6
+.line 179
+	LD.W	-2(R14),R1
+.define "text"
+.class 9
+.value -2
+.type 140
+.type 0
+.endef
+.define "prompt_len"
+.class 1
+.value -6
+.type 15
+.type 0
+.endef
+;  180		size_t prompt_len;
+;  181	
+;  182		prompt_len = strlen(text) + 1;
+.line 182
+	LD.SW	R1,-2(R14)
+	CALL	_strlen
+	ADD	R0,#1
+	LD	-6(R14),R0
+;  183		if(prompt_len >= CLI_BUFFER_SIZE) {
+.line 183
+	LD	R0,#256
+	CP	-6(R14),R0
+	JP	C,_7_L_43
+;  184			prompt_len = CLI_BUFFER_SIZE;
+.line 184
+	LD	-6(R14),R0
+;  185		}
+_7_L_43:
+.line 185
+;  186	
+;  187		memcpy(cli_prompt, text, prompt_len);
+.line 187
+	LD	R1,#_cli_prompt
+	LD.SW	R2,-2(R14)
+	LD	R3,-6(R14)
+	CALL	_memcpy
+;  188		cli_prompt[prompt_len-1] = '\0';
+.line 188
+	LD	R0,-6(R14)
+	ADD	R0,#-1
+	LD	R1,#_cli_prompt
+	ADD	R0,R1
+	CLR.B	(R0)
+;  189	}
+.line 189
+	UNLINK	
+	RET	
+
+
+;**************************** _cli_set_prompt ***************************
+;Name                         Addr/Register   Size   Type
+;_cli_prompt                         STATIC    256   variable
+;_memcpy                             IMPORT  -----   function
+;_strlen                             IMPORT  -----   function
+;prompt_len                           R14-6      4   variable
+;text                                 R14-2      2   parameter
+
+
+; Aggregate Stack Size: -6 (words)
+
+
+.endfunc "cli_set_prompt",189,"_cli_set_prompt"
 	SEGMENT ROM_TEXT
-L__19:
+L__31:
 	DB	"info"
 	DB	0
-L__21:
+L__33:
 	DB	"?"
 	DB	0
-L__23:
+L__35:
 	DB	"echo"
 	DB	0
-L__25:
+L__37:
 	DB	"display"
 	DB	0
-L__27:
-	DB	"set"
-	DB	0
-L__29:
-	DB	"hex"
-	DB	0
-L__31:
-	DB	"set"
-	DB	0
-L__33:
-	DB	"switch"
-	DB	0
-L__35:
-	DB	"port"
-	DB	0
-L__37:
-	DB	"timer"
-	DB	0
 L__39:
-	DB	"uart0"
+	DB	"set"
 	DB	0
 L__41:
+	DB	"hex"
+	DB	0
+L__43:
+	DB	"switch"
+	DB	0
+L__45:
+	DB	"port"
+	DB	0
+L__47:
+	DB	"timer"
+	DB	0
+L__49:
+	DB	"uart0"
+	DB	0
+L__51:
 	DB	"--Command:%s, not found. Enter \"?\" to see a list of available commands."
 	DB	10,0
 	SEGMENT CODE
-;  100	
-;  101	static void cli_process_command(char *command)
-;  102	{
+;  190	
+;  191	static void cli_process_command(char *command)
+;  192	{
 _cli_process_command:
 .define "_cli_process_command"
 .value _cli_process_command
@@ -404,9 +842,9 @@ _cli_process_command:
 .type 65
 .type 0
 .endef
-.begfunc "cli_process_command",102,"_cli_process_command"
+.begfunc "cli_process_command",192,"_cli_process_command"
 	LINK	#4
-.line 102
+.line 192
 	LD.W	-2(R14),R1
 .define "command"
 .class 9
@@ -414,204 +852,209 @@ _cli_process_command:
 .type 140
 .type 0
 .endef
-.define "token_end"
+.define "args"
 .class 1
 .value -4
 .type 140
 .type 0
 .endef
-;  103		char *token_end;
-;  104	
-;  105		//strip spaces and tabs
-;  106		while(isspace(*command)) {
-_3_L_21:
-.line 106
-	LD.SW	R0,-2(R14)
-	LD.UB	R1,(R0)
-	CALL	_isspace
-	CP	R0,#0
-	JP	EQ,_3_L_23
-;  107			++command;
-.line 107
-	INC.W	-2(R14)
-;  108		}
-.line 108
-	JP	_3_L_21
-_3_L_23:
-;  109	
-;  110		token_end = command;
-.line 110
+;  193		char *args;
+;  194	
+;  195		//strip spaces and tabs
+;  196		cli_strip_spaces(&command);
+.line 196
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_spaces
+;  197	
+;  198		args = command;
+.line 198
 	LD.SW	R0,-2(R14)
 	LD.W	-4(R14),R0
-;  111		while(isgraph(*token_end) && *token_end != '\t') {	//bug with isgraph, returns true on \t, and it shouldn't
-_3_L_26:
-.line 111
+;  199		while(isgraph(*args) && *args != '\t') {	//bug with isgraph, returns true on \t and it shouldn't
+_8_L_46:
+.line 199
 	LD.SW	R0,-4(R14)
 	LD.UB	R1,(R0)
 	CALL	_isgraph
 	CP	R0,#0
-	JP	EQ,_3_L_51
+	JP	EQ,_8_L_69
 	LD.SW	R0,-4(R14)
 	LD.UB	R0,(R0)
 	CP	R0,#9
-	JP	EQ,_3_L_51
-;  112			token_end++;
-.line 112
+	JP	EQ,_8_L_69
+;  200			++args;
+.line 200
 	INC.W	-4(R14)
-;  113		}
-.line 113
-	JP	_3_L_26
-_3_L_51:
-;  114	
-;  115		if(token_end != command) {
-.line 115
+;  201		}
+.line 201
+	JP	_8_L_46
+_8_L_69:
+;  202	
+;  203		if(args != command) {
+.line 203
 	LD.SW	R0,-2(R14)
 	CP.W	-4(R14),R0
-	JP	EQ,_3_L_52
-;  116			*token_end = '\0';
-.line 116
+	JP	EQ,_8_L_70
+;  204			*args = '\0';
+.line 204
 	LD.SW	R0,-4(R14)
 	CLR.B	(R0)
-;  117	
-;  118			++token_end;
-.line 118
+;  205	
+;  206			++args;
+.line 206
 	INC.W	-4(R14)
-;  119			if(strcmp(command, "info") == 0) {
-.line 119
-	LD.SW	R1,-2(R14)
-	LD	R2,#L__19
-	CALL	_strcmp
-	CP	R0,#0
-	JP	NE,_3_L_49
-;  120				cli_command_info();
-.line 120
-	CALL	_cli_command_info
-;  121			}
-;  122			else if(strcmp(command, "?") == 0) {
-.line 122
-	JP	_3_L_52
-_3_L_49:
-	LD.SW	R1,-2(R14)
-	LD	R2,#L__21
-	CALL	_strcmp
-	CP	R0,#0
-	JP	NE,_3_L_47
-;  123				cli_command_question();
-.line 123
-	CALL	_cli_command_question
-;  124			}
-;  125			else if(strcmp(command, "echo") == 0) {
-.line 125
-	JP	_3_L_52
-_3_L_47:
-	LD.SW	R1,-2(R14)
-	LD	R2,#L__23
-	CALL	_strcmp
-	CP	R0,#0
-	JP	NE,_3_L_45
-;  126				cli_command_echo(token_end);
-.line 126
-	LD.SW	R1,-4(R14)
-	CALL	_cli_command_echo
-;  127			}
-;  128			else if(strcmp(command, "display") == 0) {
-.line 128
-	JP	_3_L_52
-_3_L_45:
-	LD.SW	R1,-2(R14)
-	LD	R2,#L__25
-	CALL	_strcmp
-	CP	R0,#0
-	JP	NE,_3_L_43
-;  129				cli_command_display(token_end);
-.line 129
-	LD.SW	R1,-4(R14)
-	CALL	_cli_command_display
-;  130			}
-;  131			else if(strcmp(command, "set") == 0) {
-.line 131
-	JP	_3_L_52
-_3_L_43:
-	LD.SW	R1,-2(R14)
-	LD	R2,#L__27
-	CALL	_strcmp
-	CP	R0,#0
-	JP	EQ,_3_L_52
-;  132				
-;  133			}
-;  134			else if(strcmp(command, "hex") == 0) {
-.line 134
-	LD.SW	R1,-2(R14)
-	LD	R2,#L__29
-	CALL	_strcmp
-	CP	R0,#0
-	JP	NE,_3_L_39
-;  135				cli_command_hex(token_end);
-.line 135
-	LD.SW	R1,-4(R14)
-	CALL	_cli_command_hex
-;  136			}
-;  137			else if(strcmp(command, "set") == 0) {
-.line 137
-	JP	_3_L_52
-_3_L_39:
+;  207			if(strcmp(command, "info") == 0) {
+.line 207
 	LD.SW	R1,-2(R14)
 	LD	R2,#L__31
 	CALL	_strcmp
 	CP	R0,#0
-	JP	EQ,_3_L_52
-;  138				
-;  139			}
-;  140			else if(strcmp(command, "switch") == 0) {
-.line 140
+	JP	NE,_8_L_67
+;  208				cli_command_info();
+.line 208
+	CALL	_cli_command_info
+;  209			}
+;  210			else if(strcmp(command, "?") == 0) {
+.line 210
+	JP	_8_L_70
+_8_L_67:
 	LD.SW	R1,-2(R14)
 	LD	R2,#L__33
 	CALL	_strcmp
 	CP	R0,#0
-	JP	EQ,_3_L_52
-;  141				
-;  142			}
-;  143			else if(strcmp(command, "port") == 0) {
-.line 143
+	JP	NE,_8_L_65
+;  211				cli_command_question();
+.line 211
+	CALL	_cli_command_question
+;  212			}
+;  213			else if(strcmp(command, "echo") == 0) {
+.line 213
+	JP	_8_L_70
+_8_L_65:
 	LD.SW	R1,-2(R14)
 	LD	R2,#L__35
 	CALL	_strcmp
 	CP	R0,#0
-	JP	EQ,_3_L_52
-;  144				
-;  145			}
-;  146			else if(strcmp(command, "timer") == 0) {
-.line 146
+	JP	NE,_8_L_63
+;  214				cli_command_echo(args);
+.line 214
+	LD.SW	R1,-4(R14)
+	CALL	_cli_command_echo
+;  215			}
+;  216			else if(strcmp(command, "display") == 0) {
+.line 216
+	JP	_8_L_70
+_8_L_63:
 	LD.SW	R1,-2(R14)
 	LD	R2,#L__37
 	CALL	_strcmp
 	CP	R0,#0
-	JP	EQ,_3_L_52
-;  147				
-;  148			}
-;  149			else if(strcmp(command, "uart0") == 0) {
-.line 149
+	JP	NE,_8_L_61
+;  217				cli_command_display(args);
+.line 217
+	LD.SW	R1,-4(R14)
+	CALL	_cli_command_display
+;  218			}
+;  219			else if(strcmp(command, "set") == 0) {
+.line 219
+	JP	_8_L_70
+_8_L_61:
 	LD.SW	R1,-2(R14)
 	LD	R2,#L__39
 	CALL	_strcmp
 	CP	R0,#0
-	JP	EQ,_3_L_52
-;  150				
-;  151			}
-;  152			else {
-.line 152
-;  153				uart_printf("--Command:%s, not found. Enter \"?\" to see a list of available commands.\n", command);
-.line 153
+	JP	NE,_8_L_59
+;  220				cli_command_set(args);
+.line 220
+	LD.SW	R1,-4(R14)
+	CALL	_cli_command_set
+;  221			}
+;  222			else if(strcmp(command, "hex") == 0) {
+.line 222
+	JP	_8_L_70
+_8_L_59:
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__41
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_8_L_57
+;  223				cli_command_hex(args);
+.line 223
+	LD.SW	R1,-4(R14)
+	CALL	_cli_command_hex
+;  224			}
+;  225			else if(strcmp(command, "switch") == 0) {
+.line 225
+	JP	_8_L_70
+_8_L_57:
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__43
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_8_L_55
+;  226				cli_command_switch(args);
+.line 226
+	LD.SW	R1,-4(R14)
+	CALL	_cli_command_switch
+;  227			}
+;  228			else if(strcmp(command, "port") == 0) {
+.line 228
+	JP	_8_L_70
+_8_L_55:
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__45
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_8_L_53
+;  229				cli_command_port(args);
+.line 229
+	LD.SW	R1,-4(R14)
+	CALL	_cli_command_port
+;  230			}
+;  231			else if(strcmp(command, "timer") == 0) {
+.line 231
+	JP	_8_L_70
+_8_L_53:
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__47
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_8_L_51
+;  232				cli_command_timer(args);
+.line 232
+	LD.SW	R1,-4(R14)
+	CALL	_cli_command_timer
+;  233			}
+;  234			else if(strcmp(command, "uart0") == 0) {
+.line 234
+	JP	_8_L_70
+_8_L_51:
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__49
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_8_L_49
+;  235				cli_command_uart0(args);
+.line 235
+	LD.SW	R1,-4(R14)
+	CALL	_cli_command_uart0
+;  236			}
+;  237			else {
+.line 237
+	JP	_8_L_70
+_8_L_49:
+;  238				uart_printf("--Command:%s, not found. Enter \"?\" to see a list of available commands.\n", command);
+.line 238
 	LD.SW	R0,-2(R14)
 	PUSH.W	R0
-	PUSH.W	#L__41
+	PUSH.W	#L__51
 	CALL	_uart_printf
 	ADD	R15,#4
-;  154			}
-;  155		}
-;  156	}
-_3_L_52:
-.line 156
+;  239			}
+;  240		}
+;  241	}
+_8_L_70:
+.line 241
 	UNLINK	
 	RET	
 
@@ -619,91 +1062,96 @@ _3_L_52:
 ;**************************** _cli_process_command ***************************
 ;Name                         Addr/Register   Size   Type
 ;_uart_printf                        IMPORT  -----   function
+;_cli_command_uart0                  STATIC  -----   function
+;_cli_command_timer                  STATIC  -----   function
+;_cli_command_port                   STATIC  -----   function
+;_cli_command_switch                 STATIC  -----   function
 ;_cli_command_hex                    STATIC  -----   function
+;_cli_command_set                    STATIC  -----   function
 ;_cli_command_display                STATIC  -----   function
 ;_cli_command_echo                   STATIC  -----   function
 ;_cli_command_question               STATIC  -----   function
 ;_cli_command_info                   STATIC  -----   function
 ;_strcmp                             IMPORT  -----   function
 ;_isgraph                            IMPORT  -----   function
-;_isspace                            IMPORT  -----   function
-;token_end                            R14-4      2   variable
+;_cli_strip_spaces                   IMPORT  -----   function
+;args                                 R14-4      2   variable
 ;command                              R14-2      2   parameter
 
 
 ; Aggregate Stack Size: -4 (words)
 
 
-.endfunc "cli_process_command",156,"_cli_process_command"
+.endfunc "cli_process_command",241,"_cli_process_command"
 	SEGMENT ROM_TEXT
-L__43:
+L__53:
 	DB	10
 	DB	"Available Commands:"
 	DB	10,10,0
-L__44:
+L__54:
 	DB	"echo [\"text\"]"
 	DB	10,0
-L__45:
+L__55:
 	DB	" -Echos text back to the serial port."
 	DB	10,0
-L__46:
+L__56:
 	DB	"display [\"text\"]"
 	DB	10,0
-L__47:
+L__57:
 	DB	" -Display text on the LEDs."
 	DB	10,0
-L__48:
+L__58:
 	DB	"set prompt [\"text\"]"
 	DB	10,0
-L__49:
+L__59:
 	DB	" -Set the CLI prompt to text."
 	DB	10,0
-L__50:
+L__60:
 	DB	"hex [decimal number]"
 	DB	10,0
-L__51:
+L__61:
 	DB	" -Display a decimal number in hex on the LEDs."
 	DB	10,0
-L__52:
+L__62:
 	DB	"switch [0-2] [\"text\"]"
 	DB	10,0
-L__53:
+L__63:
 	DB	" -Assigns the text macro to a button."
 	DB	10,0
-L__54:
+L__64:
 	DB	"port [A-K]"
 	DB	10,0
-L__55:
+L__65:
 	DB	" -Display the current state of the port."
 	DB	10,0
-L__56:
+L__66:
 	DB	"timer [0-2]"
 	DB	10,0
-L__57:
+L__67:
 	DB	" -Display the current state of the timer."
 	DB	10,0
-L__58:
+L__68:
 	DB	"uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]"
 	DB	10,0
-L__59:
+L__69:
 	DB	" -Set the uart0 settings."
 	DB	10,0
-L__60:
+L__70:
 	DB	"info"
 	DB	10,0
-L__61:
+L__71:
 	DB	" -Displays various system information."
 	DB	10,0
-L__62:
+L__72:
 	DB	"?"
 	DB	10,0
-L__63:
+L__73:
 	DB	" -Displays a menu of CLI commands."
 	DB	10,0
 	SEGMENT CODE
-;  157	
-;  158	static void cli_command_question(void)
-;  159	{
+;  242	
+;  243	static void cli_command_question(void)
+;  244	{
 _cli_command_question:
 .define "_cli_command_question"
 .value _cli_command_question
@@ -711,125 +1159,125 @@ _cli_command_question:
 .type 65
 .type 0
 .endef
-.begfunc "cli_command_question",159,"_cli_command_question"
+.begfunc "cli_command_question",244,"_cli_command_question"
 	LINK	#0
-;  160		uart_printf("\nAvailable Commands:\n\n");
-.line 160
-	PUSH.W	#L__43
-	CALL	_uart_printf
-	ADD	R15,#2
-;  161	
-;  162		uart_printf("echo [\"text\"]\n");
-.line 162
-	PUSH.W	#L__44
-	CALL	_uart_printf
-	ADD	R15,#2
-;  163		uart_printf(" -Echos text back to the serial port.\n");
-.line 163
-	PUSH.W	#L__45
-	CALL	_uart_printf
-	ADD	R15,#2
-;  164	
-;  165		uart_printf("display [\"text\"]\n");
-.line 165
-	PUSH.W	#L__46
-	CALL	_uart_printf
-	ADD	R15,#2
-;  166		uart_printf(" -Display text on the LEDs.\n");
-.line 166
-	PUSH.W	#L__47
-	CALL	_uart_printf
-	ADD	R15,#2
-;  167	
-;  168		uart_printf("set prompt [\"text\"]\n");
-.line 168
-	PUSH.W	#L__48
-	CALL	_uart_printf
-	ADD	R15,#2
-;  169		uart_printf(" -Set the CLI prompt to text.\n");
-.line 169
-	PUSH.W	#L__49
-	CALL	_uart_printf
-	ADD	R15,#2
-;  170	
-;  171		uart_printf("hex [decimal number]\n");
-.line 171
-	PUSH.W	#L__50
-	CALL	_uart_printf
-	ADD	R15,#2
-;  172		uart_printf(" -Display a decimal number in hex on the LEDs.\n");
-.line 172
-	PUSH.W	#L__51
-	CALL	_uart_printf
-	ADD	R15,#2
-;  173	
-;  174		uart_printf("switch [0-2] [\"text\"]\n");
-.line 174
-	PUSH.W	#L__52
-	CALL	_uart_printf
-	ADD	R15,#2
-;  175		uart_printf(" -Assigns the text macro to a button.\n");
-.line 175
+;  245		uart_printf("\nAvailable Commands:\n\n");
+.line 245
 	PUSH.W	#L__53
 	CALL	_uart_printf
 	ADD	R15,#2
-;  176	
-;  177		uart_printf("port [A-K]\n");
-.line 177
+;  246	
+;  247		uart_printf("echo [\"text\"]\n");
+.line 247
 	PUSH.W	#L__54
 	CALL	_uart_printf
 	ADD	R15,#2
-;  178		uart_printf(" -Display the current state of the port.\n");
-.line 178
+;  248		uart_printf(" -Echos text back to the serial port.\n");
+.line 248
 	PUSH.W	#L__55
 	CALL	_uart_printf
 	ADD	R15,#2
-;  179	
-;  180		uart_printf("timer [0-2]\n");
-.line 180
+;  249	
+;  250		uart_printf("display [\"text\"]\n");
+.line 250
 	PUSH.W	#L__56
 	CALL	_uart_printf
 	ADD	R15,#2
-;  181		uart_printf(" -Display the current state of the timer.\n");
-.line 181
+;  251		uart_printf(" -Display text on the LEDs.\n");
+.line 251
 	PUSH.W	#L__57
 	CALL	_uart_printf
 	ADD	R15,#2
-;  182	
-;  183		uart_printf("uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
-.line 183
+;  252	
+;  253		uart_printf("set prompt [\"text\"]\n");
+.line 253
 	PUSH.W	#L__58
 	CALL	_uart_printf
 	ADD	R15,#2
-;  184		uart_printf(" -Set the uart0 settings.\n");
-.line 184
+;  254		uart_printf(" -Set the CLI prompt to text.\n");
+.line 254
 	PUSH.W	#L__59
 	CALL	_uart_printf
 	ADD	R15,#2
-;  185	
-;  186		uart_printf("info\n");
-.line 186
+;  255	
+;  256		uart_printf("hex [decimal number]\n");
+.line 256
 	PUSH.W	#L__60
 	CALL	_uart_printf
 	ADD	R15,#2
-;  187		uart_printf(" -Displays various system information.\n");
-.line 187
+;  257		uart_printf(" -Display a decimal number in hex on the LEDs.\n");
+.line 257
 	PUSH.W	#L__61
 	CALL	_uart_printf
 	ADD	R15,#2
-;  188	
-;  189		uart_printf("?\n");
-.line 189
+;  258	
+;  259		uart_printf("switch [0-2] [\"text\"]\n");
+.line 259
 	PUSH.W	#L__62
 	CALL	_uart_printf
 	ADD	R15,#2
-;  190		uart_printf(" -Displays a menu of CLI commands.\n");
-.line 190
+;  260		uart_printf(" -Assigns the text macro to a button.\n");
+.line 260
 	PUSH.W	#L__63
 	CALL	_uart_printf
 	ADD	R15,#2
-;  191	}
-.line 191
+;  261	
+;  262		uart_printf("port [A-K]\n");
+.line 262
+	PUSH.W	#L__64
+	CALL	_uart_printf
+	ADD	R15,#2
+;  263		uart_printf(" -Display the current state of the port.\n");
+.line 263
+	PUSH.W	#L__65
+	CALL	_uart_printf
+	ADD	R15,#2
+;  264	
+;  265		uart_printf("timer [0-2]\n");
+.line 265
+	PUSH.W	#L__66
+	CALL	_uart_printf
+	ADD	R15,#2
+;  266		uart_printf(" -Display the current state of the timer.\n");
+.line 266
+	PUSH.W	#L__67
+	CALL	_uart_printf
+	ADD	R15,#2
+;  267	
+;  268		uart_printf("uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+.line 268
+	PUSH.W	#L__68
+	CALL	_uart_printf
+	ADD	R15,#2
+;  269		uart_printf(" -Set the uart0 settings.\n");
+.line 269
+	PUSH.W	#L__69
+	CALL	_uart_printf
+	ADD	R15,#2
+;  270	
+;  271		uart_printf("info\n");
+.line 271
+	PUSH.W	#L__70
+	CALL	_uart_printf
+	ADD	R15,#2
+;  272		uart_printf(" -Displays various system information.\n");
+.line 272
+	PUSH.W	#L__71
+	CALL	_uart_printf
+	ADD	R15,#2
+;  273	
+;  274		uart_printf("?\n");
+.line 274
+	PUSH.W	#L__72
+	CALL	_uart_printf
+	ADD	R15,#2
+;  275		uart_printf(" -Displays a menu of CLI commands.\n");
+.line 275
+	PUSH.W	#L__73
+	CALL	_uart_printf
+	ADD	R15,#2
+;  276	}
+.line 276
 	UNLINK	
 	RET	
 
@@ -842,10 +1290,10 @@ _cli_command_question:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "cli_command_question",191,"_cli_command_question"
-;  192	
-;  193	static void cli_command_info(void)
-;  194	{
+.endfunc "cli_command_question",276,"_cli_command_question"
+;  277	
+;  278	static void cli_command_info(void)
+;  279	{
 _cli_command_info:
 .define "_cli_command_info"
 .value _cli_command_info
@@ -853,13 +1301,13 @@ _cli_command_info:
 .type 65
 .type 0
 .endef
-.begfunc "cli_command_info",194,"_cli_command_info"
+.begfunc "cli_command_info",279,"_cli_command_info"
 	LINK	#0
-;  195		info_display();
-.line 195
+;  280		info_display();
+.line 280
 	CALL	_info_display
-;  196	}
-.line 196
+;  281	}
+.line 281
 	UNLINK	
 	RET	
 
@@ -872,21 +1320,18 @@ _cli_command_info:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "cli_command_info",196,"_cli_command_info"
+.endfunc "cli_command_info",281,"_cli_command_info"
 	SEGMENT ROM_TEXT
-L__68:
-	DB	"1 Incorrect format, echo [\"text\"]"
+L__77:
+	DB	"Incorrect format, echo [\"text\"]"
 	DB	10,0
-L__70:
-	DB	"2 Incorrect format, echo [\"text\"]"
-	DB	10,0
-L__71:
+L__78:
 	DB	"%s"
 	DB	10,0
 	SEGMENT CODE
-;  197	
-;  198	static void cli_command_echo(char *text)
-;  199	{
+;  282	
+;  283	static void cli_command_echo(char *args)
+;  284	{
 _cli_command_echo:
 .define "_cli_command_echo"
 .value _cli_command_echo
@@ -894,126 +1339,87 @@ _cli_command_echo:
 .type 65
 .type 0
 .endef
-.begfunc "cli_command_echo",199,"_cli_command_echo"
+.begfunc "cli_command_echo",284,"_cli_command_echo"
 	LINK	#4
-.line 199
+.line 284
 	LD.W	-2(R14),R1
-.define "text"
+.define "args"
 .class 9
 .value -2
 .type 140
 .type 0
 .endef
-.define "end"
+.define "token"
 .class 1
 .value -4
 .type 140
 .type 0
 .endef
-;  200		char *end;
-;  201	
-;  202		//strip spaces and tabs
-;  203		while(isspace(*text)) {
-_6_L_55:
-.line 203
+;  285		char *token;
+;  286	
+;  287		cli_strip_spaces(&args);
+.line 287
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_spaces
+;  288	
+;  289		token = args;
+.line 289
 	LD.SW	R0,-2(R14)
-	LD.UB	R1,(R0)
-	CALL	_isspace
-	CP	R0,#0
-	JP	EQ,_6_L_58
-;  204			++text;
-.line 204
-	INC.W	-2(R14)
-;  205		}
-.line 205
-	JP	_6_L_55
-_6_L_58:
-;  206	
-;  207		if(*text != '"') {
-.line 207
-	LD.SW	R0,-2(R14)
-	LD.UB	R0,(R0)
-	CP	R0,#34
-	JP	EQ,_6_L_60
-;  208			uart_printf("1 Incorrect format, echo [\"text\"]\n");
-.line 208
-	PUSH.W	#L__68
-	CALL	_uart_printf
-	ADD	R15,#2
-;  209			return;
-.line 209
-	JP	_6_L_63
-;  210		}
-_6_L_60:
-.line 210
-;  211		text++;
-.line 211
-	INC.W	-2(R14)
-;  212	
-;  213		end = strchr(text, '"');
-.line 213
-	LD.SW	R1,-2(R14)
-	LD	R2,#34
-	CALL	_strchr
 	LD.W	-4(R14),R0
-;  214		if(end == NULL) {
-.line 214
-	CPZ.W	-4(R14)
-	JP	NE,_6_L_62
-;  215			uart_printf("2 Incorrect format, echo [\"text\"]\n");
-.line 215
-	PUSH.W	#L__70
+;  290		if(cli_strip_quotes(&args)) {
+.line 290
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_quotes
+	CP	R0,#0
+	JP	EQ,_11_L_74
+;  291			uart_printf("Incorrect format, echo [\"text\"]\n");
+.line 291
+	PUSH.W	#L__77
 	CALL	_uart_printf
 	ADD	R15,#2
-;  216			return;
-.line 216
-	JP	_6_L_63
-;  217		}
-_6_L_62:
-.line 217
-;  218		*end = '\0';
-.line 218
+;  292			return;
+.line 292
+	JP	_11_L_75
+;  293		}
+_11_L_74:
+.line 293
+;  294	
+;  295		uart_printf("%s\n", ++token);
+.line 295
+	INC.W	-4(R14)
 	LD.SW	R0,-4(R14)
-	CLR.B	(R0)
-;  219	
-;  220		uart_printf("%s\n", text);
-.line 220
-	LD.SW	R0,-2(R14)
 	PUSH.W	R0
-	PUSH.W	#L__71
+	PUSH.W	#L__78
 	CALL	_uart_printf
 	ADD	R15,#4
-;  221	}
-_6_L_63:
-.line 221
+;  296	}
+_11_L_75:
+.line 296
 	UNLINK	
 	RET	
 
 
 ;**************************** _cli_command_echo ***************************
 ;Name                         Addr/Register   Size   Type
-;_strchr                             IMPORT  -----   function
 ;_uart_printf                        IMPORT  -----   function
-;_isspace                            IMPORT  -----   function
-;end                                  R14-4      2   variable
-;text                                 R14-2      2   parameter
+;_cli_strip_quotes                   IMPORT  -----   function
+;_cli_strip_spaces                   IMPORT  -----   function
+;token                                R14-4      2   variable
+;args                                 R14-2      2   parameter
 
 
 ; Aggregate Stack Size: -4 (words)
 
 
-.endfunc "cli_command_echo",221,"_cli_command_echo"
+.endfunc "cli_command_echo",296,"_cli_command_echo"
 	SEGMENT ROM_TEXT
-L__75:
-	DB	"1 Incorrect format, display [\"text\"]"
-	DB	10,0
-L__77:
-	DB	"2 Incorrect format, display [\"text\"]"
+L__81:
+	DB	"Incorrect format, display [\"text\"]"
 	DB	10,0
 	SEGMENT CODE
-;  222	
-;  223	static void cli_command_display(char *text)
-;  224	{
+;  297	
+;  298	static void cli_command_display(char *args)
+;  299	{
 _cli_command_display:
 .define "_cli_command_display"
 .value _cli_command_display
@@ -1021,95 +1427,59 @@ _cli_command_display:
 .type 65
 .type 0
 .endef
-.begfunc "cli_command_display",224,"_cli_command_display"
+.begfunc "cli_command_display",299,"_cli_command_display"
 	LINK	#4
-.line 224
+.line 299
 	LD.W	-2(R14),R1
-.define "text"
+.define "args"
 .class 9
 .value -2
 .type 140
 .type 0
 .endef
-.define "end"
+.define "token"
 .class 1
 .value -4
 .type 140
 .type 0
 .endef
-;  225		char *end;
-;  226	
-;  227		//strip spaces and tabs
-;  228		while(isspace(*text)) {
-_7_L_64:
-.line 228
+;  300		char *token;
+;  301	
+;  302		cli_strip_spaces(&args);
+.line 302
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_spaces
+;  303	
+;  304		token = args;
+.line 304
 	LD.SW	R0,-2(R14)
-	LD.UB	R1,(R0)
-	CALL	_isspace
-	CP	R0,#0
-	JP	EQ,_7_L_67
-;  229			++text;
-.line 229
-	INC.W	-2(R14)
-;  230		}
-.line 230
-	JP	_7_L_64
-_7_L_67:
-;  231	
-;  232		if(*text != '"') {
-.line 232
-	LD.SW	R0,-2(R14)
-	LD.UB	R0,(R0)
-	CP	R0,#34
-	JP	EQ,_7_L_69
-;  233			uart_printf("1 Incorrect format, display [\"text\"]\n");
-.line 233
-	PUSH.W	#L__75
-	CALL	_uart_printf
-	ADD	R15,#2
-;  234			return;
-.line 234
-	JP	_7_L_72
-;  235		}
-_7_L_69:
-.line 235
-;  236		text++;
-.line 236
-	INC.W	-2(R14)
-;  237	
-;  238		end = strchr(text, '"');
-.line 238
-	LD.SW	R1,-2(R14)
-	LD	R2,#34
-	CALL	_strchr
 	LD.W	-4(R14),R0
-;  239		if(end == NULL) {
-.line 239
-	CPZ.W	-4(R14)
-	JP	NE,_7_L_71
-;  240			uart_printf("2 Incorrect format, display [\"text\"]\n");
-.line 240
-	PUSH.W	#L__77
+;  305		if(cli_strip_quotes(&args)) {
+.line 305
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_quotes
+	CP	R0,#0
+	JP	EQ,_12_L_77
+;  306			uart_printf("Incorrect format, display [\"text\"]\n");
+.line 306
+	PUSH.W	#L__81
 	CALL	_uart_printf
 	ADD	R15,#2
-;  241			return;
-.line 241
-	JP	_7_L_72
-;  242		}
-_7_L_71:
-.line 242
-;  243		*end = '\0';
-.line 243
-	LD.SW	R0,-4(R14)
-	CLR.B	(R0)
-;  244	
-;  245		led_display_text(text);
-.line 245
-	LD.SW	R1,-2(R14)
+;  307			return;
+.line 307
+	JP	_12_L_78
+;  308		}
+_12_L_77:
+.line 308
+;  309	
+;  310		led_display_text(++token);
+.line 310
+	INC.W	-4(R14)
+	LD.SW	R1,-4(R14)
 	CALL	_led_display_text
-;  246	}
-_7_L_72:
-.line 246
+;  311	}
+_12_L_78:
+.line 311
 	UNLINK	
 	RET	
 
@@ -1117,28 +1487,25 @@ _7_L_72:
 ;**************************** _cli_command_display ***************************
 ;Name                         Addr/Register   Size   Type
 ;_led_display_text                   IMPORT  -----   function
-;_strchr                             IMPORT  -----   function
 ;_uart_printf                        IMPORT  -----   function
-;_isspace                            IMPORT  -----   function
-;end                                  R14-4      2   variable
-;text                                 R14-2      2   parameter
+;_cli_strip_quotes                   IMPORT  -----   function
+;_cli_strip_spaces                   IMPORT  -----   function
+;token                                R14-4      2   variable
+;args                                 R14-2      2   parameter
 
 
 ; Aggregate Stack Size: -4 (words)
 
 
-.endfunc "cli_command_display",246,"_cli_command_display"
+.endfunc "cli_command_display",311,"_cli_command_display"
 	SEGMENT ROM_TEXT
-L__82:
+L__84:
 	DB	"1 Incorrect format, hex [decimal number]"
 	DB	10,0
-L__84:
-	DB	"2 Incorrect format, hex [decimal number]"
-	DB	10,0
 	SEGMENT CODE
-;  247	
-;  248	static void cli_command_hex(char *text)
-;  249	{
+;  312	
+;  313	static void cli_command_hex(char *args)
+;  314	{
 _cli_command_hex:
 .define "_cli_command_hex"
 .value _cli_command_hex
@@ -1146,17 +1513,17 @@ _cli_command_hex:
 .type 65
 .type 0
 .endef
-.begfunc "cli_command_hex",249,"_cli_command_hex"
+.begfunc "cli_command_hex",314,"_cli_command_hex"
 	LINK	#8
-.line 249
+.line 314
 	LD.W	-2(R14),R1
-.define "text"
+.define "args"
 .class 9
 .value -2
 .type 140
 .type 0
 .endef
-.define "end"
+.define "token"
 .class 1
 .value -4
 .type 140
@@ -1168,97 +1535,48 @@ _cli_command_hex:
 .type 5
 .type 0
 .endef
-;  250		char *end;
-;  251		int value;
-;  252	
-;  253		//strip spaces and tabs
-;  254		while(isspace(*text)) {
-_8_L_73:
-.line 254
-	LD.SW	R0,-2(R14)
-	LD.UB	R1,(R0)
-	CALL	_isspace
-	CP	R0,#0
-	JP	EQ,_8_L_75
-;  255			++text;
-.line 255
-	INC.W	-2(R14)
-;  256		}
-.line 256
-	JP	_8_L_73
-_8_L_75:
-;  257	
-;  258		end = text;
-.line 258
+;  315		char *token;
+;  316		int value;
+;  317	
+;  318		cli_strip_spaces(&args);
+.line 318
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_spaces
+;  319	
+;  320		token = args;
+.line 320
 	LD.SW	R0,-2(R14)
 	LD.W	-4(R14),R0
-;  259		while(isdigit(*end)) {
-_8_L_76:
-.line 259
-	LD.SW	R0,-4(R14)
-	LD.UB	R1,(R0)
-	CALL	_isdigit
+;  321		if(cli_strip_decimal_number(&args)) {
+.line 321
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_decimal_number
 	CP	R0,#0
-	JP	EQ,_8_L_78
-;  260			++end;
-.line 260
-	INC.W	-4(R14)
-;  261		}
-.line 261
-	JP	_8_L_76
-_8_L_78:
-;  262		*end = '\0';
-.line 262
-	LD.SW	R0,-4(R14)
-	CLR.B	(R0)
-;  263	
-;  264		//is there a number at all
-;  265		if(text == end) {
-.line 265
-	LD.SW	R0,-4(R14)
-	CP.W	-2(R14),R0
-	JP	NE,_8_L_80
-;  266			uart_printf("1 Incorrect format, hex [decimal number]\n");
-.line 266
-	PUSH.W	#L__82
-	CALL	_uart_printf
-	ADD	R15,#2
-;  267			return;
-.line 267
-	JP	_8_L_83
-;  268		}
-_8_L_80:
-.line 268
-;  269	
-;  270		//convert string to int
-;  271		value = atoi(text);
-.line 271
-	LD.SW	R1,-2(R14)
-	CALL	_atoi
-	LD	-8(R14),R0
-;  272		if(value == 0) {
-.line 272
-	CPZ	-8(R14)
-	JP	NE,_8_L_82
-;  273			uart_printf("2 Incorrect format, hex [decimal number]\n");
-.line 273
+	JP	EQ,_13_L_80
+;  322			uart_printf("1 Incorrect format, hex [decimal number]\n");
+.line 322
 	PUSH.W	#L__84
 	CALL	_uart_printf
 	ADD	R15,#2
-;  274			return;
-.line 274
-	JP	_8_L_83
-;  275		}
-_8_L_82:
-.line 275
-;  276	
-;  277		led_display_int_hex(value);
-.line 277
+;  323			return;
+.line 323
+	JP	_13_L_81
+;  324		}
+_13_L_80:
+.line 324
+;  325	
+;  326		value = atoi(token);
+.line 326
+	LD.SW	R1,-4(R14)
+	CALL	_atoi
+	LD	-8(R14),R0
+;  327		led_display_int_hex(value);
+.line 327
 	LD	R1,-8(R14)
 	CALL	_led_display_int_hex
-;  278	}
-_8_L_83:
-.line 278
+;  328	}
+_13_L_81:
+.line 328
 	UNLINK	
 	RET	
 
@@ -1268,25 +1586,437 @@ _8_L_83:
 ;_led_display_int_hex                IMPORT  -----   function
 ;_atoi                               IMPORT  -----   function
 ;_uart_printf                        IMPORT  -----   function
-;_isdigit                            IMPORT  -----   function
-;_isspace                            IMPORT  -----   function
+;_cli_strip_decimal_number           IMPORT  -----   function
+;_cli_strip_spaces                   IMPORT  -----   function
 ;value                                R14-8      4   variable
-;end                                  R14-4      2   variable
-;text                                 R14-2      2   parameter
+;token                                R14-4      2   variable
+;args                                 R14-2      2   parameter
 
 
 ; Aggregate Stack Size: -8 (words)
 
 
-.endfunc "cli_command_hex",278,"_cli_command_hex"
+.endfunc "cli_command_hex",328,"_cli_command_hex"
+	SEGMENT ROM_TEXT
+L__87:
+	DB	"1 Incorrect format, set prompt [\"text\"]"
+	DB	10,0
+L__88:
+	DB	"prompt"
+	DB	0
+L__91:
+	DB	"2 Incorrect format, set prompt [\"text\"]"
+	DB	10,0
+L__92:
+	DB	"3 Incorrect format, set prompt [\"text\"]"
+	DB	10,0
+	SEGMENT CODE
+;  329	
+;  330	static void cli_command_set(char *args)
+;  331	{
+_cli_command_set:
+.define "_cli_command_set"
+.value _cli_command_set
+.class 3
+.type 65
+.type 0
+.endef
+.begfunc "cli_command_set",331,"_cli_command_set"
+	LINK	#4
+.line 331
+	LD.W	-2(R14),R1
+.define "args"
+.class 9
+.value -2
+.type 140
+.type 0
+.endef
+.define "token"
+.class 1
+.value -4
+.type 140
+.type 0
+.endef
+;  332		char *token;
+;  333	
+;  334		cli_strip_spaces(&args);
+.line 334
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_spaces
+;  335	
+;  336		token = args;
+.line 336
+	LD.SW	R0,-2(R14)
+	LD.W	-4(R14),R0
+;  337		if(cli_strip_word(&args)) {
+.line 337
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_word
+	CP	R0,#0
+	JP	EQ,_14_L_87
+;  338			uart_printf("1 Incorrect format, set prompt [\"text\"]\n");
+.line 338
+	PUSH.W	#L__87
+	CALL	_uart_printf
+	ADD	R15,#2
+;  339			return;
+.line 339
+	JP	_14_L_88
+;  340		}
+_14_L_87:
+.line 340
+;  341	
+;  342		if(strcmp(token, "prompt") == 0) {
+.line 342
+	LD.SW	R1,-4(R14)
+	LD	R2,#L__88
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_14_L_86
+;  343			++args;
+.line 343
+	INC.W	-2(R14)
+;  344			cli_strip_spaces(&args);
+.line 344
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_spaces
+;  345	
+;  346			token = args;
+.line 346
+	LD.SW	R0,-2(R14)
+	LD.W	-4(R14),R0
+;  347			if(cli_strip_quotes(&args)) {
+.line 347
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_quotes
+	CP	R0,#0
+	JP	EQ,_14_L_84
+;  348				uart_printf("2 Incorrect format, set prompt [\"text\"]\n");
+.line 348
+	PUSH.W	#L__91
+	CALL	_uart_printf
+	ADD	R15,#2
+;  349				return;
+.line 349
+	JP	_14_L_88
+;  350			}
+_14_L_84:
+.line 350
+;  351	
+;  352			cli_set_prompt(++token);
+.line 352
+	INC.W	-4(R14)
+	LD.SW	R1,-4(R14)
+	CALL	_cli_set_prompt
+;  353		}
+;  354		else {
+.line 354
+	JP	_14_L_88
+_14_L_86:
+;  355			uart_printf("3 Incorrect format, set prompt [\"text\"]\n");
+.line 355
+	PUSH.W	#L__92
+	CALL	_uart_printf
+	ADD	R15,#2
+;  356			return;
+;  357		}
+;  358	}
+_14_L_88:
+.line 358
+	UNLINK	
+	RET	
+
+
+;**************************** _cli_command_set ***************************
+;Name                         Addr/Register   Size   Type
+;_cli_set_prompt                     IMPORT  -----   function
+;_cli_strip_quotes                   IMPORT  -----   function
+;_strcmp                             IMPORT  -----   function
+;_uart_printf                        IMPORT  -----   function
+;_cli_strip_word                     IMPORT  -----   function
+;_cli_strip_spaces                   IMPORT  -----   function
+;token                                R14-4      2   variable
+;args                                 R14-2      2   parameter
+
+
+; Aggregate Stack Size: -4 (words)
+
+
+.endfunc "cli_command_set",358,"_cli_command_set"
+	SEGMENT ROM_TEXT
+L__95:
+	DB	"1 Incorrect format, switch [n] [\"text\"]"
+	DB	10,0
+L__98:
+	DB	"2 Incorrect format, switch [n] [\"text\"]"
+	DB	10,0
+L__100:
+	DB	"3 Incorrect format, switch [n] [\"text\"]"
+	DB	10,0
+	SEGMENT CODE
+;  359	
+;  360	static void cli_command_switch(char *args)
+;  361	{
+_cli_command_switch:
+.define "_cli_command_switch"
+.value _cli_command_switch
+.class 3
+.type 65
+.type 0
+.endef
+.begfunc "cli_command_switch",361,"_cli_command_switch"
+	LINK	#8
+.line 361
+	LD.W	-2(R14),R1
+.define "args"
+.class 9
+.value -2
+.type 140
+.type 0
+.endef
+.define "token"
+.class 1
+.value -4
+.type 140
+.type 0
+.endef
+.define "value"
+.class 1
+.value -8
+.type 5
+.type 0
+.endef
+;  362		char *token;
+;  363		int value;
+;  364	
+;  365		cli_strip_spaces(&args);
+.line 365
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_spaces
+;  366	
+;  367		token = args;
+.line 367
+	LD.SW	R0,-2(R14)
+	LD.W	-4(R14),R0
+;  368		if(cli_strip_decimal_number(&args)) {
+.line 368
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_decimal_number
+	CP	R0,#0
+	JP	EQ,_15_L_90
+;  369			uart_printf("1 Incorrect format, switch [n] [\"text\"]\n");
+.line 369
+	PUSH.W	#L__95
+	CALL	_uart_printf
+	ADD	R15,#2
+;  370			return;
+.line 370
+	JP	_15_L_96
+;  371		}
+_15_L_90:
+.line 371
+;  372		value = atoi(token);
+.line 372
+	LD.SW	R1,-4(R14)
+	CALL	_atoi
+	LD	-8(R14),R0
+;  373	
+;  374		if(value < 0 || value >= MACRO_MAX) {
+.line 374
+	CPZ	-8(R14)
+	JP	LT,_15_L_92
+	LD	R0,#3
+	CP	-8(R14),R0
+	JP	LT,_15_L_93
+_15_L_92:
+;  375			uart_printf("2 Incorrect format, switch [n] [\"text\"]\n");
+.line 375
+	PUSH.W	#L__98
+	CALL	_uart_printf
+	ADD	R15,#2
+;  376			return;
+.line 376
+	JP	_15_L_96
+;  377		}
+_15_L_93:
+.line 377
+;  378	
+;  379		++args;
+.line 379
+	INC.W	-2(R14)
+;  380		cli_strip_spaces(&args);
+.line 380
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_spaces
+;  381	
+;  382		token = args;
+.line 382
+	LD.SW	R0,-2(R14)
+	LD.W	-4(R14),R0
+;  383		if(cli_strip_quotes(&args)) {
+.line 383
+	LEA	R1,-2(R14)
+	CALL	_cli_strip_quotes
+	CP	R0,#0
+	JP	EQ,_15_L_95
+;  384			uart_printf("3 Incorrect format, switch [n] [\"text\"]\n");
+.line 384
+	PUSH.W	#L__100
+	CALL	_uart_printf
+	ADD	R15,#2
+;  385			return;
+.line 385
+	JP	_15_L_96
+;  386		}
+_15_L_95:
+.line 386
+;  387	
+;  388		macro_set(value, ++token);
+.line 388
+	INC.W	-4(R14)
+	LD	R1,-8(R14)
+	LD.SW	R2,-4(R14)
+	CALL	_macro_set
+;  389	}
+_15_L_96:
+.line 389
+	UNLINK	
+	RET	
+
+
+;**************************** _cli_command_switch ***************************
+;Name                         Addr/Register   Size   Type
+;_macro_set                          IMPORT  -----   function
+;_cli_strip_quotes                   IMPORT  -----   function
+;_atoi                               IMPORT  -----   function
+;_uart_printf                        IMPORT  -----   function
+;_cli_strip_decimal_number           IMPORT  -----   function
+;_cli_strip_spaces                   IMPORT  -----   function
+;value                                R14-8      4   variable
+;token                                R14-4      2   variable
+;args                                 R14-2      2   parameter
+
+
+; Aggregate Stack Size: -8 (words)
+
+
+.endfunc "cli_command_switch",389,"_cli_command_switch"
+;  390	
+;  391	static void cli_command_port(char *args)
+;  392	{
+_cli_command_port:
+.define "_cli_command_port"
+.value _cli_command_port
+.class 3
+.type 65
+.type 0
+.endef
+.begfunc "cli_command_port",392,"_cli_command_port"
+.line 392
+.define "args"
+.class 17
+.reg 2
+.type 140
+.type 0
+.endef
+	LINK	#0
+;  393		
+;  394	}
+.line 394
+	UNLINK	
+	RET	
+
+
+;**************************** _cli_command_port ***************************
+;Name                         Addr/Register   Size   Type
+;args                                    R1      2   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "cli_command_port",394,"_cli_command_port"
+;  395	
+;  396	static void cli_command_timer(char *args)
+;  397	{
+_cli_command_timer:
+.define "_cli_command_timer"
+.value _cli_command_timer
+.class 3
+.type 65
+.type 0
+.endef
+.begfunc "cli_command_timer",397,"_cli_command_timer"
+.line 397
+.define "args"
+.class 17
+.reg 2
+.type 140
+.type 0
+.endef
+	LINK	#0
+;  398		
+;  399	}
+.line 399
+	UNLINK	
+	RET	
+
+
+;**************************** _cli_command_timer ***************************
+;Name                         Addr/Register   Size   Type
+;args                                    R1      2   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "cli_command_timer",399,"_cli_command_timer"
+;  400	
+;  401	static void cli_command_uart0(char *args)
+;  402	{
+_cli_command_uart0:
+.define "_cli_command_uart0"
+.value _cli_command_uart0
+.class 3
+.type 65
+.type 0
+.endef
+.begfunc "cli_command_uart0",402,"_cli_command_uart0"
+.line 402
+.define "args"
+.class 17
+.reg 2
+.type 140
+.type 0
+.endef
+	LINK	#0
+;  403		
+.line 404
+	UNLINK	
+	RET	
+
+
+;**************************** _cli_command_uart0 ***************************
+;Name                         Addr/Register   Size   Type
+;args                                    R1      2   parameter
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "cli_command_uart0",404,"_cli_command_uart0"
 	XREF _isspace:EROM
 	XREF _isgraph:EROM
 	XREF _isdigit:EROM
+	XREF _isalpha:EROM
 	XREF _memset:EROM
+	XREF _memcpy:EROM
+	XREF _strlen:EROM
 	XREF _strchr:EROM
 	XREF _strcmp:EROM
 	XREF _strcpy:EROM
 	XREF _atoi:EROM
+	XREF _macro_set:EROM
 	XREF _info_display:EROM
 	XREF _init_info:EROM
 	XREF _uart_printf:EROM
@@ -1295,6 +2025,11 @@ _8_L_83:
 	XREF _led_display_int_hex:EROM
 	XREF _led_display_text:EROM
 	XREF _init_leds:EROM
+	XDEF _cli_set_prompt
+	XDEF _cli_strip_spaces
+	XDEF _cli_strip_decimal_number
+	XDEF _cli_strip_word
+	XDEF _cli_strip_quotes
 	XDEF _cli_loop
 	XDEF _init_cli
 	END

@@ -33,4 +33,11 @@ void uart_transfer_msg(char *msg);
  */
 unsigned long uart_get_baud_rate(void);
 
+/*
+	Pass a character to uart0 receive buffer.
+
+	This method waits until the uart is ready to receive.
+ */
+void uart_dummy_receive(char c);
+
 #endif
