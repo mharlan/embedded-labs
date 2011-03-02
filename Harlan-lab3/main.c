@@ -2,24 +2,22 @@
 	Author: Matthew Harlan
 	Email:  mharlan@gwmail.gwu.edu
 	Class:  CSCI-4415
-	Date: 	February 22nd, 2011
-	Lab:    2
+	Date: 	March 1st, 2011
+	Lab:    3
 	
-	Description: This program plays three RTTL ringtones. Ringtones are
-	selected by pressing the buttons. The ringtone will loop with a one
-	measure rest between each playthrough until a button is double tapped.
-	The currently playing note and its duration is displayed on the LCD.
+	Description: This program is a command line interface that communicates via
+	a serial port. Run the program and enter "?" to see a list of available commands.
 
-	Other files: buttons.c buttons.h LED.c LED.h notes.h oscillator.c oscillator.h ringtones.h
-	rttl.c rttl.h speaker.c speaker.h timer.c timer.h
+	Other files: buttons.c buttons.h cli.c cli.h info.c info.h LED.c LED.h LED_ascii.h
+	macro.c macro.h oscillator.c oscillator.h ports.c ports.h timer.c timer.h uart.c uart.h
 
 	Compile: Set the user include path to the include directory.
 	
-	Problems: I didn't run in to any significant problems.
+	Problems: I could not get access to ports J or K.
 
-	Comments: Another fun and challenging lab.
+	Comments: None.
 
-	Enhancements: None.
+	Enhancements: Transfers and receives over the UART using interrupts and buffers.
  */
 
 #include "LED.h"
@@ -50,7 +48,5 @@ void main(void)
 	//enable interrupts
 	EI();
 
-	//macro_set(0, "info");
-	//macro_execute(0);
 	cli_loop();
 }

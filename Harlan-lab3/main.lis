@@ -1,62 +1,55 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\MAIN.C
 
      1	    1	/*
      2	    2		Author: Matthew Harlan
      3	    3		Email:  mharlan@gwmail.gwu.edu
      4	    4		Class:  CSCI-4415
-     5	    5		Date: 	February 22nd, 2011
-     6	    6		Lab:    2
+     5	    5		Date: 	March 1st, 2011
+     6	    6		Lab:    3
      7	    7		
-     8	    8		Description: This program plays three RTTL ringtones. Ringtones are
-     9	    9		selected by pressing the buttons. The ringtone will loop with a one
-    10	   10		measure rest between each playthrough until a button is double tapped.
-    11	   11		The currently playing note and its duration is displayed on the LCD.
-    12	   12	
-    13	   13		Other files: buttons.c buttons.h LED.c LED.h notes.h oscillator.c oscillator.h ringtones.h
-    14	   14		rttl.c rttl.h speaker.c speaker.h timer.c timer.h
-    15	   15	
-    16	   16		Compile: Set the user include path to the include directory.
-    17	   17		
-    18	   18		Problems: I didn't run in to any significant problems.
+     8	    8		Description: This program is a command line interface that communicates via
+     9	    9		a serial port. Run the program and enter "?" to see a list of available commands.
+    10	   10	
+    11	   11		Other files: buttons.c buttons.h cli.c cli.h info.c info.h LED.c LED.h LED_ascii.h
+    12	   12		macro.c macro.h oscillator.c oscillator.h ports.c ports.h timer.c timer.h uart.c uart.h
+    13	   13	
+    14	   14		Compile: Set the user include path to the include directory.
+    15	   15		
+    16	   16		Problems: I could not get access to ports J or K.
+    17	   17	
+    18	   18		Comments: None.
     19	   19	
-    20	   20		Comments: Another fun and challenging lab.
-    21	   21	
-    22	   22		Enhancements: None.
-    23	   23	 */
-    24	   24	
-    25	   25	#include "LED.h"
-    26	   70	#include "oscillator.h"
-    27	   91	#include "buttons.h"
-    28	  106	#include "timer.h"
-    29	  185	#include "cli.h"
-    30	  236	#include "macro.h"
-    31	  257	
-    32	  258	#include <zneo.h>
-    33	  784	#include <stdio.h>
-    34	 1630	
-    35	 1631	/*
-    36	 1632		Intializes the LED, sets the default value, and loops.
-    37	 1633	 */
-    38	 1634	void main(void)
-    39	 1635	{
-    40	 1636		//initialize the oscillator and global timer
-    41	 1637		init_oscillator(OSC_5_52MHZ);
-    42	 1638		init_timer(TIMER_2MS);
-    43	 1639	
-    44	 1640		//initialize the command line interface
-    45	 1641		init_cli();
-    46	 1642	
-    47	 1643		//initialize button functionality
-    48	 1644		init_buttons();
-    49	 1645	
-    50	 1646		//enable interrupts
-    51	 1647		EI();
-    52	 1648	
-    53	 1649		//macro_set(0, "info");
-    54	 1650		//macro_execute(0);
-    55	 1651		cli_loop();
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 2
-Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\MAIN.C
-
-    56	 1652	}ÿ
+    20	   20		Enhancements: Transfers and receives over the UART using interrupts and buffers.
+    21	   21	 */
+    22	   22	
+    23	   23	#include "LED.h"
+    24	   68	#include "oscillator.h"
+    25	   89	#include "buttons.h"
+    26	  104	#include "timer.h"
+    27	  183	#include "cli.h"
+    28	  234	#include "macro.h"
+    29	  255	
+    30	  256	#include <zneo.h>
+    31	  782	#include <stdio.h>
+    32	 1628	
+    33	 1629	/*
+    34	 1630		Intializes the LED, sets the default value, and loops.
+    35	 1631	 */
+    36	 1632	void main(void)
+    37	 1633	{
+    38	 1634		//initialize the oscillator and global timer
+    39	 1635		init_oscillator(OSC_5_52MHZ);
+    40	 1636		init_timer(TIMER_2MS);
+    41	 1637	
+    42	 1638		//initialize the command line interface
+    43	 1639		init_cli();
+    44	 1640	
+    45	 1641		//initialize button functionality
+    46	 1642		init_buttons();
+    47	 1643	
+    48	 1644		//enable interrupts
+    49	 1645		EI();
+    50	 1646	
+    51	 1647		cli_loop();
+    52	 1648	}ÿ

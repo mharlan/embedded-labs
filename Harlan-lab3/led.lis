@@ -1,253 +1,253 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
 
      1	    1	#include "LED.h"
      2	   46	#include "LED_ascii.h"
-     3	  907	#include "timer.h"
-     4	  986	
-     5	  987	#include <zneo.h>
-     6	 1513	#include <stdlib.h>
-     7	 1636	#include <stdio.h>
-     8	 2482	#include <string.h>
-     9	 2574	
-    10	 2575	#define ASCII_SPACE  0
-    11	 2576	#define ASCII_OFFSET 0x20
-    12	 2577	#define NUM_LEDS     4
-    13	 2578	
-    14	 2579	//time in seconds
-    15	 2580	#define SCROLL_CUTOFF 400
-    16	 2581	
-    17	 2582	#define LED_DEC_MAX  9999
-    18	 2583	#define LED_HEX_MAX  0xFFFF
-    19	 2584	
-    20	 2585	#define NUM_ANODES   7
-    21	 2586	#define D1           0
-    22	 2587	#define D2           1
-    23	 2588	#define D3           2
-    24	 2589	#define D4           3
-    25	 2590	
-    26	 2591	#define MAX_DIGITS 16  //Max digits for number displayed on LED
-    27	 2592	
-    28	 2593	static unsigned char *led_msg;
-    29	 2594	static size_t msg_size;
-    30	 2595	
-    31	 2596	static unsigned int draw_char[NUM_LEDS];
-    32	 2597	static volatile unsigned int msg_pos;
-    33	 2598	static volatile unsigned int row_pos;
-    34	 2599	
-    35	 2600	static volatile int led_scroll_timer;
-    36	 2601	static int led_scroll_cutoff;
-    37	 2602	
-    38	 2603	//values for selecting each LED row
-    39	 2604	static unsigned int led_anode[NUM_ANODES] =
-    40	 2605	{
-    41	 2606		0x01,
-    42	 2607		0x02,
-    43	 2608		0x04,
-    44	 2609		0x08,
-    45	 2610		0x10,
-    46	 2611		0x20,
-    47	 2612		0x40
-    48	 2613	};
-    49	 2614	
-    50	 2615	static void led_scroll_draw_chars(void);
-    51	 2616	static void led_set_draw_chars(void);
-    52	 2617	static void led_draw_row(int led_id);
-    53	 2618	
-    54	 2619	void init_leds(void) 
-    55	 2620	{ 
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 2
+     3	  911	#include "timer.h"
+     4	  990	
+     5	  991	#include <zneo.h>
+     6	 1517	#include <stdlib.h>
+     7	 1640	#include <stdio.h>
+     8	 2486	#include <string.h>
+     9	 2578	
+    10	 2579	#define ASCII_SPACE  0
+    11	 2580	#define ASCII_OFFSET 0x20
+    12	 2581	#define NUM_LEDS     4
+    13	 2582	
+    14	 2583	//time in seconds
+    15	 2584	#define SCROLL_CUTOFF 400
+    16	 2585	
+    17	 2586	#define LED_DEC_MAX  9999
+    18	 2587	#define LED_HEX_MAX  0xFFFF
+    19	 2588	
+    20	 2589	#define NUM_ANODES   7
+    21	 2590	#define D1           0
+    22	 2591	#define D2           1
+    23	 2592	#define D3           2
+    24	 2593	#define D4           3
+    25	 2594	
+    26	 2595	#define MAX_DIGITS 16  //Max digits for number displayed on LED
+    27	 2596	
+    28	 2597	static unsigned char *led_msg;
+    29	 2598	static size_t msg_size;
+    30	 2599	
+    31	 2600	static unsigned int draw_char[NUM_LEDS];
+    32	 2601	static volatile unsigned int msg_pos;
+    33	 2602	static volatile unsigned int row_pos;
+    34	 2603	
+    35	 2604	static volatile int led_scroll_timer;
+    36	 2605	static int led_scroll_cutoff;
+    37	 2606	
+    38	 2607	//values for selecting each LED row
+    39	 2608	static unsigned int led_anode[NUM_ANODES] =
+    40	 2609	{
+    41	 2610		0x01,
+    42	 2611		0x02,
+    43	 2612		0x04,
+    44	 2613		0x08,
+    45	 2614		0x10,
+    46	 2615		0x20,
+    47	 2616		0x40
+    48	 2617	};
+    49	 2618	
+    50	 2619	static void led_scroll_draw_chars(void);
+    51	 2620	static void led_set_draw_chars(void);
+    52	 2621	static void led_draw_row(int led_id);
+    53	 2622	
+    54	 2623	void init_leds(void) 
+    55	 2624	{ 
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 2
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
 
-    56	 2621	    PEDD = 0x00;	// data direction = outputs	
-    57	 2622		PGDD = 0x00;
-    58	 2623	
-    59	 2624		led_scroll_timer = 0;
-    60	 2625		led_scroll_cutoff = SCROLL_CUTOFF;
-    61	 2626	
-    62	 2627		//set LED display defaults
-    63	 2628		led_msg = NULL;
-    64	 2629	
-    65	 2630		msg_size = 0;
-    66	 2631		draw_char[0] = ASCII_SPACE;
-    67	 2632		draw_char[1] = ASCII_SPACE;
-    68	 2633		draw_char[2] = ASCII_SPACE;
-    69	 2634		draw_char[3] = ASCII_SPACE;
-    70	 2635	}
-    71	 2636	
-    72	 2637	void led_update(void)
-    73	 2638	{
-    74	 2639		led_scroll_timer += timer_interval_int();
-    75	 2640	
-    76	 2641		//updates the characters being displayed at timer_cutoff interval
-    77	 2642		if((msg_size > 4) && 
-    78	 2643		   (led_scroll_timer >= led_scroll_cutoff)) {
-    79	 2644			led_scroll_timer = 0;
-    80	 2645	
-    81	 2646			led_scroll_draw_chars();
-    82	 2647		}
-    83	 2648	
-    84	 2649		//draw the current row for each LED
-    85	 2650		led_draw_row(D1);
-    86	 2651		led_draw_row(D2);
-    87	 2652		led_draw_row(D3);
-    88	 2653		led_draw_row(D4);
-    89	 2654	
-    90	 2655		//move to the next row for next time
-    91	 2656		row_pos = (row_pos + 1) % NUM_ANODES;
-    92	 2657	}
-    93	 2658	
-    94	 2659	void led_set_scroll_cutoff(int ms)
-    95	 2660	{
-    96	 2661		led_scroll_cutoff = ms;
-    97	 2662	}
-    98	 2663	
-    99	 2664	void led_display_text(const unsigned char *msg)
-   100	 2665	{
-   101	 2666		char *new_msg;
-   102	 2667	
-   103	 2668		msg_size = strlen(msg);
-   104	 2669		new_msg = malloc(sizeof(*new_msg) * (msg_size + 2));	//+2 for space pad and null terminator
-   105	 2670		if(!new_msg) {
-   106	 2671			msg_size = 0;
-   107	 2672		}
-   108	 2673		else {
-   109	 2674			memcpy(new_msg, msg, msg_size);
-   110	 2675	
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 3
+    56	 2625	    PEDD = 0x00;	// data direction = outputs	
+    57	 2626		PGDD = 0x00;
+    58	 2627	
+    59	 2628		led_scroll_timer = 0;
+    60	 2629		led_scroll_cutoff = SCROLL_CUTOFF;
+    61	 2630	
+    62	 2631		//set LED display defaults
+    63	 2632		led_msg = NULL;
+    64	 2633	
+    65	 2634		msg_size = 0;
+    66	 2635		draw_char[0] = ASCII_SPACE;
+    67	 2636		draw_char[1] = ASCII_SPACE;
+    68	 2637		draw_char[2] = ASCII_SPACE;
+    69	 2638		draw_char[3] = ASCII_SPACE;
+    70	 2639	}
+    71	 2640	
+    72	 2641	void led_update(void)
+    73	 2642	{
+    74	 2643		led_scroll_timer += timer_interval_int();
+    75	 2644	
+    76	 2645		//updates the characters being displayed at timer_cutoff interval
+    77	 2646		if((msg_size > 4) && 
+    78	 2647		   (led_scroll_timer >= led_scroll_cutoff)) {
+    79	 2648			led_scroll_timer = 0;
+    80	 2649	
+    81	 2650			led_scroll_draw_chars();
+    82	 2651		}
+    83	 2652	
+    84	 2653		//draw the current row for each LED
+    85	 2654		led_draw_row(D1);
+    86	 2655		led_draw_row(D2);
+    87	 2656		led_draw_row(D3);
+    88	 2657		led_draw_row(D4);
+    89	 2658	
+    90	 2659		//move to the next row for next time
+    91	 2660		row_pos = (row_pos + 1) % NUM_ANODES;
+    92	 2661	}
+    93	 2662	
+    94	 2663	void led_set_scroll_cutoff(int ms)
+    95	 2664	{
+    96	 2665		led_scroll_cutoff = ms;
+    97	 2666	}
+    98	 2667	
+    99	 2668	void led_display_text(const unsigned char *msg)
+   100	 2669	{
+   101	 2670		char *new_msg;
+   102	 2671	
+   103	 2672		msg_size = strlen(msg);
+   104	 2673		new_msg = malloc(sizeof(*new_msg) * (msg_size + 2));	//+2 for space pad and null terminator
+   105	 2674		if(!new_msg) {
+   106	 2675			msg_size = 0;
+   107	 2676		}
+   108	 2677		else {
+   109	 2678			memcpy(new_msg, msg, msg_size);
+   110	 2679	
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 3
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
 
-   111	 2676			//space pads the wrap-around
-   112	 2677			if(msg_size > 4) {
-   113	 2678				new_msg[msg_size] = ' ';
-   114	 2679				++msg_size;
-   115	 2680			}
-   116	 2681			new_msg[msg_size] = '\0';
-   117	 2682	
-   118	 2683			DI();
-   119	 2684			
-   120	 2685			if(led_msg != NULL) {
-   121	 2686				free(led_msg);
-   122	 2687			}
-   123	 2688			
-   124	 2689			led_msg = new_msg;
-   125	 2690			msg_pos = 0;
-   126	 2691			row_pos = 0;
-   127	 2692			led_set_draw_chars();
-   128	 2693	
-   129	 2694			EI();
-   130	 2695		}
-   131	 2696	}
-   132	 2697	
-   133	 2698	void led_display_double(double value)
-   134	 2699	{
-   135	 2700		unsigned char num_msg[MAX_DIGITS];
-   136	 2701	
-   137	 2702		sprintf(num_msg, "%f", value);
-   138	 2703	
-   139	 2704		led_display_text(num_msg);
-   140	 2705	}
-   141	 2706	
-   142	 2707	void led_display_int(int value)
-   143	 2708	{
-   144	 2709		unsigned char num_msg[MAX_DIGITS];
-   145	 2710	
-   146	 2711		sprintf(num_msg, "%d", value);
-   147	 2712	
-   148	 2713		led_display_text(num_msg);
-   149	 2714	}
-   150	 2715	
-   151	 2716	void led_display_int_hex(int value)
-   152	 2717	{
-   153	 2718		unsigned char num_msg[MAX_DIGITS];
-   154	 2719	
-   155	 2720		sprintf(num_msg, "%X", value);
-   156	 2721	
-   157	 2722		led_display_text(num_msg);
-   158	 2723	}
-   159	 2724	
-   160	 2725	/*
-   161	 2726	 	Draws the current row to a particular LED
-   162	 2727	 */
-   163	 2728	static void led_draw_row(int led_id)
-   164	 2729	{
-   165	 2730		// set cathodes
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 4
+   111	 2680			//space pads the wrap-around
+   112	 2681			if(msg_size > 4) {
+   113	 2682				new_msg[msg_size] = ' ';
+   114	 2683				++msg_size;
+   115	 2684			}
+   116	 2685			new_msg[msg_size] = '\0';
+   117	 2686	
+   118	 2687			DI();
+   119	 2688			
+   120	 2689			if(led_msg != NULL) {
+   121	 2690				free(led_msg);
+   122	 2691			}
+   123	 2692			
+   124	 2693			led_msg = new_msg;
+   125	 2694			msg_pos = 0;
+   126	 2695			row_pos = 0;
+   127	 2696			led_set_draw_chars();
+   128	 2697	
+   129	 2698			EI();
+   130	 2699		}
+   131	 2700	}
+   132	 2701	
+   133	 2702	void led_display_double(double value)
+   134	 2703	{
+   135	 2704		unsigned char num_msg[MAX_DIGITS];
+   136	 2705	
+   137	 2706		sprintf(num_msg, "%f", value);
+   138	 2707	
+   139	 2708		led_display_text(num_msg);
+   140	 2709	}
+   141	 2710	
+   142	 2711	void led_display_int(int value)
+   143	 2712	{
+   144	 2713		unsigned char num_msg[MAX_DIGITS];
+   145	 2714	
+   146	 2715		sprintf(num_msg, "%d", value);
+   147	 2716	
+   148	 2717		led_display_text(num_msg);
+   149	 2718	}
+   150	 2719	
+   151	 2720	void led_display_int_hex(int value)
+   152	 2721	{
+   153	 2722		unsigned char num_msg[MAX_DIGITS];
+   154	 2723	
+   155	 2724		sprintf(num_msg, "%X", value);
+   156	 2725	
+   157	 2726		led_display_text(num_msg);
+   158	 2727	}
+   159	 2728	
+   160	 2729	/*
+   161	 2730	 	Draws the current row to a particular LED
+   162	 2731	 */
+   163	 2732	static void led_draw_row(int led_id)
+   164	 2733	{
+   165	 2734		// set cathodes
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 4
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
 
-   166	 2731		PEOUT |= 0x1F;
-   167	 2732		PEOUT &= ~char_data[draw_char[led_id]][row_pos];
-   168	 2733	
-   169	 2734		// set anodes
-   170	 2735		PGOUT &= 0x80;
-   171	 2736		PGOUT |= led_anode[row_pos];
-   172	 2737	
-   173	 2738		//latch the LED
-   174	 2739		if(led_id == D1) {               // PE7 controls D1
-   175	 2740	        PEOUT &= ~0x80;           //   create rising edge on PE7, clear bit 7
-   176	 2741	        PEOUT |= 0x80;            //   set bit 7
-   177	 2742	    }
-   178	 2743	    else if(led_id == D2) {               // PG7 controls D2
-   179	 2744	        PGOUT &= ~0x80;           //   create rising edge on PG7
-   180	 2745	        PGOUT |= 0x80; 
-   181	 2746	    }
-   182	 2747	    else if(led_id == D3) {               // PE5 controls D3
-   183	 2748	        PEOUT &= ~0x20;           //   create rising edge on PE5
-   184	 2749	        PEOUT |= 0x20; 
-   185	 2750	    }
-   186	 2751	    else if(led_id == D4) {               // PE6 controls D4
-   187	 2752	        PEOUT &= ~0x40;           //   create rising edge on PE6
-   188	 2753	        PEOUT |= 0x40; 
-   189	 2754	    }
-   190	 2755	}
-   191	 2756	
-   192	 2757	/*
-   193	 2758		Updates what characters the LED is drawing.
-   194	 2759	 */
-   195	 2760	static void led_scroll_draw_chars(void)
-   196	 2761	{
-   197	 2762		//update what each led is drawing
-   198	 2763		draw_char[0] = ((unsigned int)led_msg[msg_pos]) - ASCII_OFFSET;
-   199	 2764		draw_char[1] = ((unsigned int)led_msg[(msg_pos + 1) % msg_size]) - ASCII_OFFSET;
-   200	 2765		draw_char[2] = ((unsigned int)led_msg[(msg_pos + 2) % msg_size]) - ASCII_OFFSET;
-   201	 2766		draw_char[3] = ((unsigned int)led_msg[(msg_pos + 3) % msg_size]) - ASCII_OFFSET;
-   202	 2767		msg_pos = (msg_pos + 1) % msg_size;
-   203	 2768	}
-   204	 2769	
-   205	 2770	/*
-   206	 2771		Sets the characters the LED is drawing to the first 4 of the message.
-   207	 2772	 */
-   208	 2773	static void led_set_draw_chars(void)
-   209	 2774	{
-   210	 2775		if(msg_size > 0) {
-   211	 2776			draw_char[0] = ((unsigned int)led_msg[msg_pos]) - ASCII_OFFSET;
-   212	 2777		}
-   213	 2778		else {
-   214	 2779			draw_char[0] = ASCII_SPACE;
-   215	 2780		}
-   216	 2781		
-   217	 2782		if(msg_size > 1) {
-   218	 2783			draw_char[1] = ((unsigned int)led_msg[(msg_pos + 1) % msg_size]) - ASCII_OFFSET;
-   219	 2784		}
-   220	 2785		else {
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 5
+   166	 2735		PEOUT |= 0x1F;
+   167	 2736		PEOUT &= ~char_data[draw_char[led_id]][row_pos];
+   168	 2737	
+   169	 2738		// set anodes
+   170	 2739		PGOUT &= 0x80;
+   171	 2740		PGOUT |= led_anode[row_pos];
+   172	 2741	
+   173	 2742		//latch the LED
+   174	 2743		if(led_id == D1) {               // PE7 controls D1
+   175	 2744	        PEOUT &= ~0x80;           //   create rising edge on PE7, clear bit 7
+   176	 2745	        PEOUT |= 0x80;            //   set bit 7
+   177	 2746	    }
+   178	 2747	    else if(led_id == D2) {               // PG7 controls D2
+   179	 2748	        PGOUT &= ~0x80;           //   create rising edge on PG7
+   180	 2749	        PGOUT |= 0x80; 
+   181	 2750	    }
+   182	 2751	    else if(led_id == D3) {               // PE5 controls D3
+   183	 2752	        PEOUT &= ~0x20;           //   create rising edge on PE5
+   184	 2753	        PEOUT |= 0x20; 
+   185	 2754	    }
+   186	 2755	    else if(led_id == D4) {               // PE6 controls D4
+   187	 2756	        PEOUT &= ~0x40;           //   create rising edge on PE6
+   188	 2757	        PEOUT |= 0x40; 
+   189	 2758	    }
+   190	 2759	}
+   191	 2760	
+   192	 2761	/*
+   193	 2762		Updates what characters the LED is drawing.
+   194	 2763	 */
+   195	 2764	static void led_scroll_draw_chars(void)
+   196	 2765	{
+   197	 2766		//update what each led is drawing
+   198	 2767		draw_char[0] = ((unsigned int)led_msg[msg_pos]) - ASCII_OFFSET;
+   199	 2768		draw_char[1] = ((unsigned int)led_msg[(msg_pos + 1) % msg_size]) - ASCII_OFFSET;
+   200	 2769		draw_char[2] = ((unsigned int)led_msg[(msg_pos + 2) % msg_size]) - ASCII_OFFSET;
+   201	 2770		draw_char[3] = ((unsigned int)led_msg[(msg_pos + 3) % msg_size]) - ASCII_OFFSET;
+   202	 2771		msg_pos = (msg_pos + 1) % msg_size;
+   203	 2772	}
+   204	 2773	
+   205	 2774	/*
+   206	 2775		Sets the characters the LED is drawing to the first 4 of the message.
+   207	 2776	 */
+   208	 2777	static void led_set_draw_chars(void)
+   209	 2778	{
+   210	 2779		if(msg_size > 0) {
+   211	 2780			draw_char[0] = ((unsigned int)led_msg[msg_pos]) - ASCII_OFFSET;
+   212	 2781		}
+   213	 2782		else {
+   214	 2783			draw_char[0] = ASCII_SPACE;
+   215	 2784		}
+   216	 2785		
+   217	 2786		if(msg_size > 1) {
+   218	 2787			draw_char[1] = ((unsigned int)led_msg[(msg_pos + 1) % msg_size]) - ASCII_OFFSET;
+   219	 2788		}
+   220	 2789		else {
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 5
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\LED.C
 
-   221	 2786			draw_char[1] = ASCII_SPACE;
-   222	 2787		}
-   223	 2788		
-   224	 2789		if(msg_size > 2) {
-   225	 2790			draw_char[2] = ((unsigned int)led_msg[(msg_pos + 2) % msg_size]) - ASCII_OFFSET;
-   226	 2791		}
-   227	 2792		else {
-   228	 2793			draw_char[2] = ASCII_SPACE;
-   229	 2794		}
-   230	 2795		
-   231	 2796		if(msg_size > 3) {
-   232	 2797			draw_char[3] = ((unsigned int)led_msg[(msg_pos + 3) % msg_size]) - ASCII_OFFSET;
-   233	 2798		}
-   234	 2799		else {
-   235	 2800			draw_char[3] = ASCII_SPACE;
-   236	 2801		}
-   237	 2802	}
-   238	 2803	ÿ
+   221	 2790			draw_char[1] = ASCII_SPACE;
+   222	 2791		}
+   223	 2792		
+   224	 2793		if(msg_size > 2) {
+   225	 2794			draw_char[2] = ((unsigned int)led_msg[(msg_pos + 2) % msg_size]) - ASCII_OFFSET;
+   226	 2795		}
+   227	 2796		else {
+   228	 2797			draw_char[2] = ASCII_SPACE;
+   229	 2798		}
+   230	 2799		
+   231	 2800		if(msg_size > 3) {
+   232	 2801			draw_char[3] = ((unsigned int)led_msg[(msg_pos + 3) % msg_size]) - ASCII_OFFSET;
+   233	 2802		}
+   234	 2803		else {
+   235	 2804			draw_char[3] = ASCII_SPACE;
+   236	 2805		}
+   237	 2806	}
+   238	 2807	ÿ

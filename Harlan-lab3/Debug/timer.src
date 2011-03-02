@@ -17,28 +17,30 @@ _timer_state:
 ;    2	#include "oscillator.h"
 ;    3	#include "LED.h"
 ;    4	#include "buttons.h"
-;    5	
-;    6	#include <zneo.h>
-;    7	
-;    8	#define INTERVAL_1MS_INT 1
-;    9	#define INTERVAL_2MS_INT 2
-;   10	#define INTERVAL_4MS_INT 4
-;   11	
-;   12	#define INTERVAL_1MS_FLOAT 0.001f
-;   13	#define INTERVAL_2MS_FLOAT 0.002f
-;   14	#define INTERVAL_4MS_FLOAT 0.004f
-;   15	
-;   16	static int timer_state;
-	SEGMENT CODE
+;    5	#include "uart.h"
+;    6	
+;    7	#include <zneo.h>
+;    8	#include <string.h>
+;    9	
+;   10	#define INTERVAL_1MS_INT 1
+;   11	#define INTERVAL_2MS_INT 2
+;   12	#define INTERVAL_4MS_INT 4
+;   13	
+;   14	#define INTERVAL_1MS_FLOAT 0.001f
+;   15	#define INTERVAL_2MS_FLOAT 0.002f
+;   16	#define INTERVAL_4MS_FLOAT 0.004f
 ;   17	
-;   18	/*
-;   19		Interrupt for timer events.
-;   20	
-;   21		Used for updating the LED, polling the buttons, and responding
-;   22		to note change events for the speaker..
-;   23	 */
-;   24	void interrupt timer_isr(void)
-;   25	{
+;   18	static int timer_state;
+	SEGMENT CODE
+;   19	
+;   20	/*
+;   21		Interrupt for timer events.
+;   22	
+;   23		Used for updating the LED, polling the buttons, and responding
+;   24		to note change events for the speaker..
+;   25	 */
+;   26	void interrupt timer_isr(void)
+;   27	{
 _timer_isr:
 .define "_timer_isr"
 .value _timer_isr
@@ -46,22 +48,22 @@ _timer_isr:
 .type 65
 .type 0
 .endef
-.begfunc "timer_isr",25,"_timer_isr"
+.begfunc "timer_isr",27,"_timer_isr"
 	LINK	#0
 	PUSHMLO	#255
-;   26		//enable interrupts for speaker interrupt
-;   27		EI();
-.line 27
-	EI
-;   28	
-;   29		led_update();
+;   28		//enable interrupts for speaker interrupt
+;   29		EI();
 .line 29
-	CALL	_led_update
-;   30		button_events();
-.line 30
-	CALL	_button_events
-;   31	}
+	EI
+;   30	
+;   31		led_update();
 .line 31
+	CALL	_led_update
+;   32		button_events();
+.line 32
+	CALL	_button_events
+;   33	}
+.line 33
 	POPMLO	#255
 	UNLINK	
 	IRET	
@@ -77,10 +79,10 @@ _timer_isr:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "timer_isr",31,"_timer_isr"
-;   32	
-;   33	void init_timer(int mode)
-;   34	{
+.endfunc "timer_isr",33,"_timer_isr"
+;   34	
+;   35	void init_timer(int mode)
+;   36	{
 _init_timer:
 .define "_init_timer"
 .value _init_timer
@@ -88,10 +90,10 @@ _init_timer:
 .type 65
 .type 0
 .endef
-.begfunc "init_timer",34,"_init_timer"
+.begfunc "init_timer",36,"_init_timer"
 	LINK	#4
 	PUSHMHI	#3
-.line 34
+.line 36
 	LD	-4(R14),R1
 .define "mode"
 .class 9
@@ -99,33 +101,33 @@ _init_timer:
 .type 5
 .type 0
 .endef
-;   35		timer_state = mode;
-.line 35
+;   37		timer_state = mode;
+.line 37
 	LD	R0,-4(R14)
 	LD	_timer_state:RAM,R0
-;   36	
-;   37		T0CTL1 |= TIMER_DISABLE;
-.line 37
+;   38	
+;   39		T0CTL1 |= TIMER_DISABLE;
+.line 39
 	LD.SB	R0,58119:RAM
-;   38	    T0CTL1 = TIMER_MODE_CONTINUOUS + TIMER_PRESCALE_128;
-.line 38
+;   40	    T0CTL1 = TIMER_MODE_CONTINUOUS + TIMER_PRESCALE_128;
+.line 40
 	LD	R0,#57
 	LD.B	58119:RAM,R0
-;   39	
-;   40	    // Initial counter value
-;   41	    T0HL = 0x00;
-.line 41
-	CLR.W	58112:RAM
-;   42	
-;   43		if(timer_state == TIMER_4MS) {
+;   41	
+;   42	    // Initial counter value
+;   43	    T0HL = 0x00;
 .line 43
+	CLR.W	58112:RAM
+;   44	
+;   45		if(timer_state == TIMER_4MS) {
+.line 45
 	LD	R0,#4
 	CP	_timer_state:RAM,R0
 	JP	NE,_2_L_4
-;   44			// Timer reload
-;   45	    	//   reload = clock / prescale * timeout  
-;   46	   	 	T0R = (get_osc_clock() / 128) * INTERVAL_4MS_FLOAT;
-.line 46
+;   46			// Timer reload
+;   47	    	//   reload = clock / prescale * timeout  
+;   48	   	 	T0R = (get_osc_clock() / 128) * INTERVAL_4MS_FLOAT;
+.line 48
 	CALL	_get_osc_clock
 	LD	R1,#128
 	SDIV	R0,R1
@@ -137,16 +139,16 @@ _init_timer:
 	LD	R8,R0
 	CALL	__fpftol
 	LD.W	58114:RAM,R0
-;   47		}
-;   48		else if(timer_state == TIMER_1MS) {
-.line 48
+;   49		}
+;   50		else if(timer_state == TIMER_1MS) {
+.line 50
 	JP	_2_L_5
 _2_L_4:
 	LD	R0,#1
 	CP	_timer_state:RAM,R0
 	JP	NE,_2_L_2
-;   49			T0R = (get_osc_clock() / 128) * INTERVAL_1MS_FLOAT;
-.line 49
+;   51			T0R = (get_osc_clock() / 128) * INTERVAL_1MS_FLOAT;
+.line 51
 	CALL	_get_osc_clock
 	LD	R1,#128
 	SDIV	R0,R1
@@ -158,14 +160,14 @@ _2_L_4:
 	LD	R8,R0
 	CALL	__fpftol
 	LD.W	58114:RAM,R0
-;   50		}
-;   51		//default timer is 2ms
-;   52		else {
-.line 52
+;   52		}
+;   53		//default timer is 2ms
+;   54		else {
+.line 54
 	JP	_2_L_5
 _2_L_2:
-;   53			T0R = (get_osc_clock() / 128) * INTERVAL_2MS_FLOAT;
-.line 53
+;   55			T0R = (get_osc_clock() / 128) * INTERVAL_2MS_FLOAT;
+.line 55
 	CALL	_get_osc_clock
 	LD	R1,#128
 	SDIV	R0,R1
@@ -177,24 +179,24 @@ _2_L_2:
 	LD	R8,R0
 	CALL	__fpftol
 	LD.W	58114:RAM,R0
-;   54		}
+;   56		}
 _2_L_5:
-.line 54
-;   55	
-;   56		// Enable Timer0 interrupt
-;   57	    IRQ0EN |= IRQ_Timer0;
-.line 57
+.line 56
+;   57	
+;   58		// Enable Timer0 interrupt
+;   59	    IRQ0EN |= IRQ_Timer0;
+.line 59
 	LD	R0,#32
 	OR.W	57394:RAM,R0
-;   58	
-;   59		T0CTL1 |= TIMER_ENABLE;
-.line 59
+;   60	
+;   61		T0CTL1 |= TIMER_ENABLE;
+.line 61
 	LD	R0,#128
 	OR.B	58119:RAM,R0
-;   60	
-;   61		SET_VECTOR(TIMER0, timer_isr);
-;   62	}
-.line 62
+;   62	
+;   63		SET_VECTOR(TIMER0, timer_isr);
+;   64	}
+.line 64
 	POPMHI	#3
 	UNLINK	
 	RET	
@@ -211,10 +213,10 @@ _2_L_5:
 ; Aggregate Stack Size: -4 (words)
 
 
-.endfunc "init_timer",62,"_init_timer"
-;   63	
-;   64	int timer_interval_int(void)
-;   65	{
+.endfunc "init_timer",64,"_init_timer"
+;   65	
+;   66	int timer_interval_int(void)
+;   67	{
 _timer_interval_int:
 .define "_timer_interval_int"
 .value _timer_interval_int
@@ -222,37 +224,37 @@ _timer_interval_int:
 .type 69
 .type 0
 .endef
-.begfunc "timer_interval_int",65,"_timer_interval_int"
+.begfunc "timer_interval_int",67,"_timer_interval_int"
 	LINK	#0
-;   66		if(timer_state == TIMER_1MS) {
-.line 66
+;   68		if(timer_state == TIMER_1MS) {
+.line 68
 	LD	R0,#1
 	CP	_timer_state:RAM,R0
 	JP	NE,_3_L_10
-;   67			return INTERVAL_1MS_INT;
-.line 67
-	JP	_3_L_11
-;   68		}
-;   69		else if(timer_state == TIMER_2MS) {
-_3_L_10:
+;   69			return INTERVAL_1MS_INT;
 .line 69
+	JP	_3_L_11
+;   70		}
+;   71		else if(timer_state == TIMER_2MS) {
+_3_L_10:
+.line 71
 	LD	R0,#2
 	CP	_timer_state:RAM,R0
 	JP	NE,_3_L_8
-;   70			return INTERVAL_2MS_INT;
-.line 70
-	JP	_3_L_11
-;   71		}
-;   72		else {
-_3_L_8:
+;   72			return INTERVAL_2MS_INT;
 .line 72
-;   73			return INTERVAL_4MS_INT;
-.line 73
-	LD	R0,#4
-;   74		}
-;   75	}
-_3_L_11:
+	JP	_3_L_11
+;   73		}
+;   74		else {
+_3_L_8:
+.line 74
+;   75			return INTERVAL_4MS_INT;
 .line 75
+	LD	R0,#4
+;   76		}
+;   77	}
+_3_L_11:
+.line 77
 	UNLINK	
 	RET	
 
@@ -265,10 +267,10 @@ _3_L_11:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "timer_interval_int",75,"_timer_interval_int"
-;   76	
-;   77	float timer_interval_float(void)
-;   78	{
+.endfunc "timer_interval_int",77,"_timer_interval_int"
+;   78	
+;   79	float timer_interval_float(void)
+;   80	{
 _timer_interval_float:
 .define "_timer_interval_float"
 .value _timer_interval_float
@@ -276,38 +278,39 @@ _timer_interval_float:
 .type 70
 .type 0
 .endef
-.begfunc "timer_interval_float",78,"_timer_interval_float"
+.begfunc "timer_interval_float",80,"_timer_interval_float"
 	LINK	#0
-;   79		if(timer_state == TIMER_1MS) {
-.line 79
+;   81		if(timer_state == TIMER_1MS) {
+.line 81
 	LD	R0,#1
 	CP	_timer_state:RAM,R0
 	JP	NE,_4_L_15
-;   80			return INTERVAL_1MS_FLOAT;
-.line 80
+;   82			return INTERVAL_1MS_FLOAT;
+.line 82
 	LD	R0,#981668463
 	JP	_4_L_16
-;   81		}
-;   82		else if(timer_state == TIMER_2MS) {
+;   83		}
+;   84		else if(timer_state == TIMER_2MS) {
 _4_L_15:
-.line 82
+.line 84
 	LD	R0,#2
 	CP	_timer_state:RAM,R0
 	JP	NE,_4_L_13
-;   83			return INTERVAL_2MS_FLOAT;
-.line 83
+;   85			return INTERVAL_2MS_FLOAT;
+.line 85
 	LD	R0,#990057071
 	JP	_4_L_16
-;   84		}
-;   85		else {
+;   86		}
+;   87		else {
 _4_L_13:
-.line 85
-;   86			return INTERVAL_4MS_FLOAT;
-.line 86
-	LD	R0,#998445679
-;   87		}
-_4_L_16:
+.line 87
+;   88			return INTERVAL_4MS_FLOAT;
 .line 88
+	LD	R0,#998445679
+;   89		}
+;   90	}
+_4_L_16:
+.line 90
 	UNLINK	
 	RET	
 
@@ -320,14 +323,402 @@ _4_L_16:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "timer_interval_float",88,"_timer_interval_float"
+.endfunc "timer_interval_float",90,"_timer_interval_float"
+	SEGMENT ROM_TEXT
+L__10:
+	DB	10,0
+L__11:
+	DB	"0"
+	DB	0
+L__13:
+	DB	"T0H:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__14:
+	DB	"T0L:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__15:
+	DB	"T0RH:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__16:
+	DB	"T0RL:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__17:
+	DB	"T0PWMH:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__18:
+	DB	"T0PWML:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__19:
+	DB	"T0CTL0:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__20:
+	DB	"T0CTL1:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__21:
+	DB	"1"
+	DB	0
+L__23:
+	DB	"T1H:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__24:
+	DB	"T1L:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__25:
+	DB	"T1RH:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__26:
+	DB	"T1RL:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__27:
+	DB	"T1PWMH:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__28:
+	DB	"T1PWML:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__29:
+	DB	"T1CTL0:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__30:
+	DB	"T1CTL1:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__31:
+	DB	"2"
+	DB	0
+L__33:
+	DB	"T2H:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__34:
+	DB	"T2L:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__35:
+	DB	"T2RH:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__36:
+	DB	"T2RL:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__37:
+	DB	"T2PWMH:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__38:
+	DB	"T2PWML:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__39:
+	DB	"T2CTL0:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__40:
+	DB	"T2CTL1:"
+	DB	9
+	DB	"%.2X"
+	DB	10,0
+L__41:
+	DB	"Select a timer 0-2."
+	DB	10,0
+	SEGMENT CODE
+;   91	
+;   92	void timers_print_config(const char *value)
+;   93	{
+_timers_print_config:
+.define "_timers_print_config"
+.value _timers_print_config
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "timers_print_config",93,"_timers_print_config"
+	LINK	#2
+.line 93
+	LD.W	-2(R14),R1
+.define "value"
+.class 9
+.value -2
+.type 140
+.type 0
+.endef
+;   94		uart_printf("\n");
+.line 94
+	PUSH.W	#L__10
+	CALL	_uart_printf
+	ADD	R15,#2
+;   95		if(strcmp(value, "0") == 0) {
+.line 95
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__11
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_5_L_22
+;   96			uart_printf("T0H:\t%.2X\n", T0H);
+.line 96
+	LD.UB	R0,58112:RAM
+	PUSH	R0
+	PUSH.W	#L__13
+	CALL	_uart_printf
+	ADD	R15,#6
+;   97			uart_printf("T0L:\t%.2X\n", T0L);
+.line 97
+	LD.UB	R0,58113:RAM
+	PUSH	R0
+	PUSH.W	#L__14
+	CALL	_uart_printf
+	ADD	R15,#6
+;   98			uart_printf("T0RH:\t%.2X\n", T0RH);
+.line 98
+	LD.UB	R0,58114:RAM
+	PUSH	R0
+	PUSH.W	#L__15
+	CALL	_uart_printf
+	ADD	R15,#6
+;   99			uart_printf("T0RL:\t%.2X\n", T0RL);
+.line 99
+	LD.UB	R0,58115:RAM
+	PUSH	R0
+	PUSH.W	#L__16
+	CALL	_uart_printf
+	ADD	R15,#6
+;  100			uart_printf("T0PWMH:\t%.2X\n", T0PWMH);
+.line 100
+	LD.UB	R0,58116:RAM
+	PUSH	R0
+	PUSH.W	#L__17
+	CALL	_uart_printf
+	ADD	R15,#6
+;  101			uart_printf("T0PWML:\t%.2X\n", T0PWML);
+.line 101
+	LD.UB	R0,58117:RAM
+	PUSH	R0
+	PUSH.W	#L__18
+	CALL	_uart_printf
+	ADD	R15,#6
+;  102			uart_printf("T0CTL0:\t%.2X\n", T0CTL0);
+.line 102
+	LD.UB	R0,58118:RAM
+	PUSH	R0
+	PUSH.W	#L__19
+	CALL	_uart_printf
+	ADD	R15,#6
+;  103			uart_printf("T0CTL1:\t%.2X\n", T0CTL1);
+.line 103
+	LD.UB	R0,58119:RAM
+	PUSH	R0
+	PUSH.W	#L__20
+	CALL	_uart_printf
+	ADD	R15,#6
+;  104		}
+;  105		else if(strcmp(value, "1") == 0) {
+.line 105
+	JP	_5_L_23
+_5_L_22:
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__21
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_5_L_20
+;  106			uart_printf("T1H:\t%.2X\n", T1H);
+.line 106
+	LD.UB	R0,58128:RAM
+	PUSH	R0
+	PUSH.W	#L__23
+	CALL	_uart_printf
+	ADD	R15,#6
+;  107			uart_printf("T1L:\t%.2X\n", T1L);
+.line 107
+	LD.UB	R0,58129:RAM
+	PUSH	R0
+	PUSH.W	#L__24
+	CALL	_uart_printf
+	ADD	R15,#6
+;  108			uart_printf("T1RH:\t%.2X\n", T1RH);
+.line 108
+	LD.UB	R0,58130:RAM
+	PUSH	R0
+	PUSH.W	#L__25
+	CALL	_uart_printf
+	ADD	R15,#6
+;  109			uart_printf("T1RL:\t%.2X\n", T1RL);
+.line 109
+	LD.UB	R0,58131:RAM
+	PUSH	R0
+	PUSH.W	#L__26
+	CALL	_uart_printf
+	ADD	R15,#6
+;  110			uart_printf("T1PWMH:\t%.2X\n", T1PWMH);
+.line 110
+	LD.UB	R0,58132:RAM
+	PUSH	R0
+	PUSH.W	#L__27
+	CALL	_uart_printf
+	ADD	R15,#6
+;  111			uart_printf("T1PWML:\t%.2X\n", T1PWML);
+.line 111
+	LD.UB	R0,58133:RAM
+	PUSH	R0
+	PUSH.W	#L__28
+	CALL	_uart_printf
+	ADD	R15,#6
+;  112			uart_printf("T1CTL0:\t%.2X\n", T1CTL0);
+.line 112
+	LD.UB	R0,58134:RAM
+	PUSH	R0
+	PUSH.W	#L__29
+	CALL	_uart_printf
+	ADD	R15,#6
+;  113			uart_printf("T1CTL1:\t%.2X\n", T1CTL1);
+.line 113
+	LD.UB	R0,58135:RAM
+	PUSH	R0
+	PUSH.W	#L__30
+	CALL	_uart_printf
+	ADD	R15,#6
+;  114		}
+;  115		else if(strcmp(value, "2") == 0) {
+.line 115
+	JP	_5_L_23
+_5_L_20:
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__31
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_5_L_18
+;  116			uart_printf("T2H:\t%.2X\n", T2H);
+.line 116
+	LD.UB	R0,58144:RAM
+	PUSH	R0
+	PUSH.W	#L__33
+	CALL	_uart_printf
+	ADD	R15,#6
+;  117			uart_printf("T2L:\t%.2X\n", T2L);
+.line 117
+	LD.UB	R0,58145:RAM
+	PUSH	R0
+	PUSH.W	#L__34
+	CALL	_uart_printf
+	ADD	R15,#6
+;  118			uart_printf("T2RH:\t%.2X\n", T2RH);
+.line 118
+	LD.UB	R0,58146:RAM
+	PUSH	R0
+	PUSH.W	#L__35
+	CALL	_uart_printf
+	ADD	R15,#6
+;  119			uart_printf("T2RL:\t%.2X\n", T2RL);
+.line 119
+	LD.UB	R0,58147:RAM
+	PUSH	R0
+	PUSH.W	#L__36
+	CALL	_uart_printf
+	ADD	R15,#6
+;  120			uart_printf("T2PWMH:\t%.2X\n", T2PWMH);
+.line 120
+	LD.UB	R0,58148:RAM
+	PUSH	R0
+	PUSH.W	#L__37
+	CALL	_uart_printf
+	ADD	R15,#6
+;  121			uart_printf("T2PWML:\t%.2X\n", T2PWML);
+.line 121
+	LD.UB	R0,58149:RAM
+	PUSH	R0
+	PUSH.W	#L__38
+	CALL	_uart_printf
+	ADD	R15,#6
+;  122			uart_printf("T2CTL0:\t%.2X\n", T2CTL0);
+.line 122
+	LD.UB	R0,58150:RAM
+	PUSH	R0
+	PUSH.W	#L__39
+	CALL	_uart_printf
+	ADD	R15,#6
+;  123			uart_printf("T2CTL1:\t%.2X\n", T2CTL1);
+.line 123
+	LD.UB	R0,58151:RAM
+	PUSH	R0
+	PUSH.W	#L__40
+	CALL	_uart_printf
+	ADD	R15,#6
+;  124		}
+;  125		else {
+.line 125
+	JP	_5_L_23
+_5_L_18:
+;  126			uart_printf("Select a timer 0-2.\n");
+.line 126
+	PUSH.W	#L__41
+	CALL	_uart_printf
+	ADD	R15,#2
+;  127		}
+;  128	}
+_5_L_23:
+.line 128
+	UNLINK	
+	RET	
+
+
+;**************************** _timers_print_config ***************************
+;Name                         Addr/Register   Size   Type
+;_strcmp                             IMPORT  -----   function
+;_uart_printf                        IMPORT  -----   function
+;value                                R14-2      2   parameter
+
+
+; Aggregate Stack Size: -2 (words)
+
+
+.endfunc "timers_print_config",128,"_timers_print_config"
 	VECTOR	TIMER0=_timer_isr
+	XREF _strcmp:EROM
+	XREF _uart_printf:EROM
 	XREF _button_events:EROM
 	XREF _led_update:EROM
 	XREF _get_osc_clock:EROM
 	XREF __fpltof:EROM
 	XREF __fpftol:EROM
 	XREF __fpmul:EROM
+	XDEF _timers_print_config
 	XDEF _timer_interval_float
 	XDEF _timer_interval_int
 	XDEF _init_timer

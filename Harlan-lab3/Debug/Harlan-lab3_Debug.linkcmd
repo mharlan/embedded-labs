@@ -69,6 +69,7 @@ DEFINE _SYS_CLK_FREQ = 5529600
  .\cli.obj, \
  .\info.obj, \
  .\macro.obj, \
+ .\ports.obj, \
  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\chelpSD.lib, \
  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\crtSD.lib, \
  C:\PROGRA~2\ZiLOG\ZDSII_~1.1\lib\std\fpSD.lib

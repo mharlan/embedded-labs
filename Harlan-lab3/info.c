@@ -1,5 +1,6 @@
 #include "info.h"
 #include "uart.h"
+#include "oscillator.h"
 
 #include <zneo.h>
 #include <string.h>
@@ -24,8 +25,11 @@ void init_info(void)
  */
 void info_display(void)
 {
-	uart_printf("Uart0 Baud Rate: %u\n", uart_get_baud_rate());
+	uart_printf("\nPart Information\n------------------------\n");
+	uart_printf("Uart0 Baudrate: %u\n", uart_get_baudrate());
 	uart_printf("Part Number: %s\n", part_num);
 	uart_printf("Compile Date: %s\nCompile Time: %s\n", __DATE__, __TIME__);
+
+	osc_print_config();
 }
 

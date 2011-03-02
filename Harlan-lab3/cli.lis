@@ -1,428 +1,520 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
 
      1	    1	#include "cli.h"
      2	   52	#include "LED.h"
      3	   97	#include "uart.h"
-     4	  141	#include "info.h"
-     5	  156	#include "macro.h"
-     6	  177	
-     7	  178	#include <stdlib.h>
-     8	  301	#include <string.h>
-     9	  393	#include <ctype.h>
-    10	  420	
-    11	  421	#define CLI_PROMPT      "> "
-    12	  422	#define CLI_BUFFER_SIZE 256
-    13	  423	
-    14	  424	#define ASCII_DEL 0x7F
-    15	  425	
-    16	  426	static char cli_prompt[CLI_BUFFER_SIZE];
-    17	  427	
-    18	  428	static void cli_process_command(const char *command);
-    19	  429	
-    20	  430	/*
-    21	  431		Zero arguement CLI functions.
-    22	  432	 */
-    23	  433	static void cli_command_info(void);
-    24	  434	static void cli_command_question(void);
-    25	  435	
-    26	  436	/*
-    27	  437		Variable arguement CLI functions.
-    28	  438	
-    29	  439		Multiple arguements encoded as strings, separated by
-    30	  440		whitespace and quotes.
-    31	  441	 */
-    32	  442	static void cli_command_echo(char *args);
-    33	  443	static void cli_command_display(char *args);
-    34	  444	static void cli_command_hex(char *args);
-    35	  445	static void cli_command_set(char *args);
-    36	  446	static void cli_command_switch(char *args);
-    37	  447	static void cli_command_port(char *args);
-    38	  448	static void cli_command_timer(char *args);
-    39	  449	static void cli_command_uart0(char *args);
-    40	  450	
-    41	  451	void init_cli(void)
-    42	  452	{
-    43	  453		//initialize the hardware
-    44	  454		init_leds();
-    45	  455		init_uart();
-    46	  456		init_info();
-    47	  457	
-    48	  458		strcpy(cli_prompt, CLI_PROMPT);
-    49	  459	}
-    50	  460	
-    51	  461	void cli_loop(void)
-    52	  462	{
-    53	  463		char buffer[CLI_BUFFER_SIZE];
-    54	  464		char c;
-    55	  465	
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 2
+     4	  173	#include "info.h"
+     5	  188	#include "macro.h"
+     6	  209	#include "ports.h"
+     7	  219	#include "timer.h"
+     8	  298	
+     9	  299	#include <stdlib.h>
+    10	  422	#include <string.h>
+    11	  514	#include <ctype.h>
+    12	  541	
+    13	  542	#define CLI_PROMPT      "> "
+    14	  543	#define CLI_BUFFER_SIZE 256
+    15	  544	
+    16	  545	#define ASCII_DEL 0x7F
+    17	  546	
+    18	  547	static char cli_prompt[CLI_BUFFER_SIZE];
+    19	  548	
+    20	  549	static void cli_process_command(const char *command);
+    21	  550	
+    22	  551	/*
+    23	  552		Zero arguement CLI functions.
+    24	  553	 */
+    25	  554	static void cli_command_info(void);
+    26	  555	static void cli_command_question(void);
+    27	  556	
+    28	  557	/*
+    29	  558		Variable arguement CLI functions.
+    30	  559	
+    31	  560		Multiple arguements encoded as strings, separated by
+    32	  561		whitespace and quotes.
+    33	  562	 */
+    34	  563	static void cli_command_echo(char *args);
+    35	  564	static void cli_command_display(char *args);
+    36	  565	static void cli_command_hex(char *args);
+    37	  566	static void cli_command_set(char *args);
+    38	  567	static void cli_command_switch(char *args);
+    39	  568	static void cli_command_port(char *args);
+    40	  569	static void cli_command_timer(char *args);
+    41	  570	static void cli_command_uart0(char *args);
+    42	  571	
+    43	  572	void init_cli(void)
+    44	  573	{
+    45	  574		//initialize the hardware
+    46	  575		init_leds();
+    47	  576		init_uart();
+    48	  577		init_info();
+    49	  578	
+    50	  579		cli_set_prompt(CLI_PROMPT);
+    51	  580	}
+    52	  581	
+    53	  582	void cli_loop(void)
+    54	  583	{
+    55	  584		char buffer[CLI_BUFFER_SIZE];
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 2
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
 
-    56	  466		int buffer_pos;
-    57	  467	
-    58	  468		uart_printf("%s", cli_prompt);
-    59	  469	
-    60	  470		buffer_pos = 0;
-    61	  471	
-    62	  472		while(1) {
-    63	  473			//wait until a character is available
-    64	  474			while((c = uart_getchar()) == 0) { ; }
-    65	  475	
-    66	  476			//new line means end of the command
-    67	  477			if(c == '\n') {
-    68	  478				//only process a command if something was entered
-    69	  479				if(buffer_pos) {
-    70	  480					buffer[buffer_pos] = '\0';
-    71	  481					cli_process_command(buffer);
-    72	  482				}
-    73	  483	
-    74	  484				buffer_pos = 0;
-    75	  485				memset(buffer, 0, CLI_BUFFER_SIZE);
-    76	  486	
-    77	  487				uart_printf("%s", cli_prompt);
-    78	  488			}
-    79	  489			//there is more to come...
-    80	  490			else if(isgraph(c) || isspace(c)) {
-    81	  491				buffer[buffer_pos++] = c;
-    82	  492			}
-    83	  493			//
-    84	  494			else if(c == ASCII_DEL) {
-    85	  495				if(buffer_pos) {
-    86	  496					buffer_pos--;
-    87	  497					buffer[buffer_pos] = '\0';
-    88	  498				}
-    89	  499			}
-    90	  500			//ignore for now
-    91	  501			else {
-    92	  502				continue;
-    93	  503			}
-    94	  504	
-    95	  505			//is the command too long?
-    96	  506			if(buffer_pos >= CLI_BUFFER_SIZE) {
-    97	  507				uart_printf("\n--Error--, command is too long. Command ignored.\n");
-    98	  508				
-    99	  509				buffer_pos = 0;
-   100	  510				memset(buffer, 0, CLI_BUFFER_SIZE);
-   101	  511	
-   102	  512				uart_printf("%s", cli_prompt);
-   103	  513			}
-   104	  514		}
-   105	  515	}
-   106	  516	
-   107	  517	int cli_strip_quotes(char **args)
-   108	  518	{
-   109	  519		char *c;
-   110	  520	
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 3
+    56	  585		char c;
+    57	  586	
+    58	  587		int buffer_pos;
+    59	  588	
+    60	  589		uart_printf("%s", cli_prompt);
+    61	  590	
+    62	  591		buffer_pos = 0;
+    63	  592	
+    64	  593		while(1) {
+    65	  594			//wait until a character is available
+    66	  595			while((c = uart_getchar()) == 0) { ; }
+    67	  596	
+    68	  597			//new line means end of the command
+    69	  598			if(c == '\n') {
+    70	  599				//only process a command if something was entered
+    71	  600				if(buffer_pos) {
+    72	  601					buffer[buffer_pos] = '\0';
+    73	  602					cli_process_command(buffer);
+    74	  603				}
+    75	  604	
+    76	  605				buffer_pos = 0;
+    77	  606				memset(buffer, 0, CLI_BUFFER_SIZE);
+    78	  607	
+    79	  608				uart_printf("%s", cli_prompt);
+    80	  609			}
+    81	  610			//there is more to come...
+    82	  611			else if(isgraph(c) || isspace(c)) {
+    83	  612				buffer[buffer_pos++] = c;
+    84	  613			}
+    85	  614			//
+    86	  615			else if(c == ASCII_DEL) {
+    87	  616				if(buffer_pos) {
+    88	  617					buffer_pos--;
+    89	  618					buffer[buffer_pos] = '\0';
+    90	  619				}
+    91	  620			}
+    92	  621			//ignore for now
+    93	  622			else {
+    94	  623				continue;
+    95	  624			}
+    96	  625	
+    97	  626			//is the command too long?
+    98	  627			if(buffer_pos >= CLI_BUFFER_SIZE) {
+    99	  628				uart_printf("\n--Error--, command is too long. Command ignored.\n");
+   100	  629				
+   101	  630				buffer_pos = 0;
+   102	  631				memset(buffer, 0, CLI_BUFFER_SIZE);
+   103	  632	
+   104	  633				uart_printf("%s", cli_prompt);
+   105	  634			}
+   106	  635		}
+   107	  636	}
+   108	  637	
+   109	  638	int cli_strip_quotes(char **args)
+   110	  639	{
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 3
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
 
-   111	  521		c = *args;
-   112	  522		if(*c != '"') {
-   113	  523			return 1;
-   114	  524		}
-   115	  525		++c;
-   116	  526	
-   117	  527		c = strchr(c, '"');
-   118	  528		if(c == NULL) {
-   119	  529			return 1;
-   120	  530		}
-   121	  531		*c = '\0';
-   122	  532	
-   123	  533		*args = c;
-   124	  534	
-   125	  535		return 0;
-   126	  536	}
-   127	  537	
-   128	  538	int cli_strip_word(char **args) 
-   129	  539	{
-   130	  540		char *c;
-   131	  541	
-   132	  542		c = *args;
-   133	  543		while(isalpha(*c)) {
-   134	  544			++c;
-   135	  545		}
-   136	  546	
-   137	  547		if(*c == '\0') {
-   138	  548			return 1;
-   139	  549		}
-   140	  550		*c = '\0';
-   141	  551	
-   142	  552		*args = c;
-   143	  553	
-   144	  554		return 0;
-   145	  555	}
-   146	  556	
-   147	  557	int cli_strip_decimal_number(char **args)
-   148	  558	{
-   149	  559		char *c;
-   150	  560	
-   151	  561		c = *args;
-   152	  562		while(isdigit(*c)) {
-   153	  563			++c;
-   154	  564		}
-   155	  565		*c = '\0';
-   156	  566	
-   157	  567		//is there a number at all
-   158	  568		if(*args == c) {
-   159	  569			return 1;
-   160	  570		}
-   161	  571		*args = c;
-   162	  572	
-   163	  573		return 0;
-   164	  574	}
-   165	  575	
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 4
+   111	  640		char *c;
+   112	  641	
+   113	  642		c = *args;
+   114	  643		if(*c != '"') {
+   115	  644			return 1;
+   116	  645		}
+   117	  646		++c;
+   118	  647	
+   119	  648		c = strchr(c, '"');
+   120	  649		if(c == NULL) {
+   121	  650			return 1;
+   122	  651		}
+   123	  652		*c = '\0';
+   124	  653	
+   125	  654		*args = c;
+   126	  655	
+   127	  656		return 0;
+   128	  657	}
+   129	  658	
+   130	  659	int cli_strip_word(char **args) 
+   131	  660	{
+   132	  661		char *c;
+   133	  662	
+   134	  663		c = *args;
+   135	  664		while(isalpha(*c)) {
+   136	  665			++c;
+   137	  666		}
+   138	  667	
+   139	  668		if(*c == '\0') {
+   140	  669			return 1;
+   141	  670		}
+   142	  671		*c = '\0';
+   143	  672	
+   144	  673		*args = c;
+   145	  674	
+   146	  675		return 0;
+   147	  676	}
+   148	  677	
+   149	  678	int cli_strip_decimal_number(char **args)
+   150	  679	{
+   151	  680		char *c;
+   152	  681	
+   153	  682		c = *args;
+   154	  683		while(isdigit(*c)) {
+   155	  684			++c;
+   156	  685		}
+   157	  686		*c = '\0';
+   158	  687	
+   159	  688		//is there a number at all
+   160	  689		if(*args == c) {
+   161	  690			return 1;
+   162	  691		}
+   163	  692		*args = c;
+   164	  693	
+   165	  694		return 0;
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 4
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
 
-   166	  576	void cli_strip_spaces(char **args)
-   167	  577	{
-   168	  578		char *c;
-   169	  579	
-   170	  580		c = *args;
-   171	  581		while(isspace(*c)) {
-   172	  582			++c;
-   173	  583		}
-   174	  584	
-   175	  585		*args = c;
-   176	  586	}
-   177	  587	
-   178	  588	void cli_set_prompt(const char *text)
-   179	  589	{
-   180	  590		size_t prompt_len;
-   181	  591	
-   182	  592		prompt_len = strlen(text) + 1;
-   183	  593		if(prompt_len >= CLI_BUFFER_SIZE) {
-   184	  594			prompt_len = CLI_BUFFER_SIZE;
-   185	  595		}
-   186	  596	
-   187	  597		memcpy(cli_prompt, text, prompt_len);
-   188	  598		cli_prompt[prompt_len-1] = '\0';
-   189	  599	}
-   190	  600	
-   191	  601	static void cli_process_command(char *command)
-   192	  602	{
-   193	  603		char *args;
-   194	  604	
-   195	  605		//strip spaces and tabs
-   196	  606		cli_strip_spaces(&command);
-   197	  607	
-   198	  608		args = command;
-   199	  609		while(isgraph(*args) && *args != '\t') {	//bug with isgraph, returns true on \t and it shouldn't
-   200	  610			++args;
-   201	  611		}
-   202	  612	
-   203	  613		if(args != command) {
-   204	  614			*args = '\0';
-   205	  615	
-   206	  616			++args;
-   207	  617			if(strcmp(command, "info") == 0) {
-   208	  618				cli_command_info();
-   209	  619			}
-   210	  620			else if(strcmp(command, "?") == 0) {
-   211	  621				cli_command_question();
-   212	  622			}
-   213	  623			else if(strcmp(command, "echo") == 0) {
-   214	  624				cli_command_echo(args);
-   215	  625			}
-   216	  626			else if(strcmp(command, "display") == 0) {
-   217	  627				cli_command_display(args);
-   218	  628			}
-   219	  629			else if(strcmp(command, "set") == 0) {
-   220	  630				cli_command_set(args);
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 5
+   166	  695	}
+   167	  696	
+   168	  697	void cli_strip_spaces(char **args)
+   169	  698	{
+   170	  699		char *c;
+   171	  700	
+   172	  701		c = *args;
+   173	  702		while(isspace(*c)) {
+   174	  703			++c;
+   175	  704		}
+   176	  705	
+   177	  706		*args = c;
+   178	  707	}
+   179	  708	
+   180	  709	void cli_set_prompt(const char *text)
+   181	  710	{
+   182	  711		size_t prompt_len;
+   183	  712		
+   184	  713		prompt_len = strlen(text) + 1;
+   185	  714		if(prompt_len >= CLI_BUFFER_SIZE) {
+   186	  715			prompt_len = CLI_BUFFER_SIZE;
+   187	  716		}
+   188	  717		
+   189	  718		memcpy(cli_prompt, text, prompt_len);
+   190	  719		cli_prompt[prompt_len-1] = '\0';
+   191	  720	}
+   192	  721	
+   193	  722	static void cli_process_command(char *command)
+   194	  723	{
+   195	  724		char *args;
+   196	  725	
+   197	  726		//strip spaces and tabs
+   198	  727		cli_strip_spaces(&command);
+   199	  728	
+   200	  729		args = command;
+   201	  730		while(isgraph(*args) && *args != '\t') {	//bug with isgraph, returns true on \t and it shouldn't
+   202	  731			++args;
+   203	  732		}
+   204	  733	
+   205	  734		if(args != command) {
+   206	  735			*args = '\0';
+   207	  736	
+   208	  737			++args;
+   209	  738			if(strcmp(command, "info") == 0) {
+   210	  739				cli_command_info();
+   211	  740			}
+   212	  741			else if(strcmp(command, "?") == 0) {
+   213	  742				cli_command_question();
+   214	  743			}
+   215	  744			else if(strcmp(command, "echo") == 0) {
+   216	  745				cli_command_echo(args);
+   217	  746			}
+   218	  747			else if(strcmp(command, "display") == 0) {
+   219	  748				cli_command_display(args);
+   220	  749			}
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 5
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
 
-   221	  631			}
-   222	  632			else if(strcmp(command, "hex") == 0) {
-   223	  633				cli_command_hex(args);
-   224	  634			}
-   225	  635			else if(strcmp(command, "switch") == 0) {
-   226	  636				cli_command_switch(args);
-   227	  637			}
-   228	  638			else if(strcmp(command, "port") == 0) {
-   229	  639				cli_command_port(args);
-   230	  640			}
-   231	  641			else if(strcmp(command, "timer") == 0) {
-   232	  642				cli_command_timer(args);
-   233	  643			}
-   234	  644			else if(strcmp(command, "uart0") == 0) {
-   235	  645				cli_command_uart0(args);
-   236	  646			}
-   237	  647			else {
-   238	  648				uart_printf("--Command:%s, not found. Enter \"?\" to see a list of available commands.\n", command);
-   239	  649			}
-   240	  650		}
-   241	  651	}
-   242	  652	
-   243	  653	static void cli_command_question(void)
-   244	  654	{
-   245	  655		uart_printf("\nAvailable Commands:\n\n");
-   246	  656	
-   247	  657		uart_printf("echo [\"text\"]\n");
-   248	  658		uart_printf(" -Echos text back to the serial port.\n");
-   249	  659	
-   250	  660		uart_printf("display [\"text\"]\n");
-   251	  661		uart_printf(" -Display text on the LEDs.\n");
-   252	  662	
-   253	  663		uart_printf("set prompt [\"text\"]\n");
-   254	  664		uart_printf(" -Set the CLI prompt to text.\n");
-   255	  665	
-   256	  666		uart_printf("hex [decimal number]\n");
-   257	  667		uart_printf(" -Display a decimal number in hex on the LEDs.\n");
-   258	  668	
-   259	  669		uart_printf("switch [0-2] [\"text\"]\n");
-   260	  670		uart_printf(" -Assigns the text macro to a button.\n");
-   261	  671	
-   262	  672		uart_printf("port [A-K]\n");
-   263	  673		uart_printf(" -Display the current state of the port.\n");
-   264	  674	
-   265	  675		uart_printf("timer [0-2]\n");
-   266	  676		uart_printf(" -Display the current state of the timer.\n");
-   267	  677	
-   268	  678		uart_printf("uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
-   269	  679		uart_printf(" -Set the uart0 settings.\n");
-   270	  680	
-   271	  681		uart_printf("info\n");
-   272	  682		uart_printf(" -Displays various system information.\n");
-   273	  683	
-   274	  684		uart_printf("?\n");
-   275	  685		uart_printf(" -Displays a menu of CLI commands.\n");
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 6
+   221	  750			else if(strcmp(command, "set") == 0) {
+   222	  751				cli_command_set(args);
+   223	  752			}
+   224	  753			else if(strcmp(command, "hex") == 0) {
+   225	  754				cli_command_hex(args);
+   226	  755			}
+   227	  756			else if(strcmp(command, "switch") == 0) {
+   228	  757				cli_command_switch(args);
+   229	  758			}
+   230	  759			else if(strcmp(command, "port") == 0) {
+   231	  760				cli_command_port(args);
+   232	  761			}
+   233	  762			else if(strcmp(command, "timer") == 0) {
+   234	  763				cli_command_timer(args);
+   235	  764			}
+   236	  765			else if(strcmp(command, "uart0") == 0) {
+   237	  766				cli_command_uart0(args);
+   238	  767			}
+   239	  768			else {
+   240	  769				uart_printf("--Command:%s, not found. Enter \"?\" to see a list of available commands.\n", command);
+   241	  770			}
+   242	  771		}
+   243	  772	}
+   244	  773	
+   245	  774	static void cli_command_question(void)
+   246	  775	{
+   247	  776		uart_printf("\nAvailable Commands:\n\n");
+   248	  777	
+   249	  778		uart_printf("echo [\"text\"]\n");
+   250	  779		uart_printf(" -Echos text back to the serial port.\n");
+   251	  780	
+   252	  781		uart_printf("display [\"text\"]\n");
+   253	  782		uart_printf(" -Display text on the LEDs.\n");
+   254	  783	
+   255	  784		uart_printf("set prompt [\"text\"]\n");
+   256	  785		uart_printf(" -Set the CLI prompt to text.\n");
+   257	  786	
+   258	  787		uart_printf("hex [decimal number]\n");
+   259	  788		uart_printf(" -Display a decimal number in hex on the LEDs.\n");
+   260	  789	
+   261	  790		uart_printf("switch [0-2] [\"text\"]\n");
+   262	  791		uart_printf(" -Assigns the text macro to a button.\n");
+   263	  792	
+   264	  793		uart_printf("port [A-K]\n");
+   265	  794		uart_printf(" -Display the current state of the port.\n");
+   266	  795	
+   267	  796		uart_printf("timer [0-2]\n");
+   268	  797		uart_printf(" -Display the current state of the timer.\n");
+   269	  798	
+   270	  799		uart_printf("uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+   271	  800		uart_printf(" -Set the uart0 settings.\n");
+   272	  801	
+   273	  802		uart_printf("info\n");
+   274	  803		uart_printf(" -Displays various system information.\n");
+   275	  804	
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 6
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
 
-   276	  686	}
-   277	  687	
-   278	  688	static void cli_command_info(void)
-   279	  689	{
-   280	  690		info_display();
-   281	  691	}
-   282	  692	
-   283	  693	static void cli_command_echo(char *args)
-   284	  694	{
-   285	  695		char *token;
-   286	  696	
-   287	  697		cli_strip_spaces(&args);
-   288	  698	
-   289	  699		token = args;
-   290	  700		if(cli_strip_quotes(&args)) {
-   291	  701			uart_printf("Incorrect format, echo [\"text\"]\n");
-   292	  702			return;
-   293	  703		}
-   294	  704	
-   295	  705		uart_printf("%s\n", ++token);
-   296	  706	}
-   297	  707	
-   298	  708	static void cli_command_display(char *args)
-   299	  709	{
-   300	  710		char *token;
-   301	  711	
-   302	  712		cli_strip_spaces(&args);
-   303	  713	
-   304	  714		token = args;
-   305	  715		if(cli_strip_quotes(&args)) {
-   306	  716			uart_printf("Incorrect format, display [\"text\"]\n");
-   307	  717			return;
-   308	  718		}
-   309	  719	
-   310	  720		led_display_text(++token);
-   311	  721	}
-   312	  722	
-   313	  723	static void cli_command_hex(char *args)
-   314	  724	{
-   315	  725		char *token;
-   316	  726		int value;
-   317	  727	
-   318	  728		cli_strip_spaces(&args);
-   319	  729	
-   320	  730		token = args;
-   321	  731		if(cli_strip_decimal_number(&args)) {
-   322	  732			uart_printf("1 Incorrect format, hex [decimal number]\n");
-   323	  733			return;
-   324	  734		}
-   325	  735	
-   326	  736		value = atoi(token);
-   327	  737		led_display_int_hex(value);
-   328	  738	}
-   329	  739	
-   330	  740	static void cli_command_set(char *args)
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 7
+   276	  805		uart_printf("?\n");
+   277	  806		uart_printf(" -Displays a menu of CLI commands.\n");
+   278	  807	}
+   279	  808	
+   280	  809	static void cli_command_info(void)
+   281	  810	{
+   282	  811		info_display();
+   283	  812	}
+   284	  813	
+   285	  814	static void cli_command_echo(char *args)
+   286	  815	{
+   287	  816		char *token;
+   288	  817	
+   289	  818		cli_strip_spaces(&args);
+   290	  819	
+   291	  820		token = args;
+   292	  821		if(cli_strip_quotes(&args)) {
+   293	  822			uart_printf("Incorrect format, echo [\"text\"]\n");
+   294	  823			return;
+   295	  824		}
+   296	  825	
+   297	  826		uart_printf("%s\n", ++token);
+   298	  827	}
+   299	  828	
+   300	  829	static void cli_command_display(char *args)
+   301	  830	{
+   302	  831		char *token;
+   303	  832	
+   304	  833		cli_strip_spaces(&args);
+   305	  834	
+   306	  835		token = args;
+   307	  836		if(cli_strip_quotes(&args)) {
+   308	  837			uart_printf("Incorrect format, display [\"text\"]\n");
+   309	  838			return;
+   310	  839		}
+   311	  840	
+   312	  841		led_display_text(++token);
+   313	  842	}
+   314	  843	
+   315	  844	static void cli_command_hex(char *args)
+   316	  845	{
+   317	  846		char *token;
+   318	  847		int value;
+   319	  848	
+   320	  849		cli_strip_spaces(&args);
+   321	  850	
+   322	  851		token = args;
+   323	  852		if(cli_strip_decimal_number(&args)) {
+   324	  853			uart_printf("1 Incorrect format, hex [decimal number]\n");
+   325	  854			return;
+   326	  855		}
+   327	  856	
+   328	  857		value = atoi(token);
+   329	  858		led_display_int_hex(value);
+   330	  859	}
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 7
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
 
-   331	  741	{
-   332	  742		char *token;
-   333	  743	
-   334	  744		cli_strip_spaces(&args);
-   335	  745	
-   336	  746		token = args;
-   337	  747		if(cli_strip_word(&args)) {
-   338	  748			uart_printf("1 Incorrect format, set prompt [\"text\"]\n");
-   339	  749			return;
-   340	  750		}
-   341	  751	
-   342	  752		if(strcmp(token, "prompt") == 0) {
-   343	  753			++args;
-   344	  754			cli_strip_spaces(&args);
-   345	  755	
-   346	  756			token = args;
-   347	  757			if(cli_strip_quotes(&args)) {
-   348	  758				uart_printf("2 Incorrect format, set prompt [\"text\"]\n");
-   349	  759				return;
-   350	  760			}
-   351	  761	
-   352	  762			cli_set_prompt(++token);
-   353	  763		}
-   354	  764		else {
-   355	  765			uart_printf("3 Incorrect format, set prompt [\"text\"]\n");
-   356	  766			return;
-   357	  767		}
-   358	  768	}
-   359	  769	
-   360	  770	static void cli_command_switch(char *args)
-   361	  771	{
-   362	  772		char *token;
-   363	  773		int value;
-   364	  774	
-   365	  775		cli_strip_spaces(&args);
-   366	  776	
-   367	  777		token = args;
-   368	  778		if(cli_strip_decimal_number(&args)) {
-   369	  779			uart_printf("1 Incorrect format, switch [n] [\"text\"]\n");
-   370	  780			return;
-   371	  781		}
-   372	  782		value = atoi(token);
-   373	  783	
-   374	  784		if(value < 0 || value >= MACRO_MAX) {
-   375	  785			uart_printf("2 Incorrect format, switch [n] [\"text\"]\n");
-   376	  786			return;
-   377	  787		}
-   378	  788	
-   379	  789		++args;
-   380	  790		cli_strip_spaces(&args);
-   381	  791	
-   382	  792		token = args;
-   383	  793		if(cli_strip_quotes(&args)) {
-   384	  794			uart_printf("3 Incorrect format, switch [n] [\"text\"]\n");
-   385	  795			return;
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 8
+   331	  860	
+   332	  861	static void cli_command_set(char *args)
+   333	  862	{
+   334	  863		char *token;
+   335	  864	
+   336	  865		cli_strip_spaces(&args);
+   337	  866	
+   338	  867		token = args;
+   339	  868		if(cli_strip_word(&args)) {
+   340	  869			uart_printf("1 Incorrect format, set prompt [\"text\"]\n");
+   341	  870			return;
+   342	  871		}
+   343	  872	
+   344	  873		if(strcmp(token, "prompt") == 0) {
+   345	  874			++args;
+   346	  875			cli_strip_spaces(&args);
+   347	  876	
+   348	  877			token = args;
+   349	  878			if(cli_strip_quotes(&args)) {
+   350	  879				uart_printf("2 Incorrect format, set prompt [\"text\"]\n");
+   351	  880				return;
+   352	  881			}
+   353	  882	
+   354	  883			++token;
+   355	  884			cli_set_prompt(token);
+   356	  885		}
+   357	  886		else {
+   358	  887			uart_printf("3 Incorrect format, set prompt [\"text\"]\n");
+   359	  888			return;
+   360	  889		}
+   361	  890	}
+   362	  891	
+   363	  892	static void cli_command_switch(char *args)
+   364	  893	{
+   365	  894		char *token;
+   366	  895		int value;
+   367	  896	
+   368	  897		cli_strip_spaces(&args);
+   369	  898	
+   370	  899		token = args;
+   371	  900		if(cli_strip_decimal_number(&args)) {
+   372	  901			uart_printf("1 Incorrect format, switch [n] [\"text\"]\n");
+   373	  902			return;
+   374	  903		}
+   375	  904		value = atoi(token);
+   376	  905	
+   377	  906		if(value < 0 || value >= MACRO_MAX) {
+   378	  907			uart_printf("2 Incorrect format, switch [n] [\"text\"]\n");
+   379	  908			return;
+   380	  909		}
+   381	  910	
+   382	  911		++args;
+   383	  912		cli_strip_spaces(&args);
+   384	  913	
+   385	  914		token = args;
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 8
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
 
-   386	  796		}
-   387	  797	
-   388	  798		macro_set(value, ++token);
-   389	  799	}
-   390	  800	
-   391	  801	static void cli_command_port(char *args)
-   392	  802	{
-   393	  803		
-   394	  804	}
-   395	  805	
-   396	  806	static void cli_command_timer(char *args)
-   397	  807	{
-   398	  808		
-   399	  809	}
-   400	  810	
-   401	  811	static void cli_command_uart0(char *args)
-   402	  812	{
-   403	  813		
-   404	  814	}ÿ
+   386	  915		if(cli_strip_quotes(&args)) {
+   387	  916			uart_printf("3 Incorrect format, switch [n] [\"text\"]\n");
+   388	  917			return;
+   389	  918		}
+   390	  919	
+   391	  920		macro_set(value, ++token);
+   392	  921	}
+   393	  922	
+   394	  923	static void cli_command_port(char *args)
+   395	  924	{
+   396	  925		char *token;
+   397	  926	
+   398	  927		cli_strip_spaces(&args);
+   399	  928	
+   400	  929		token = args;
+   401	  930		if(cli_strip_word(&args)) {
+   402	  931			uart_printf("Incorrect format, port [A-K]\n");
+   403	  932			return;
+   404	  933		}
+   405	  934	
+   406	  935		ports_print_config(token);
+   407	  936	}
+   408	  937	
+   409	  938	static void cli_command_timer(char *args)
+   410	  939	{
+   411	  940		char *token;
+   412	  941	
+   413	  942		cli_strip_spaces(&args);
+   414	  943	
+   415	  944		token = args;
+   416	  945		if(cli_strip_decimal_number(&args)) {
+   417	  946			uart_printf("Incorrect format, timer [0-2]\n");
+   418	  947			return;
+   419	  948		}
+   420	  949	
+   421	  950		timers_print_config(token);
+----- File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C -----
+   420	  949	
+   421	  950		timers_print_config(token);
+WARNING		---------------------------^ (197) No function prototype "timers_print_config" in scope
+   422	  951	}
+   423	  952	
+   424	  953	static void cli_command_uart0(char *args)
+   425	  954	{
+   426	  955		char *token;
+   427	  956		int value;
+   428	  957	
+   429	  958		cli_strip_spaces(&args);
+   430	  959	
+   431	  960		token = args;
+   432	  961		if(cli_strip_word(&args)) {
+   433	  962			uart_printf("1 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+   434	  963			return;
+   435	  964		}
+   436	  965	
+   437	  966		if(strcmp(token, "speed") == 0) {
+   438	  967			++args;
+   439	  968			
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 9
+Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\CLI.C
+
+   440	  969			cli_strip_spaces(&args);		
+   441	  970		
+   442	  971			token = args;
+   443	  972			if(cli_strip_decimal_number(&args)) {
+   444	  973				uart_printf("2 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+   445	  974				return;
+   446	  975			}
+   447	  976			value = atoi(token);
+   448	  977	
+   449	  978			uart_set_baudrate(value);
+   450	  979	
+   451	  980			++args;
+   452	  981			cli_strip_spaces(&args);
+   453	  982	
+   454	  983			token = args;
+   455	  984			cli_strip_word(&args);
+   456	  985		}
+   457	  986		if(strcmp(token, "parity") == 0) {
+   458	  987			++args;
+   459	  988	
+   460	  989			cli_strip_spaces(&args);
+   461	  990	
+   462	  991			token = args;
+   463	  992			if(cli_strip_word(&args)) {
+   464	  993				uart_printf("3 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+   465	  994				return;
+   466	  995			}
+   467	  996	
+   468	  997			uart_set_parity(token);
+   469	  998	
+   470	  999			++args;
+   471	 1000			cli_strip_spaces(&args);
+   472	 1001	
+   473	 1002			token = args;
+   474	 1003			cli_strip_word(&args);
+   475	 1004		}
+   476	 1005		if(strcmp(token, "bits") == 0) {
+   477	 1006			++args;
+   478	 1007	
+   479	 1008			cli_strip_spaces(&args);
+   480	 1009	
+   481	 1010			token = args;
+   482	 1011			if(cli_strip_decimal_number(&args)) {
+   483	 1012				uart_printf("4 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+   484	 1013				return;
+   485	 1014			}
+   486	 1015	
+   487	 1016			uart_set_bits(token);
+   488	 1017		}
+   489	 1018	}ÿ

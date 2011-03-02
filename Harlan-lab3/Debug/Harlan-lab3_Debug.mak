@@ -78,6 +78,8 @@ clean:
             $(RM) $(WORKDIR)\info.obj
 	@if exist $(WORKDIR)\macro.obj  \
             $(RM) $(WORKDIR)\macro.obj
+	@if exist $(WORKDIR)\ports.obj  \
+            $(RM) $(WORKDIR)\ports.obj
 
 # pre-4.11.0 compatibility
 rebuildall: buildall 
@@ -93,7 +95,8 @@ OBJS =  \
             $(WORKDIR)\uart.obj  \
             $(WORKDIR)\cli.obj  \
             $(WORKDIR)\info.obj  \
-            $(WORKDIR)\macro.obj
+            $(WORKDIR)\macro.obj  \
+            $(WORKDIR)\ports.obj
 
 Harlan-lab3: $(OBJS)
 	 $(LD) $(LDFLAGS)
@@ -142,16 +145,20 @@ $(WORKDIR)\main.obj :  \
 $(WORKDIR)\oscillator.obj :  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\oscillator.c  \
             $(INCLUDE)\zilog\zneo.h  \
-            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\oscillator.h
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\oscillator.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\uart.h
 	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\oscillator.c
 
 $(WORKDIR)\timer.obj :  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\timer.c  \
+            $(INCLUDE)\std\STRING.H  \
+            $(INCLUDE)\zilog\Zconst.h  \
             $(INCLUDE)\zilog\zneo.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\LED.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\buttons.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\oscillator.h  \
-            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\timer.h
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\timer.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\uart.h
 	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\timer.c
 
 $(WORKDIR)\uart.obj :  \
@@ -174,9 +181,11 @@ $(WORKDIR)\cli.obj :  \
             $(INCLUDE)\std\STRING.H  \
             $(INCLUDE)\zilog\Zconst.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\LED.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\timer.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\cli.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\info.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\macro.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\ports.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\uart.h
 	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\cli.c
 
@@ -185,6 +194,7 @@ $(WORKDIR)\info.obj :  \
             $(INCLUDE)\std\STRING.H  \
             $(INCLUDE)\zilog\Zconst.h  \
             $(INCLUDE)\zilog\zneo.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab2\include\oscillator.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\info.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\uart.h
 	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\info.c
@@ -197,4 +207,13 @@ $(WORKDIR)\macro.obj :  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\macro.h  \
             C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\uart.h
 	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\macro.c
+
+$(WORKDIR)\ports.obj :  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\ports.c  \
+            $(INCLUDE)\std\STRING.H  \
+            $(INCLUDE)\zilog\Zconst.h  \
+            $(INCLUDE)\zilog\zneo.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\ports.h  \
+            C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\include\uart.h
+	 $(CC) $(CFLAGS) C:\Users\Matt\Documents\CSCI-4415-labs\Harlan-lab3\ports.c
 

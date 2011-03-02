@@ -10,6 +10,11 @@
 #define FREQ         5529600UL  //use internal oscillator
 #define DEFAULT_BAUD 57600UL    //our desired baud rate
 
+#define UART_PARITY_EN   0x10
+#define UART_PARITY_ODD  0x08
+
+#define UART_TWO_STOP 0x02
+
 //alternate function enable for PA for uart0
 #define PORTA_UART_RXD	0x10	
 #define PORTA_UART_TXD	0x20
@@ -33,7 +38,9 @@ static volatile int rec_buffer_size;
 static volatile int trans_buffer_current;
 static volatile int rec_buffer_current;
 
-static unsigned long baud_rate;
+static unsigned long baudrate;
+
+static int uart_isr_putchar(unsigned char c);
 
 void interrupt uart_receive(void)
 {
@@ -43,15 +50,11 @@ void interrupt uart_receive(void)
 	c = U0RXD;
 
 	//so the echo is compatible with Windows, CR+LF
-	if(c == '\r' || c == '\n') {
+	if(c == '\r') {
 		c = '\n';
-		uart_putchar('\r');
-		uart_putchar('\n');	
 	}
-	//echo the character back
-	else {
-		uart_putchar(c);
-	}
+	
+	uart_isr_putchar(c);
 
 	if(rec_buffer_size < BUFFER_SIZE) {
 		buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
@@ -84,10 +87,10 @@ void init_uart(void)
 	PAAFH &= ~(PORTA_UART_TXD | PORTA_UART_RXD);
     PAAFL |= PORTA_UART_TXD | PORTA_UART_RXD;
 
-    // Set the baud rate
+	// Set the baud rate
     // BRG = freq/( baud * 16)
     U0BR = FREQ/((unsigned long)DEFAULT_BAUD * 16UL);
-	baud_rate = DEFAULT_BAUD;
+	baudrate = DEFAULT_BAUD;
 
     // U0 control
     // Transmit enable, Receive Enable, No Parity, 1 Stop
@@ -127,6 +130,34 @@ int uart_putchar(unsigned char c)
 		}
 
 		EI();
+	}
+	else {
+		return 1;
+	}
+
+	return 0;
+}
+
+static int uart_isr_putchar(unsigned char c)
+{
+	int buffer_loc;
+
+	if(c == '\n') {
+		if(uart_isr_putchar('\r')) {
+			return 1;
+		}
+	}
+
+	if(trans_buffer_size < BUFFER_SIZE) {
+		buffer_loc = (trans_buffer_current + trans_buffer_size) % BUFFER_SIZE;
+		trans_buffer[buffer_loc] = c;
+		trans_buffer_size++;
+
+		//trigger the interrupt if already ready to transmit
+		if((U0STAT0 & UART_TRAN_RDY) && 
+		   ((IRQ0SET & UART_IRQ_TRAN) == 0)) {
+			IRQ0SET |= UART_IRQ_TRAN;
+		}
 	}
 	else {
 		return 1;
@@ -179,9 +210,9 @@ void uart_transfer_msg(char *text)
 	}
 }
 
-unsigned long uart_get_baud_rate(void)
+unsigned long uart_get_baudrate(void)
 {
-	return baud_rate;
+	return baudrate;
 }
 
 void uart_dummy_receive(char c)
@@ -189,6 +220,8 @@ void uart_dummy_receive(char c)
 	int buffer_loc;
 
 	DI();
+
+	uart_isr_putchar(c);
 
 	if(rec_buffer_size < BUFFER_SIZE) {
 		buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
@@ -198,4 +231,58 @@ void uart_dummy_receive(char c)
 	}
 
 	EI();
+}
+
+void uart_disable(void)
+{
+	U0CTL0 &= ~(UART_RXD_EN | UART_TXD_EN);
+}
+
+void uart_enable(void)
+{
+    U0CTL0 |= UART_RXD_EN | UART_TXD_EN;
+}
+
+void uart_set_baudrate(unsigned long baud)
+{
+	uart_disable();
+
+	// Set the baud rate
+    // BRG = freq/( baud * 16)
+    U0BR = FREQ/((unsigned long)baud * 16UL);
+	baudrate = baud;
+
+	uart_enable();
+}
+
+void uart_set_parity(const char *value)
+{
+	uart_disable();
+
+	if(strcmp(value, UART_EVEN) == 0) {
+		U0CTL0 |= UART_PARITY_EN;
+		U0CTL0 &= ~UART_PARITY_ODD;
+	}
+	else if(strcmp(value, UART_ODD) == 0) {
+		U0CTL0 |= UART_PARITY_EN | UART_PARITY_ODD;
+	}
+	else if(strcmp(value, UART_NONE) == 0) {
+		U0CTL0 &= ~UART_PARITY_EN;
+	}
+
+	uart_enable();
+}
+
+void uart_set_bits(const char *value)
+{
+	uart_disable();
+
+	if(strcmp(value, UART_BIT7) == 0) {
+		U0CTL0 &= ~UART_TWO_STOP;
+	}
+	else if(strcmp(value, UART_BIT8) == 0) {
+		U0CTL0 |= UART_TWO_STOP;	
+	}
+
+	uart_enable();
 }

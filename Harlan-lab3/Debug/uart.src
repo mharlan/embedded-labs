@@ -163,12 +163,12 @@ _rec_buffer_current:
 .type 5
 .type 0
 .endef
-_baud_rate:
+_baudrate:
 	DS	4*1
-.define "baud_rate"
-.alias "_baud_rate"
+.define "baudrate"
+.alias "_baudrate"
 .class 147
-.value _baud_rate
+.value _baudrate
 .type 15
 .type 0
 .endef
@@ -184,34 +184,41 @@ _baud_rate:
 ;   10	#define FREQ         5529600UL  //use internal oscillator
 ;   11	#define DEFAULT_BAUD 57600UL    //our desired baud rate
 ;   12	
-;   13	//alternate function enable for PA for uart0
-;   14	#define PORTA_UART_RXD	0x10	
-;   15	#define PORTA_UART_TXD	0x20
-;   16	
-;   17	#define UART_TXD_EN		0x80	//transmit enable
-;   18	#define UART_RXD_EN		0x40	//receive enable
-;   19	
-;   20	#define UART_TRAN_RDY 0x04
+;   13	#define UART_PARITY_EN   0x10
+;   14	#define UART_PARITY_ODD  0x08
+;   15	
+;   16	#define UART_TWO_STOP 0x02
+;   17	
+;   18	//alternate function enable for PA for uart0
+;   19	#define PORTA_UART_RXD	0x10	
+;   20	#define PORTA_UART_TXD	0x20
 ;   21	
-;   22	#define UART_IRQ_EN   0x18
-;   23	
-;   24	#define UART_IRQ_TRAN 0x08
-;   25	#define UART_IRQ_REC  0x10
+;   22	#define UART_TXD_EN		0x80	//transmit enable
+;   23	#define UART_RXD_EN		0x40	//receive enable
+;   24	
+;   25	#define UART_TRAN_RDY 0x04
 ;   26	
-;   27	static unsigned char trans_buffer[BUFFER_SIZE];
-;   28	static unsigned char rec_buffer[BUFFER_SIZE];
-;   29	
-;   30	static volatile int trans_buffer_size;
-;   31	static volatile int rec_buffer_size;
-;   32	
-;   33	static volatile int trans_buffer_current;
-;   34	static volatile int rec_buffer_current;
-;   35	
-;   36	static unsigned long baud_rate;
-	SEGMENT CODE
+;   27	#define UART_IRQ_EN   0x18
+;   28	
+;   29	#define UART_IRQ_TRAN 0x08
+;   30	#define UART_IRQ_REC  0x10
+;   31	
+;   32	static unsigned char trans_buffer[BUFFER_SIZE];
+;   33	static unsigned char rec_buffer[BUFFER_SIZE];
+;   34	
+;   35	static volatile int trans_buffer_size;
+;   36	static volatile int rec_buffer_size;
 ;   37	
-;   38	void interrupt uart_receive(void)
-;   39	{
+;   38	static volatile int trans_buffer_current;
+;   39	static volatile int rec_buffer_current;
+;   40	
+;   41	static unsigned long baudrate;
+	SEGMENT CODE
+;   42	
+;   43	static int uart_isr_putchar(unsigned char c);
+;   44	
+;   45	void interrupt uart_receive(void)
+;   46	{
 _uart_receive:
 .define "_uart_receive"
 .value _uart_receive
@@ -219,8 +226,8 @@ _uart_receive:
 .type 65
 .type 0
 .endef
-.begfunc "uart_receive",39,"_uart_receive"
-.line 39
+.begfunc "uart_receive",46,"_uart_receive"
+.line 46
 .define "c"
 .class 1
 .value -1
@@ -235,77 +242,60 @@ _uart_receive:
 .endef
 	LINK	#5
 	PUSHMLO	#255
-;   40		int buffer_loc;
-;   41		unsigned char c;
-;   42	
-;   43		c = U0RXD;
-.line 43
+;   47		int buffer_loc;
+;   48		unsigned char c;
+;   49	
+;   50		c = U0RXD;
+.line 50
 	LD.SB	R0,57856:RAM
 	LD.B	-1(R14),R0
-;   44	
-;   45		//so the echo is compatible with Windows, CR+LF
-;   46		if(c == '\r' || c == '\n') {
-.line 46
+;   51	
+;   52		//so the echo is compatible with Windows, CR+LF
+;   53		if(c == '\r') {
+.line 53
 	LD	R0,#13
 	CP.B	-1(R14),R0
-	JP	EQ,_1_L_1
-	LD	R0,#10
-	CP.B	-1(R14),R0
-	JP	NE,_1_L_2
-_1_L_1:
-;   47			c = '\n';
-.line 47
+	JP	NE,_1_L_1
+;   54			c = '\n';
+.line 54
 	LD	R0,#10
 	LD.B	-1(R14),R0
-;   48			uart_putchar('\r');
-.line 48
-	LD	R1,#13
-	CALL	_uart_putchar
-;   49			uart_putchar('\n');	
-.line 49
-	LD	R1,#10
-	CALL	_uart_putchar
-;   50		}
-;   51		//echo the character back
-;   52		else {
-.line 52
-	JP	_1_L_4
-_1_L_2:
-;   53			uart_putchar(c);
-.line 53
+;   55		}
+_1_L_1:
+.line 55
+;   56		
+;   57		uart_isr_putchar(c);
+.line 57
 	LD.SB	R1,-1(R14)
-	CALL	_uart_putchar
-;   54		}
-_1_L_4:
-.line 54
-;   55	
-;   56		if(rec_buffer_size < BUFFER_SIZE) {
-.line 56
+	CALL	_uart_isr_putchar
+;   58	
+;   59		if(rec_buffer_size < BUFFER_SIZE) {
+.line 59
 	LD	R0,#512
 	CP	_rec_buffer_size:RAM,R0
-	JP	GE,_1_L_5
-;   57			buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
-.line 57
+	JP	GE,_1_L_3
+;   60			buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
+.line 60
 	LD	R0,_rec_buffer_current:RAM
 	ADD	R0,_rec_buffer_size:RAM
 	LD	R1,#512
 	SDIV	R0,R1
 	LD	-5(R14),R1
-;   58			
-;   59			rec_buffer[buffer_loc] = c;
-.line 59
+;   61			
+;   62			rec_buffer[buffer_loc] = c;
+.line 62
 	LD.SW	R0,-3(R14)
 	LD	R1,#_rec_buffer
 	ADD	R0,R1
 	LD.SB	R1,-1(R14)
 	LD.B	(R0),R1
-;   60			++rec_buffer_size;
-.line 60
+;   63			++rec_buffer_size;
+.line 63
 	INC	_rec_buffer_size:RAM
-;   61		}
-;   62	}
-_1_L_5:
-.line 62
+;   64		}
+;   65	}
+_1_L_3:
+.line 65
 	POPMLO	#255
 	UNLINK	
 	IRET	
@@ -316,7 +306,7 @@ _1_L_5:
 ;_rec_buffer                         STATIC    512   variable
 ;_rec_buffer_current                 STATIC      4   variable
 ;_rec_buffer_size                    STATIC      4   variable
-;_uart_putchar                       IMPORT  -----   function
+;_uart_isr_putchar                   STATIC  -----   function
 ;buffer_loc                           R14-5      4   variable
 ;c                                    R14-1      1   variable
 
@@ -324,10 +314,10 @@ _1_L_5:
 ; Aggregate Stack Size: -5 (words)
 
 
-.endfunc "uart_receive",62,"_uart_receive"
-;   63	
-;   64	void interrupt uart_transfer(void)
-;   65	{
+.endfunc "uart_receive",65,"_uart_receive"
+;   66	
+;   67	void interrupt uart_transfer(void)
+;   68	{
 _uart_transfer:
 .define "_uart_transfer"
 .value _uart_transfer
@@ -335,36 +325,36 @@ _uart_transfer:
 .type 65
 .type 0
 .endef
-.begfunc "uart_transfer",65,"_uart_transfer"
+.begfunc "uart_transfer",68,"_uart_transfer"
 	LINK	#0
 	PUSHMLO	#3
-;   66		if(trans_buffer_size) {
-.line 66
+;   69		if(trans_buffer_size) {
+.line 69
 	CPZ	_trans_buffer_size:RAM
-	JP	EQ,_2_L_8
-;   67			U0TXD = trans_buffer[trans_buffer_current];
-.line 67
+	JP	EQ,_2_L_6
+;   70			U0TXD = trans_buffer[trans_buffer_current];
+.line 70
 	LD.SW	R0,_trans_buffer_current+2:RAM
 	LD	R1,#_trans_buffer
 	ADD	R0,R1
 	LD.SB	R0,(R0)
 	LD.B	57856:RAM,R0
-;   68	
-;   69			trans_buffer_current = (trans_buffer_current + 1) % BUFFER_SIZE;
-.line 69
+;   71	
+;   72			trans_buffer_current = (trans_buffer_current + 1) % BUFFER_SIZE;
+.line 72
 	LD	R0,_trans_buffer_current:RAM
 	ADD	R0,#1
 	LD	R1,#512
 	SDIV	R0,R1
 	LD	_trans_buffer_current:RAM,R1
-;   70			trans_buffer_size--;
-.line 70
+;   73			trans_buffer_size--;
+.line 73
 	LD	R0,_trans_buffer_size:RAM
 	DEC	_trans_buffer_size:RAM
-;   71		}
-;   72	}
-_2_L_8:
-.line 72
+;   74		}
+;   75	}
+_2_L_6:
+.line 75
 	POPMLO	#3
 	UNLINK	
 	IRET	
@@ -380,13 +370,13 @@ _2_L_8:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "uart_transfer",72,"_uart_transfer"
-;   73	
-;   74	/*
-;   75		Configure UART0.
-;   76	 */
-;   77	void init_uart(void)
-;   78	{
+.endfunc "uart_transfer",75,"_uart_transfer"
+;   76	
+;   77	/*
+;   78		Configure UART0.
+;   79	 */
+;   80	void init_uart(void)
+;   81	{
 _init_uart:
 .define "_init_uart"
 .value _init_uart
@@ -394,74 +384,74 @@ _init_uart:
 .type 65
 .type 0
 .endef
-.begfunc "init_uart",78,"_init_uart"
+.begfunc "init_uart",81,"_init_uart"
 	LINK	#0
-;   79		memset(rec_buffer, 0, BUFFER_SIZE);
-.line 79
+;   82		memset(rec_buffer, 0, BUFFER_SIZE);
+.line 82
 	LD	R1,#_rec_buffer
 	LD	R2,#0
 	LD	R3,#512
 	CALL	_memset
-;   80		memset(trans_buffer, 0, BUFFER_SIZE);
-.line 80
+;   83		memset(trans_buffer, 0, BUFFER_SIZE);
+.line 83
 	LD	R1,#_trans_buffer
 	LD	R2,#0
 	LD	R3,#512
 	CALL	_memset
-;   81	
-;   82		// Set the alternate function on port A
-;   83	    // Enable UART0 TxD0/RxD0 pins (bits 4 & 5)
-;   84		PAAFH &= ~(PORTA_UART_TXD | PORTA_UART_RXD);
-.line 84
+;   84	
+;   85		// Set the alternate function on port A
+;   86	    // Enable UART0 TxD0/RxD0 pins (bits 4 & 5)
+;   87		PAAFH &= ~(PORTA_UART_TXD | PORTA_UART_RXD);
+.line 87
 	LD	R0,#-49
 	AND.B	57604:RAM,R0
-;   85	    PAAFL |= PORTA_UART_TXD | PORTA_UART_RXD;
-.line 85
+;   88	    PAAFL |= PORTA_UART_TXD | PORTA_UART_RXD;
+.line 88
 	LD	R0,#48
 	OR.B	57605:RAM,R0
-;   86	
-;   87	    // Set the baud rate
-;   88	    // BRG = freq/( baud * 16)
-;   89	    U0BR = FREQ/((unsigned long)DEFAULT_BAUD * 16UL);
-.line 89
+;   89	
+;   90		// Set the baud rate
+;   91	    // BRG = freq/( baud * 16)
+;   92	    U0BR = FREQ/((unsigned long)DEFAULT_BAUD * 16UL);
+.line 92
 	LD	R0,#6
 	LD.W	57862:RAM,R0
-;   90		baud_rate = DEFAULT_BAUD;
-.line 90
+;   93		baudrate = DEFAULT_BAUD;
+.line 93
 	LD	R0,#57600
-	LD	_baud_rate:RAM,R0
-;   91	
-;   92	    // U0 control
-;   93	    // Transmit enable, Receive Enable, No Parity, 1 Stop
-;   94	    U0CTL0 = UART_RXD_EN | UART_TXD_EN;
-.line 94
+	LD	_baudrate:RAM,R0
+;   94	
+;   95	    // U0 control
+;   96	    // Transmit enable, Receive Enable, No Parity, 1 Stop
+;   97	    U0CTL0 = UART_RXD_EN | UART_TXD_EN;
+.line 97
 	LD	R0,#192
 	LD.B	57858:RAM,R0
-;   95	    U0CTL1 = 0;
-.line 95
-	CLR.B	57859:RAM
-;   96	
-;   97		//set nominal priority
-;   98		IRQ0ENH |= UART_IRQ_EN;
+;   98	    U0CTL1 = 0;
 .line 98
+	CLR.B	57859:RAM
+;   99	
+;  100		//set nominal priority
+;  101		IRQ0ENH |= UART_IRQ_EN;
+.line 101
 	LD	R0,#24
 	OR.B	57394:RAM,R0
-;   99		IRQ0ENL &= ~UART_IRQ_EN;
-.line 99
+;  102		IRQ0ENL &= ~UART_IRQ_EN;
+.line 102
 	LD	R0,#-25
 	AND.B	57395:RAM,R0
-;  100	
-;  101		PAIMUX &= ~UART_IRQ_EN;		//Port A (0) for interrupts
-.line 101
-	AND.B	57614:RAM,R0
-;  102		PAIEDGE &= ~UART_IRQ_EN;	//negedge (0) interrupt
-.line 102
-	AND.B	57615:RAM,R0
 ;  103	
-;  104		SET_VECTOR(UART0_RX, uart_receive);
-;  105		SET_VECTOR(UART0_TX, uart_transfer);
-;  106	}
-.line 106
+;  104		PAIMUX &= ~UART_IRQ_EN;		//Port A (0) for interrupts
+.line 104
+	AND.B	57614:RAM,R0
+;  105		PAIEDGE &= ~UART_IRQ_EN;	//negedge (0) interrupt
+.line 105
+	AND.B	57615:RAM,R0
+;  106	
+;  107		SET_VECTOR(UART0_RX, uart_receive);
+;  108		SET_VECTOR(UART0_TX, uart_transfer);
+;  109	}
+.line 109
 	UNLINK	
 	RET	
 
@@ -469,7 +459,7 @@ _init_uart:
 ;**************************** _init_uart ***************************
 ;Name                         Addr/Register   Size   Type
 ;_SET_VECTOR                         IMPORT  -----   function
-;_baud_rate                          STATIC      4   variable
+;_baudrate                           STATIC      4   variable
 ;_trans_buffer                       STATIC    512   variable
 ;_rec_buffer                         STATIC    512   variable
 ;_memset                             IMPORT  -----   function
@@ -478,10 +468,10 @@ _init_uart:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "init_uart",106,"_init_uart"
-;  107	
-;  108	int uart_putchar(unsigned char c)
-;  109	{
+.endfunc "init_uart",109,"_init_uart"
+;  110	
+;  111	int uart_putchar(unsigned char c)
+;  112	{
 _uart_putchar:
 .define "_uart_putchar"
 .value _uart_putchar
@@ -489,9 +479,9 @@ _uart_putchar:
 .type 69
 .type 0
 .endef
-.begfunc "uart_putchar",109,"_uart_putchar"
+.begfunc "uart_putchar",112,"_uart_putchar"
 	LINK	#5
-.line 109
+.line 112
 	LD.B	-1(R14),R1
 .define "c"
 .class 9
@@ -505,92 +495,92 @@ _uart_putchar:
 .type 5
 .type 0
 .endef
-;  110		int buffer_loc;
-;  111	
-;  112		if(c == '\n') {
-.line 112
+;  113		int buffer_loc;
+;  114	
+;  115		if(c == '\n') {
+.line 115
 	LD	R0,#10
 	CP.B	-1(R14),R0
-	JP	NE,_4_L_19
-;  113			while(uart_putchar('\r')) { ; }
-_4_L_10:
-.line 113
+	JP	NE,_4_L_17
+;  116			while(uart_putchar('\r')) { ; }
+_4_L_8:
+.line 116
 	LD	R1,#13
 	CALL	_uart_putchar
 	CP	R0,#0
-	JP	NE,_4_L_10
-;  114		}
-_4_L_19:
-.line 114
-;  115	
-;  116		if(trans_buffer_size < BUFFER_SIZE) {
-.line 116
+	JP	NE,_4_L_8
+;  117		}
+_4_L_17:
+.line 117
+;  118	
+;  119		if(trans_buffer_size < BUFFER_SIZE) {
+.line 119
 	LD	R0,#512
 	CP	_trans_buffer_size:RAM,R0
-	JP	GE,_4_L_18
-;  117			DI();
-.line 117
+	JP	GE,_4_L_16
+;  120			DI();
+.line 120
 	DI
-;  118			
-;  119			buffer_loc = (trans_buffer_current + trans_buffer_size) % BUFFER_SIZE;
-.line 119
+;  121			
+;  122			buffer_loc = (trans_buffer_current + trans_buffer_size) % BUFFER_SIZE;
+.line 122
 	LD	R0,_trans_buffer_current:RAM
 	ADD	R0,_trans_buffer_size:RAM
 	LD	R1,#512
 	SDIV	R0,R1
 	LD	-5(R14),R1
-;  120			trans_buffer[buffer_loc] = c;
-.line 120
+;  123			trans_buffer[buffer_loc] = c;
+.line 123
 	LD.SW	R0,-3(R14)
 	LD	R1,#_trans_buffer
 	ADD	R0,R1
 	LD.SB	R1,-1(R14)
 	LD.B	(R0),R1
-;  121			trans_buffer_size++;
-.line 121
+;  124			trans_buffer_size++;
+.line 124
 	LD	R0,_trans_buffer_size:RAM
 	INC	_trans_buffer_size:RAM
-;  122	
-;  123			//trigger the interrupt if already ready to transmit
-;  124			if((U0STAT0 & UART_TRAN_RDY) && 
-.line 124
+;  125	
+;  126			//trigger the interrupt if already ready to transmit
+;  127			if((U0STAT0 & UART_TRAN_RDY) && 
+.line 127
 	LD	R0,#4
 	TM.B	57857:RAM,R0
-	JP	EQ,_4_L_16
-;  125			   ((IRQ0SET & UART_IRQ_TRAN) == 0)) {
-.line 125
+	JP	EQ,_4_L_14
+;  128			   ((IRQ0SET & UART_IRQ_TRAN) == 0)) {
+.line 128
 	LD	R0,#8
 	TM.B	57393:RAM,R0
-	JP	NE,_4_L_16
-;  126				IRQ0SET |= UART_IRQ_TRAN;
-.line 126
-	OR.B	57393:RAM,R0
-;  127			}
-_4_L_16:
-.line 127
-;  128	
-;  129			EI();
+	JP	NE,_4_L_14
+;  129				IRQ0SET |= UART_IRQ_TRAN;
 .line 129
-	EI
-;  130		}
-;  131		else {
-.line 131
-	JP	_4_L_20
-_4_L_18:
-;  132			return 1;
+	OR.B	57393:RAM,R0
+;  130			}
+_4_L_14:
+.line 130
+;  131	
+;  132			EI();
 .line 132
-	LD	R0,#1
-	JP	_4_L_21
+	EI
 ;  133		}
-_4_L_20:
-.line 133
-;  134	
-;  135		return 0;
+;  134		else {
+.line 134
+	JP	_4_L_18
+_4_L_16:
+;  135			return 1;
 .line 135
-	LD	R0,#0
-;  136	}
-_4_L_21:
+	LD	R0,#1
+	JP	_4_L_19
+;  136		}
+_4_L_18:
 .line 136
+;  137	
+;  138		return 0;
+.line 138
+	LD	R0,#0
+;  139	}
+_4_L_19:
+.line 139
 	UNLINK	
 	RET	
 
@@ -609,10 +599,133 @@ _4_L_21:
 ; Aggregate Stack Size: -5 (words)
 
 
-.endfunc "uart_putchar",136,"_uart_putchar"
-;  137	
-;  138	unsigned char uart_getchar(void)
-;  139	{
+.endfunc "uart_putchar",139,"_uart_putchar"
+;  140	
+;  141	static int uart_isr_putchar(unsigned char c)
+;  142	{
+_uart_isr_putchar:
+.define "_uart_isr_putchar"
+.value _uart_isr_putchar
+.class 3
+.type 69
+.type 0
+.endef
+.begfunc "uart_isr_putchar",142,"_uart_isr_putchar"
+	LINK	#5
+.line 142
+	LD.B	-1(R14),R1
+.define "c"
+.class 9
+.value -1
+.type 12
+.type 0
+.endef
+.define "buffer_loc"
+.class 1
+.value -5
+.type 5
+.type 0
+.endef
+;  143		int buffer_loc;
+;  144	
+;  145		if(c == '\n') {
+.line 145
+	LD	R0,#10
+	CP.B	-1(R14),R0
+	JP	NE,_5_L_27
+;  146			if(uart_isr_putchar('\r')) {
+.line 146
+	LD	R1,#13
+	CALL	_uart_isr_putchar
+	CP	R0,#0
+	JP	EQ,_5_L_27
+;  147				return 1;
+.line 147
+	LD	R0,#1
+	JP	_5_L_29
+;  148			}
+;  149		}
+_5_L_27:
+.line 149
+;  150	
+;  151		if(trans_buffer_size < BUFFER_SIZE) {
+.line 151
+	LD	R0,#512
+	CP	_trans_buffer_size:RAM,R0
+	JP	GE,_5_L_26
+;  152			buffer_loc = (trans_buffer_current + trans_buffer_size) % BUFFER_SIZE;
+.line 152
+	LD	R0,_trans_buffer_current:RAM
+	ADD	R0,_trans_buffer_size:RAM
+	LD	R1,#512
+	SDIV	R0,R1
+	LD	-5(R14),R1
+;  153			trans_buffer[buffer_loc] = c;
+.line 153
+	LD.SW	R0,-3(R14)
+	LD	R1,#_trans_buffer
+	ADD	R0,R1
+	LD.SB	R1,-1(R14)
+	LD.B	(R0),R1
+;  154			trans_buffer_size++;
+.line 154
+	LD	R0,_trans_buffer_size:RAM
+	INC	_trans_buffer_size:RAM
+;  155	
+;  156			//trigger the interrupt if already ready to transmit
+;  157			if((U0STAT0 & UART_TRAN_RDY) && 
+.line 157
+	LD	R0,#4
+	TM.B	57857:RAM,R0
+	JP	EQ,_5_L_28
+;  158			   ((IRQ0SET & UART_IRQ_TRAN) == 0)) {
+.line 158
+	LD	R0,#8
+	TM.B	57393:RAM,R0
+	JP	NE,_5_L_28
+;  159				IRQ0SET |= UART_IRQ_TRAN;
+.line 159
+	OR.B	57393:RAM,R0
+;  160			}
+;  161		}
+;  162		else {
+.line 162
+	JP	_5_L_28
+_5_L_26:
+;  163			return 1;
+.line 163
+	LD	R0,#1
+	JP	_5_L_29
+;  164		}
+_5_L_28:
+.line 164
+;  165	
+;  166		return 0;
+.line 166
+	LD	R0,#0
+;  167	}
+_5_L_29:
+.line 167
+	UNLINK	
+	RET	
+
+
+;**************************** _uart_isr_putchar ***************************
+;Name                         Addr/Register   Size   Type
+;_trans_buffer                       STATIC    512   variable
+;_trans_buffer_current               STATIC      4   variable
+;_trans_buffer_size                  STATIC      4   variable
+;buffer_loc                           R14-5      4   variable
+;c                                    R14-1      1   parameter
+
+
+; Aggregate Stack Size: -5 (words)
+
+
+.endfunc "uart_isr_putchar",167,"_uart_isr_putchar"
+;  168	
+;  169	unsigned char uart_getchar(void)
+;  170	{
 _uart_getchar:
 .define "_uart_getchar"
 .value _uart_getchar
@@ -620,8 +733,8 @@ _uart_getchar:
 .type 76
 .type 0
 .endef
-.begfunc "uart_getchar",139,"_uart_getchar"
-.line 139
+.begfunc "uart_getchar",170,"_uart_getchar"
+.line 170
 .define "c"
 .class 1
 .value -1
@@ -629,53 +742,53 @@ _uart_getchar:
 .type 0
 .endef
 	LINK	#1
-;  140		unsigned char c;
-;  141	
-;  142		if(rec_buffer_size) {
-.line 142
+;  171		unsigned char c;
+;  172	
+;  173		if(rec_buffer_size) {
+.line 173
 	CPZ	_rec_buffer_size:RAM
-	JP	EQ,_5_L_24
-;  143			DI();
-.line 143
+	JP	EQ,_6_L_32
+;  174			DI();
+.line 174
 	DI
-;  144	
-;  145			c = rec_buffer[rec_buffer_current];
-.line 145
+;  175	
+;  176			c = rec_buffer[rec_buffer_current];
+.line 176
 	LD.SW	R0,_rec_buffer_current+2:RAM
 	LD	R1,#_rec_buffer
 	ADD	R0,R1
 	LD.SB	R0,(R0)
 	LD.B	-1(R14),R0
-;  146			rec_buffer_current = (rec_buffer_current + 1) % BUFFER_SIZE;
-.line 146
+;  177			rec_buffer_current = (rec_buffer_current + 1) % BUFFER_SIZE;
+.line 177
 	LD	R0,_rec_buffer_current:RAM
 	ADD	R0,#1
 	LD	R1,#512
 	SDIV	R0,R1
 	LD	_rec_buffer_current:RAM,R1
-;  147			rec_buffer_size--;
-.line 147
+;  178			rec_buffer_size--;
+.line 178
 	LD	R0,_rec_buffer_size:RAM
 	DEC	_rec_buffer_size:RAM
-;  148	
-;  149			EI();
-.line 149
+;  179	
+;  180			EI();
+.line 180
 	EI
-;  150	
-;  151			return c;
-.line 151
+;  181	
+;  182			return c;
+.line 182
 	LD.SB	R0,-1(R14)
-	JP	_5_L_25
-;  152		}
-_5_L_24:
-.line 152
-;  153	
-;  154		return 0;
-.line 154
+	JP	_6_L_33
+;  183		}
+_6_L_32:
+.line 183
+;  184	
+;  185		return 0;
+.line 185
 	LD	R0,#0
-;  155	}
-_5_L_25:
-.line 155
+;  186	}
+_6_L_33:
+.line 186
 	UNLINK	
 	RET	
 
@@ -693,10 +806,10 @@ _5_L_25:
 ; Aggregate Stack Size: -1 (words)
 
 
-.endfunc "uart_getchar",155,"_uart_getchar"
-;  156	
-;  157	void uart_printf(const char *format, ...)
-;  158	{
+.endfunc "uart_getchar",186,"_uart_getchar"
+;  187	
+;  188	void uart_printf(const char *format, ...)
+;  189	{
 _uart_printf:
 .define "_uart_printf"
 .value _uart_printf
@@ -704,8 +817,8 @@ _uart_printf:
 .type 65
 .type 0
 .endef
-.begfunc "uart_printf",158,"_uart_printf"
-.line 158
+.begfunc "uart_printf",189,"_uart_printf"
+.line 189
 .define "format"
 .class 9
 .value 8
@@ -727,28 +840,28 @@ _uart_printf:
 .endef
 	LINK	#0
 	SUB	R15,#514
-;  159		char buffer[BUFFER_SIZE];
-;  160		va_list args;
-;  161		int i;
-;  162	
-;  163		va_start(args, format);
-.line 163
+;  190		char buffer[BUFFER_SIZE];
+;  191		va_list args;
+;  192		int i;
+;  193	
+;  194		va_start(args, format);
+.line 194
 	LEA	R0,10(R14)
 	LD.W	-2(R14),R0
-;  164		vsprintf(buffer, format, args);
-.line 164
+;  195		vsprintf(buffer, format, args);
+.line 195
 	LEA	R1,-514(R14)
 	LD.SW	R2,8(R14)
 	LD.SW	R3,-2(R14)
 	CALL	_vsprintf
-;  165		va_end(args);
-;  166	
-;  167		uart_transfer_msg(buffer);
-.line 167
+;  196		va_end(args);
+;  197	
+;  198		uart_transfer_msg(buffer);
+.line 198
 	LEA	R1,-514(R14)
 	CALL	_uart_transfer_msg
-;  168	}
-.line 168
+;  199	}
+.line 199
 	UNLINK	
 	RET	
 
@@ -765,10 +878,10 @@ _uart_printf:
 ; Aggregate Stack Size: -514 (words)
 
 
-.endfunc "uart_printf",168,"_uart_printf"
-;  169	
-;  170	void uart_transfer_msg(char *text)
-;  171	{
+.endfunc "uart_printf",199,"_uart_printf"
+;  200	
+;  201	void uart_transfer_msg(char *text)
+;  202	{
 _uart_transfer_msg:
 .define "_uart_transfer_msg"
 .value _uart_transfer_msg
@@ -776,9 +889,9 @@ _uart_transfer_msg:
 .type 65
 .type 0
 .endef
-.begfunc "uart_transfer_msg",171,"_uart_transfer_msg"
+.begfunc "uart_transfer_msg",202,"_uart_transfer_msg"
 	LINK	#8
-.line 171
+.line 202
 	LD.W	-2(R14),R1
 .define "text"
 .class 9
@@ -798,45 +911,45 @@ _uart_transfer_msg:
 .type 5
 .type 0
 .endef
-;  172		int i;
-;  173		char *msg;
-;  174		
-;  175		msg = text;
-.line 175
+;  203		int i;
+;  204		char *msg;
+;  205		
+;  206		msg = text;
+.line 206
 	LD.SW	R0,-2(R14)
 	LD.W	-4(R14),R0
-	JP	_7_L_33
-;  176		for(i = 0; *msg && i < BUFFER_SIZE; i++) {
-_7_L_34:
-.line 176
+	JP	_8_L_41
+;  207		for(i = 0; *msg && i < BUFFER_SIZE; i++) {
+_8_L_42:
+.line 207
 	LD.SW	R0,-4(R14)
 	CPZ.B	(R0)
-	JP	EQ,_7_L_37
+	JP	EQ,_8_L_45
 	LD	R0,#512
 	CP	-8(R14),R0
-	JP	LT,_7_L_29
-	JP	_7_L_37
-_7_L_33:
+	JP	LT,_8_L_37
+	JP	_8_L_45
+_8_L_41:
 	CLR	-8(R14)
-	JP	_7_L_34
-;  177			while(uart_putchar(*msg)) { ; }	//wait if the buffer is full
-_7_L_29:
-.line 177
+	JP	_8_L_42
+;  208			while(uart_putchar(*msg)) { ; }	//wait if the buffer is full
+_8_L_37:
+.line 208
 	LD.SW	R0,-4(R14)
 	LD.SB	R1,(R0)
 	CALL	_uart_putchar
 	CP	R0,#0
-	JP	NE,_7_L_29
-;  178			msg++;
-.line 178
+	JP	NE,_8_L_37
+;  209			msg++;
+.line 209
 	INC.W	-4(R14)
 	INC	-8(R14)
-;  179		}
-.line 179
-	JP	_7_L_34
-;  180	}
-_7_L_37:
-.line 180
+;  210		}
+.line 210
+	JP	_8_L_42
+;  211	}
+_8_L_45:
+.line 211
 	UNLINK	
 	RET	
 
@@ -852,40 +965,40 @@ _7_L_37:
 ; Aggregate Stack Size: -8 (words)
 
 
-.endfunc "uart_transfer_msg",180,"_uart_transfer_msg"
-;  181	
-;  182	unsigned long uart_get_baud_rate(void)
-;  183	{
-_uart_get_baud_rate:
-.define "_uart_get_baud_rate"
-.value _uart_get_baud_rate
+.endfunc "uart_transfer_msg",211,"_uart_transfer_msg"
+;  212	
+;  213	unsigned long uart_get_baudrate(void)
+;  214	{
+_uart_get_baudrate:
+.define "_uart_get_baudrate"
+.value _uart_get_baudrate
 .class 2
 .type 79
 .type 0
 .endef
-.begfunc "uart_get_baud_rate",183,"_uart_get_baud_rate"
+.begfunc "uart_get_baudrate",214,"_uart_get_baudrate"
 	LINK	#0
-;  184		return baud_rate;
-.line 184
-	LD	R0,_baud_rate:RAM
-;  185	}
-.line 185
+;  215		return baudrate;
+.line 215
+	LD	R0,_baudrate:RAM
+;  216	}
+.line 216
 	UNLINK	
 	RET	
 
 
-;**************************** _uart_get_baud_rate ***************************
+;**************************** _uart_get_baudrate ***************************
 ;Name                         Addr/Register   Size   Type
-;_baud_rate                          STATIC      4   variable
+;_baudrate                           STATIC      4   variable
 
 
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "uart_get_baud_rate",185,"_uart_get_baud_rate"
-;  186	
-;  187	void uart_dummy_receive(char c)
-;  188	{
+.endfunc "uart_get_baudrate",216,"_uart_get_baudrate"
+;  217	
+;  218	void uart_dummy_receive(char c)
+;  219	{
 _uart_dummy_receive:
 .define "_uart_dummy_receive"
 .value _uart_dummy_receive
@@ -893,9 +1006,9 @@ _uart_dummy_receive:
 .type 65
 .type 0
 .endef
-.begfunc "uart_dummy_receive",188,"_uart_dummy_receive"
+.begfunc "uart_dummy_receive",219,"_uart_dummy_receive"
 	LINK	#5
-.line 188
+.line 219
 	LD.B	-1(R14),R1
 .define "c"
 .class 9
@@ -909,43 +1022,49 @@ _uart_dummy_receive:
 .type 5
 .type 0
 .endef
-;  189		int buffer_loc;
-;  190	
-;  191		DI();
-.line 191
+;  220		int buffer_loc;
+;  221	
+;  222		DI();
+.line 222
 	DI
-;  192	
-;  193		if(rec_buffer_size < BUFFER_SIZE) {
-.line 193
+;  223	
+;  224		uart_isr_putchar(c);
+.line 224
+	LD.SB	R1,-1(R14)
+	CALL	_uart_isr_putchar
+;  225	
+;  226		if(rec_buffer_size < BUFFER_SIZE) {
+.line 226
 	LD	R0,#512
 	CP	_rec_buffer_size:RAM,R0
-	JP	GE,_9_L_40
-;  194			buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
-.line 194
+	JP	GE,_10_L_48
+;  227			buffer_loc = (rec_buffer_current + rec_buffer_size) % BUFFER_SIZE;
+.line 227
 	LD	R0,_rec_buffer_current:RAM
 	ADD	R0,_rec_buffer_size:RAM
 	LD	R1,#512
 	SDIV	R0,R1
 	LD	-5(R14),R1
-;  195			
-;  196			rec_buffer[buffer_loc] = c;
-.line 196
+;  228			
+;  229			rec_buffer[buffer_loc] = c;
+.line 229
 	LD.SW	R0,-3(R14)
 	LD	R1,#_rec_buffer
 	ADD	R0,R1
 	LD.SB	R1,-1(R14)
 	LD.B	(R0),R1
-;  197			++rec_buffer_size;
-.line 197
+;  230			++rec_buffer_size;
+.line 230
 	INC	_rec_buffer_size:RAM
-;  198		}
-_9_L_40:
-.line 198
-;  199	
-;  200		EI();
-.line 200
+;  231		}
+_10_L_48:
+.line 231
+;  232	
+;  233		EI();
+.line 233
 	EI
-.line 201
+;  234	}
+.line 234
 	UNLINK	
 	RET	
 
@@ -956,6 +1075,7 @@ _9_L_40:
 ;_rec_buffer                         STATIC    512   variable
 ;_rec_buffer_current                 STATIC      4   variable
 ;_rec_buffer_size                    STATIC      4   variable
+;_uart_isr_putchar                   STATIC  -----   function
 ;_DI                                 IMPORT  -----   function
 ;buffer_loc                           R14-5      4   variable
 ;c                                    R14-1      1   parameter
@@ -964,13 +1084,322 @@ _9_L_40:
 ; Aggregate Stack Size: -5 (words)
 
 
-.endfunc "uart_dummy_receive",201,"_uart_dummy_receive"
+.endfunc "uart_dummy_receive",234,"_uart_dummy_receive"
+;  235	
+;  236	void uart_disable(void)
+;  237	{
+_uart_disable:
+.define "_uart_disable"
+.value _uart_disable
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "uart_disable",237,"_uart_disable"
+	LINK	#0
+;  238		U0CTL0 &= ~(UART_RXD_EN | UART_TXD_EN);
+.line 238
+	LD	R0,#63
+	AND.B	57858:RAM,R0
+;  239	}
+.line 239
+	UNLINK	
+	RET	
+
+
+;**************************** _uart_disable ***************************
+;Name                         Addr/Register   Size   Type
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "uart_disable",239,"_uart_disable"
+;  240	
+;  241	void uart_enable(void)
+;  242	{
+_uart_enable:
+.define "_uart_enable"
+.value _uart_enable
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "uart_enable",242,"_uart_enable"
+	LINK	#0
+;  243	    U0CTL0 |= UART_RXD_EN | UART_TXD_EN;
+.line 243
+	LD	R0,#192
+	OR.B	57858:RAM,R0
+;  244	}
+.line 244
+	UNLINK	
+	RET	
+
+
+;**************************** _uart_enable ***************************
+;Name                         Addr/Register   Size   Type
+
+
+; Aggregate Stack Size: 0 (words)
+
+
+.endfunc "uart_enable",244,"_uart_enable"
+;  245	
+;  246	void uart_set_baudrate(unsigned long baud)
+;  247	{
+_uart_set_baudrate:
+.define "_uart_set_baudrate"
+.value _uart_set_baudrate
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "uart_set_baudrate",247,"_uart_set_baudrate"
+	LINK	#4
+.line 247
+	LD	-4(R14),R1
+.define "baud"
+.class 9
+.value -4
+.type 15
+.type 0
+.endef
+;  248		uart_disable();
+.line 248
+	CALL	_uart_disable
+;  249	
+;  250		// Set the baud rate
+;  251	    // BRG = freq/( baud * 16)
+;  252	    U0BR = FREQ/((unsigned long)baud * 16UL);
+.line 252
+	LD	R0,-4(R14)
+	SLL	R0,#4
+	LD	R1,#5529600
+	UDIV	R1,R0
+	LD.W	57862:RAM,R1
+;  253		baudrate = baud;
+.line 253
+	LD	R0,-4(R14)
+	LD	_baudrate:RAM,R0
+;  254	
+;  255		uart_enable();
+.line 255
+	CALL	_uart_enable
+;  256	}
+.line 256
+	UNLINK	
+	RET	
+
+
+;**************************** _uart_set_baudrate ***************************
+;Name                         Addr/Register   Size   Type
+;_uart_enable                        IMPORT  -----   function
+;_baudrate                           STATIC      4   variable
+;_uart_disable                       IMPORT  -----   function
+;baud                                 R14-4      4   parameter
+
+
+; Aggregate Stack Size: -4 (words)
+
+
+.endfunc "uart_set_baudrate",256,"_uart_set_baudrate"
+	SEGMENT ROM_TEXT
+L__31:
+	DB	"even"
+	DB	0
+L__33:
+	DB	"odd"
+	DB	0
+L__35:
+	DB	"none"
+	DB	0
+	SEGMENT CODE
+;  257	
+;  258	void uart_set_parity(const char *value)
+;  259	{
+_uart_set_parity:
+.define "_uart_set_parity"
+.value _uart_set_parity
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "uart_set_parity",259,"_uart_set_parity"
+	LINK	#2
+.line 259
+	LD.W	-2(R14),R1
+.define "value"
+.class 9
+.value -2
+.type 140
+.type 0
+.endef
+;  260		uart_disable();
+.line 260
+	CALL	_uart_disable
+;  261	
+;  262		if(strcmp(value, UART_EVEN) == 0) {
+.line 262
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__31
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_14_L_57
+;  263			U0CTL0 |= UART_PARITY_EN;
+.line 263
+	LD	R0,#16
+	OR.B	57858:RAM,R0
+;  264			U0CTL0 &= ~UART_PARITY_ODD;
+.line 264
+	LD	R0,#-9
+	AND.B	57858:RAM,R0
+;  265		}
+;  266		else if(strcmp(value, UART_ODD) == 0) {
+.line 266
+	JP	_14_L_58
+_14_L_57:
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__33
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_14_L_55
+;  267			U0CTL0 |= UART_PARITY_EN | UART_PARITY_ODD;
+.line 267
+	LD	R0,#24
+	OR.B	57858:RAM,R0
+;  268		}
+;  269		else if(strcmp(value, UART_NONE) == 0) {
+.line 269
+	JP	_14_L_58
+_14_L_55:
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__35
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_14_L_58
+;  270			U0CTL0 &= ~UART_PARITY_EN;
+.line 270
+	LD	R0,#-17
+	AND.B	57858:RAM,R0
+;  271		}
+_14_L_58:
+.line 271
+;  272	
+;  273		uart_enable();
+.line 273
+	CALL	_uart_enable
+;  274	}
+.line 274
+	UNLINK	
+	RET	
+
+
+;**************************** _uart_set_parity ***************************
+;Name                         Addr/Register   Size   Type
+;_uart_enable                        IMPORT  -----   function
+;_strcmp                             IMPORT  -----   function
+;_uart_disable                       IMPORT  -----   function
+;value                                R14-2      2   parameter
+
+
+; Aggregate Stack Size: -2 (words)
+
+
+.endfunc "uart_set_parity",274,"_uart_set_parity"
+	SEGMENT ROM_TEXT
+L__38:
+	DB	"7"
+	DB	0
+L__40:
+	DB	"8"
+	DB	0
+	SEGMENT CODE
+;  275	
+;  276	void uart_set_bits(const char *value)
+;  277	{
+_uart_set_bits:
+.define "_uart_set_bits"
+.value _uart_set_bits
+.class 2
+.type 65
+.type 0
+.endef
+.begfunc "uart_set_bits",277,"_uart_set_bits"
+	LINK	#2
+.line 277
+	LD.W	-2(R14),R1
+.define "value"
+.class 9
+.value -2
+.type 140
+.type 0
+.endef
+;  278		uart_disable();
+.line 278
+	CALL	_uart_disable
+;  279	
+;  280		if(strcmp(value, UART_BIT7) == 0) {
+.line 280
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__38
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_15_L_62
+;  281			U0CTL0 &= ~UART_TWO_STOP;
+.line 281
+	LD	R0,#-3
+	AND.B	57858:RAM,R0
+;  282		}
+;  283		else if(strcmp(value, UART_BIT8) == 0) {
+.line 283
+	JP	_15_L_63
+_15_L_62:
+	LD.SW	R1,-2(R14)
+	LD	R2,#L__40
+	CALL	_strcmp
+	CP	R0,#0
+	JP	NE,_15_L_63
+;  284			U0CTL0 |= UART_TWO_STOP;	
+.line 284
+	LD	R0,#2
+	OR.B	57858:RAM,R0
+;  285		}
+_15_L_63:
+.line 285
+;  286	
+;  287		uart_enable();
+.line 287
+	CALL	_uart_enable
+.line 288
+	UNLINK	
+	RET	
+
+
+;**************************** _uart_set_bits ***************************
+;Name                         Addr/Register   Size   Type
+;_uart_enable                        IMPORT  -----   function
+;_strcmp                             IMPORT  -----   function
+;_uart_disable                       IMPORT  -----   function
+;value                                R14-2      2   parameter
+
+
+; Aggregate Stack Size: -2 (words)
+
+
+.endfunc "uart_set_bits",288,"_uart_set_bits"
 	VECTOR	UART0_TX=_uart_transfer
 	VECTOR	UART0_RX=_uart_receive
 	XREF _vsprintf:EROM
 	XREF _memset:EROM
+	XREF _strcmp:EROM
+	XDEF _uart_set_bits
+	XDEF _uart_set_parity
+	XDEF _uart_set_baudrate
+	XDEF _uart_enable
+	XDEF _uart_disable
 	XDEF _uart_dummy_receive
-	XDEF _uart_get_baud_rate
+	XDEF _uart_get_baudrate
 	XDEF _uart_transfer_msg
 	XDEF _uart_printf
 	XDEF _uart_getchar

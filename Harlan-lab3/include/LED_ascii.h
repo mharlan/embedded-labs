@@ -1,3 +1,6 @@
+#ifndef __LED_ASCII_H
+#define __LED_ASCII_H
+
 /***** ASCII character data *****
 
 We define bit patterns for these characters
@@ -857,3 +860,5 @@ unsigned char char_data[95][7] =
       _____,
       _____, }, // ~
 };
+
+#endif

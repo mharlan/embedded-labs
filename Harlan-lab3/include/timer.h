@@ -1,5 +1,5 @@
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef __TIMER_H
+#define __TIMER_H
 
 // Timer enable and disable
 #define TIMER_DISABLE 0x00
@@ -63,16 +63,21 @@
 
 	TIMER_1MS, TIMER_2MS, TIMER_4MS
  */
-void init_timer(int mode);
+extern void init_timer(int mode);
 
 /*
 	The timer interval as an int, in ms.
  */
-int timer_interval_int(void);
+extern int timer_interval_int(void);
 
 /*
  	The timer interval as a float, 1.0 is a second.
  */
-float timer_interval_float(void);
+extern float timer_interval_float(void);
+
+/*
+	Print the current configuration for timers 0 through 2.
+ */
+extern void timers_print_config(const char *value);
 
 #endif

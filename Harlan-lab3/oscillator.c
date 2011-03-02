@@ -1,4 +1,5 @@
 #include "oscillator.h"
+#include "uart.h"
 
 #include <zneo.h>
 
@@ -39,7 +40,10 @@ int get_osc_clock(void)
 	return osc_clock;
 }
 
-void oscillator_settings_display(void)
+void osc_print_config(void)
 {
-	
+	uart_printf("\n\nOscillator Configuration\n------------------------\n");
+	uart_printf("Clock Speed (Hz):%d\n", osc_clock);
+	uart_printf("OSCCTL:\t0x%.2X\n", OSCCTL);
+	uart_printf("OSCDIV:\t0x%.2X\n", OSCDIV);
 }

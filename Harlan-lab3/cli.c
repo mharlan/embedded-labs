@@ -3,6 +3,8 @@
 #include "uart.h"
 #include "info.h"
 #include "macro.h"
+#include "ports.h"
+#include "timer.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -45,7 +47,7 @@ void init_cli(void)
 	init_uart();
 	init_info();
 
-	strcpy(cli_prompt, CLI_PROMPT);
+	cli_set_prompt(CLI_PROMPT);
 }
 
 void cli_loop(void)
@@ -178,12 +180,12 @@ void cli_strip_spaces(char **args)
 void cli_set_prompt(const char *text)
 {
 	size_t prompt_len;
-
+	
 	prompt_len = strlen(text) + 1;
 	if(prompt_len >= CLI_BUFFER_SIZE) {
 		prompt_len = CLI_BUFFER_SIZE;
 	}
-
+	
 	memcpy(cli_prompt, text, prompt_len);
 	cli_prompt[prompt_len-1] = '\0';
 }
@@ -349,7 +351,8 @@ static void cli_command_set(char *args)
 			return;
 		}
 
-		cli_set_prompt(++token);
+		++token;
+		cli_set_prompt(token);
 	}
 	else {
 		uart_printf("3 Incorrect format, set prompt [\"text\"]\n");
@@ -390,15 +393,97 @@ static void cli_command_switch(char *args)
 
 static void cli_command_port(char *args)
 {
-	
+	char *token;
+
+	cli_strip_spaces(&args);
+
+	token = args;
+	if(cli_strip_word(&args)) {
+		uart_printf("Incorrect format, port [A-K]\n");
+		return;
+	}
+
+	ports_print_config(token);
 }
 
 static void cli_command_timer(char *args)
 {
-	
+	char *token;
+
+	cli_strip_spaces(&args);
+
+	token = args;
+	if(cli_strip_decimal_number(&args)) {
+		uart_printf("Incorrect format, timer [0-2]\n");
+		return;
+	}
+
+	timers_print_config(token);
 }
 
 static void cli_command_uart0(char *args)
 {
+	char *token;
+	int value;
+
+	cli_strip_spaces(&args);
+
+	token = args;
+	if(cli_strip_word(&args)) {
+		uart_printf("1 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+		return;
+	}
+
+	if(strcmp(token, "speed") == 0) {
+		++args;
+		
+		cli_strip_spaces(&args);		
 	
+		token = args;
+		if(cli_strip_decimal_number(&args)) {
+			uart_printf("2 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+			return;
+		}
+		value = atoi(token);
+
+		uart_set_baudrate(value);
+
+		++args;
+		cli_strip_spaces(&args);
+
+		token = args;
+		cli_strip_word(&args);
+	}
+	if(strcmp(token, "parity") == 0) {
+		++args;
+
+		cli_strip_spaces(&args);
+
+		token = args;
+		if(cli_strip_word(&args)) {
+			uart_printf("3 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+			return;
+		}
+
+		uart_set_parity(token);
+
+		++args;
+		cli_strip_spaces(&args);
+
+		token = args;
+		cli_strip_word(&args);
+	}
+	if(strcmp(token, "bits") == 0) {
+		++args;
+
+		cli_strip_spaces(&args);
+
+		token = args;
+		if(cli_strip_decimal_number(&args)) {
+			uart_printf("4 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+			return;
+		}
+
+		uart_set_bits(token);
+	}
 }

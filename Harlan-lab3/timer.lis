@@ -1,94 +1,138 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\TIMER.C
 
      1	    1	#include "timer.h"
      2	   80	#include "oscillator.h"
      3	  101	#include "LED.h"
      4	  146	#include "buttons.h"
-     5	  161	
-     6	  162	#include <zneo.h>
-     7	  688	
-     8	  689	#define INTERVAL_1MS_INT 1
-     9	  690	#define INTERVAL_2MS_INT 2
-    10	  691	#define INTERVAL_4MS_INT 4
-    11	  692	
-    12	  693	#define INTERVAL_1MS_FLOAT 0.001f
-    13	  694	#define INTERVAL_2MS_FLOAT 0.002f
-    14	  695	#define INTERVAL_4MS_FLOAT 0.004f
-    15	  696	
-    16	  697	static int timer_state;
-    17	  698	
-    18	  699	/*
-    19	  700		Interrupt for timer events.
-    20	  701	
-    21	  702		Used for updating the LED, polling the buttons, and responding
-    22	  703		to note change events for the speaker..
-    23	  704	 */
-    24	  705	void interrupt timer_isr(void)
-    25	  706	{
-    26	  707		//enable interrupts for speaker interrupt
-    27	  708		EI();
-    28	  709	
-    29	  710		led_update();
-    30	  711		button_events();
-    31	  712	}
-    32	  713	
-    33	  714	void init_timer(int mode)
-    34	  715	{
-    35	  716		timer_state = mode;
-    36	  717	
-    37	  718		T0CTL1 |= TIMER_DISABLE;
-    38	  719	    T0CTL1 = TIMER_MODE_CONTINUOUS + TIMER_PRESCALE_128;
-    39	  720	
-    40	  721	    // Initial counter value
-    41	  722	    T0HL = 0x00;
-    42	  723	
-    43	  724		if(timer_state == TIMER_4MS) {
-    44	  725			// Timer reload
-    45	  726	    	//   reload = clock / prescale * timeout  
-    46	  727	   	 	T0R = (get_osc_clock() / 128) * INTERVAL_4MS_FLOAT;
-    47	  728		}
-    48	  729		else if(timer_state == TIMER_1MS) {
-    49	  730			T0R = (get_osc_clock() / 128) * INTERVAL_1MS_FLOAT;
-    50	  731		}
-    51	  732		//default timer is 2ms
-    52	  733		else {
-    53	  734			T0R = (get_osc_clock() / 128) * INTERVAL_2MS_FLOAT;
-    54	  735		}
-    55	  736	
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 2
+     5	  161	#include "uart.h"
+     6	  237	
+     7	  238	#include <zneo.h>
+     8	  764	#include <string.h>
+     9	  856	
+    10	  857	#define INTERVAL_1MS_INT 1
+    11	  858	#define INTERVAL_2MS_INT 2
+    12	  859	#define INTERVAL_4MS_INT 4
+    13	  860	
+    14	  861	#define INTERVAL_1MS_FLOAT 0.001f
+    15	  862	#define INTERVAL_2MS_FLOAT 0.002f
+    16	  863	#define INTERVAL_4MS_FLOAT 0.004f
+    17	  864	
+    18	  865	static int timer_state;
+    19	  866	
+    20	  867	/*
+    21	  868		Interrupt for timer events.
+    22	  869	
+    23	  870		Used for updating the LED, polling the buttons, and responding
+    24	  871		to note change events for the speaker..
+    25	  872	 */
+    26	  873	void interrupt timer_isr(void)
+    27	  874	{
+    28	  875		//enable interrupts for speaker interrupt
+    29	  876		EI();
+    30	  877	
+    31	  878		led_update();
+    32	  879		button_events();
+    33	  880	}
+    34	  881	
+    35	  882	void init_timer(int mode)
+    36	  883	{
+    37	  884		timer_state = mode;
+    38	  885	
+    39	  886		T0CTL1 |= TIMER_DISABLE;
+    40	  887	    T0CTL1 = TIMER_MODE_CONTINUOUS + TIMER_PRESCALE_128;
+    41	  888	
+    42	  889	    // Initial counter value
+    43	  890	    T0HL = 0x00;
+    44	  891	
+    45	  892		if(timer_state == TIMER_4MS) {
+    46	  893			// Timer reload
+    47	  894	    	//   reload = clock / prescale * timeout  
+    48	  895	   	 	T0R = (get_osc_clock() / 128) * INTERVAL_4MS_FLOAT;
+    49	  896		}
+    50	  897		else if(timer_state == TIMER_1MS) {
+    51	  898			T0R = (get_osc_clock() / 128) * INTERVAL_1MS_FLOAT;
+    52	  899		}
+    53	  900		//default timer is 2ms
+    54	  901		else {
+    55	  902			T0R = (get_osc_clock() / 128) * INTERVAL_2MS_FLOAT;
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 2
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\TIMER.C
 
-    56	  737		// Enable Timer0 interrupt
-    57	  738	    IRQ0EN |= IRQ_Timer0;
-    58	  739	
-    59	  740		T0CTL1 |= TIMER_ENABLE;
-    60	  741	
-    61	  742		SET_VECTOR(TIMER0, timer_isr);
-    62	  743	}
-    63	  744	
-    64	  745	int timer_interval_int(void)
-    65	  746	{
-    66	  747		if(timer_state == TIMER_1MS) {
-    67	  748			return INTERVAL_1MS_INT;
-    68	  749		}
-    69	  750		else if(timer_state == TIMER_2MS) {
-    70	  751			return INTERVAL_2MS_INT;
-    71	  752		}
-    72	  753		else {
-    73	  754			return INTERVAL_4MS_INT;
-    74	  755		}
-    75	  756	}
-    76	  757	
-    77	  758	float timer_interval_float(void)
-    78	  759	{
-    79	  760		if(timer_state == TIMER_1MS) {
-    80	  761			return INTERVAL_1MS_FLOAT;
-    81	  762		}
-    82	  763		else if(timer_state == TIMER_2MS) {
-    83	  764			return INTERVAL_2MS_FLOAT;
-    84	  765		}
-    85	  766		else {
-    86	  767			return INTERVAL_4MS_FLOAT;
-    87	  768		}
-    88	  769	}ÿ
+    56	  903		}
+    57	  904	
+    58	  905		// Enable Timer0 interrupt
+    59	  906	    IRQ0EN |= IRQ_Timer0;
+    60	  907	
+    61	  908		T0CTL1 |= TIMER_ENABLE;
+    62	  909	
+    63	  910		SET_VECTOR(TIMER0, timer_isr);
+    64	  911	}
+    65	  912	
+    66	  913	int timer_interval_int(void)
+    67	  914	{
+    68	  915		if(timer_state == TIMER_1MS) {
+    69	  916			return INTERVAL_1MS_INT;
+    70	  917		}
+    71	  918		else if(timer_state == TIMER_2MS) {
+    72	  919			return INTERVAL_2MS_INT;
+    73	  920		}
+    74	  921		else {
+    75	  922			return INTERVAL_4MS_INT;
+    76	  923		}
+    77	  924	}
+    78	  925	
+    79	  926	float timer_interval_float(void)
+    80	  927	{
+    81	  928		if(timer_state == TIMER_1MS) {
+    82	  929			return INTERVAL_1MS_FLOAT;
+    83	  930		}
+    84	  931		else if(timer_state == TIMER_2MS) {
+    85	  932			return INTERVAL_2MS_FLOAT;
+    86	  933		}
+    87	  934		else {
+    88	  935			return INTERVAL_4MS_FLOAT;
+    89	  936		}
+    90	  937	}
+    91	  938	
+    92	  939	void timers_print_config(const char *value)
+    93	  940	{
+    94	  941		uart_printf("\n");
+    95	  942		if(strcmp(value, "0") == 0) {
+    96	  943			uart_printf("T0H:\t%.2X\n", T0H);
+    97	  944			uart_printf("T0L:\t%.2X\n", T0L);
+    98	  945			uart_printf("T0RH:\t%.2X\n", T0RH);
+    99	  946			uart_printf("T0RL:\t%.2X\n", T0RL);
+   100	  947			uart_printf("T0PWMH:\t%.2X\n", T0PWMH);
+   101	  948			uart_printf("T0PWML:\t%.2X\n", T0PWML);
+   102	  949			uart_printf("T0CTL0:\t%.2X\n", T0CTL0);
+   103	  950			uart_printf("T0CTL1:\t%.2X\n", T0CTL1);
+   104	  951		}
+   105	  952		else if(strcmp(value, "1") == 0) {
+   106	  953			uart_printf("T1H:\t%.2X\n", T1H);
+   107	  954			uart_printf("T1L:\t%.2X\n", T1L);
+   108	  955			uart_printf("T1RH:\t%.2X\n", T1RH);
+   109	  956			uart_printf("T1RL:\t%.2X\n", T1RL);
+   110	  957			uart_printf("T1PWMH:\t%.2X\n", T1PWMH);
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 3
+Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\TIMER.C
+
+   111	  958			uart_printf("T1PWML:\t%.2X\n", T1PWML);
+   112	  959			uart_printf("T1CTL0:\t%.2X\n", T1CTL0);
+   113	  960			uart_printf("T1CTL1:\t%.2X\n", T1CTL1);
+   114	  961		}
+   115	  962		else if(strcmp(value, "2") == 0) {
+   116	  963			uart_printf("T2H:\t%.2X\n", T2H);
+   117	  964			uart_printf("T2L:\t%.2X\n", T2L);
+   118	  965			uart_printf("T2RH:\t%.2X\n", T2RH);
+   119	  966			uart_printf("T2RL:\t%.2X\n", T2RL);
+   120	  967			uart_printf("T2PWMH:\t%.2X\n", T2PWMH);
+   121	  968			uart_printf("T2PWML:\t%.2X\n", T2PWML);
+   122	  969			uart_printf("T2CTL0:\t%.2X\n", T2CTL0);
+   123	  970			uart_printf("T2CTL1:\t%.2X\n", T2CTL1);
+   124	  971		}
+   125	  972		else {
+   126	  973			uart_printf("Select a timer 0-2.\n");
+   127	  974		}
+   128	  975	}
+   129	  976	ÿ

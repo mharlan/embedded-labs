@@ -14,23 +14,24 @@ _osc_clock:
 .type 0
 .endef
 ;    1	#include "oscillator.h"
-;    2	
-;    3	#include <zneo.h>
-;    4	
-;    5	static int osc_clock;
+;    2	#include "uart.h"
+;    3	
+;    4	#include <zneo.h>
+;    5	
+;    6	static int osc_clock;
 	SEGMENT CODE
-;    6	
-;    7	#define CLOCK_5_52MHZ   5520000
-;    8	#define CLOCK_18_432MHZ 18432000
-;    9	
-;   10	/*
-;   11		Unlocks the oscillator control register and selects either
-;   12		the 5.5 or 18.43 mHz oscillator.
-;   13	
-;   14		OSC_5_52MHZ or OSC_18_432MHZ
-;   15	 */
-;   16	void init_oscillator(int osc)
-;   17	{
+;    7	
+;    8	#define CLOCK_5_52MHZ   5520000
+;    9	#define CLOCK_18_432MHZ 18432000
+;   10	
+;   11	/*
+;   12		Unlocks the oscillator control register and selects either
+;   13		the 5.5 or 18.43 mHz oscillator.
+;   14	
+;   15		OSC_5_52MHZ or OSC_18_432MHZ
+;   16	 */
+;   17	void init_oscillator(int osc)
+;   18	{
 _init_oscillator:
 .define "_init_oscillator"
 .value _init_oscillator
@@ -38,8 +39,8 @@ _init_oscillator:
 .type 65
 .type 0
 .endef
-.begfunc "init_oscillator",17,"_init_oscillator"
-.line 17
+.begfunc "init_oscillator",18,"_init_oscillator"
+.line 18
 .define "osc"
 .class 17
 .reg 2
@@ -47,46 +48,46 @@ _init_oscillator:
 .type 0
 .endef
 	LINK	#0
-;   18		// unlock the oscillator control register
-;   19		OSCCTL = 0xE7; OSCCTL = 0x18;  
-.line 19
+;   19		// unlock the oscillator control register
+;   20		OSCCTL = 0xE7; OSCCTL = 0x18;  
+.line 20
 	LD	R0,#231
 	LD.B	57504:RAM,R0
 	LD	R0,#24
 	LD.B	57504:RAM,R0
-;   20	   
-;   21		if(osc == OSC_18_432MHZ) {                 
-.line 21
+;   21	   
+;   22		if(osc == OSC_18_432MHZ) {                 
+.line 22
 	CP	R1,#2
 	JP	NE,_1_L_1
-;   22			// 61 = 0110_0001 = external 18.432 Hz
-;   23			OSCCTL = 0x61;
-.line 23
+;   23			// 61 = 0110_0001 = external 18.432 Hz
+;   24			OSCCTL = 0x61;
+.line 24
 	LD	R0,#97
 	LD.B	57504:RAM,R0
-;   24			osc_clock = CLOCK_18_432MHZ;
-.line 24
+;   25			osc_clock = CLOCK_18_432MHZ;
+.line 25
 	LD	R0,#18432000
 	LD	_osc_clock:RAM,R0
-;   25		}
-;   26		//default oscillator setting
-;   27		else {
-.line 27
+;   26		}
+;   27		//default oscillator setting
+;   28		else {
+.line 28
 	JP	_1_L_2
 _1_L_1:
-;   28			// A0 = 1010_0000 = internal 5.52 MHz
-;   29			OSCCTL = 0xA0;
-.line 29
+;   29			// A0 = 1010_0000 = internal 5.52 MHz
+;   30			OSCCTL = 0xA0;
+.line 30
 	LD	R0,#160
 	LD.B	57504:RAM,R0
-;   30			osc_clock = CLOCK_5_52MHZ;
-.line 30
+;   31			osc_clock = CLOCK_5_52MHZ;
+.line 31
 	LD	R0,#5520000
 	LD	_osc_clock:RAM,R0
-;   31		}
-;   32	}
+;   32		}
+;   33	}
 _1_L_2:
-.line 32
+.line 33
 	UNLINK	
 	RET	
 
@@ -100,13 +101,13 @@ _1_L_2:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "init_oscillator",32,"_init_oscillator"
-;   33	
-;   34	/*
-;   35	 	Return the current oscillator clockspeed in Hz.
-;   36	 */
-;   37	int get_osc_clock(void)
-;   38	{
+.endfunc "init_oscillator",33,"_init_oscillator"
+;   34	
+;   35	/*
+;   36	 	Return the current oscillator clockspeed in Hz.
+;   37	 */
+;   38	int get_osc_clock(void)
+;   39	{
 _get_osc_clock:
 .define "_get_osc_clock"
 .value _get_osc_clock
@@ -114,13 +115,13 @@ _get_osc_clock:
 .type 69
 .type 0
 .endef
-.begfunc "get_osc_clock",38,"_get_osc_clock"
+.begfunc "get_osc_clock",39,"_get_osc_clock"
 	LINK	#0
-;   39		return osc_clock;
-.line 39
-	LD	R0,_osc_clock:RAM
-;   40	}
+;   40		return osc_clock;
 .line 40
+	LD	R0,_osc_clock:RAM
+;   41	}
+.line 41
 	UNLINK	
 	RET	
 
@@ -133,35 +134,84 @@ _get_osc_clock:
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "get_osc_clock",40,"_get_osc_clock"
-;   41	
-;   42	void oscillator_settings_display(void)
-;   43	{
-_oscillator_settings_display:
-.define "_oscillator_settings_display"
-.value _oscillator_settings_display
+.endfunc "get_osc_clock",41,"_get_osc_clock"
+	SEGMENT ROM_TEXT
+L__3:
+	DB	10,10
+	DB	"Oscillator Configuration"
+	DB	10
+	DB	"------------------------"
+	DB	10,0
+L__4:
+	DB	"Clock Speed (Hz):%d"
+	DB	10,0
+L__5:
+	DB	"OSCCTL:"
+	DB	9
+	DB	"0x%.2X"
+	DB	10,0
+L__6:
+	DB	"OSCDIV:"
+	DB	9
+	DB	"0x%.2X"
+	DB	10,0
+	SEGMENT CODE
+;   42	
+;   43	void osc_print_config(void)
+;   44	{
+_osc_print_config:
+.define "_osc_print_config"
+.value _osc_print_config
 .class 2
 .type 65
 .type 0
 .endef
-.begfunc "oscillator_settings_display",43,"_oscillator_settings_display"
+.begfunc "osc_print_config",44,"_osc_print_config"
 	LINK	#0
-;   44		
-;   45	}
+;   45		uart_printf("\n\nOscillator Configuration\n------------------------\n");
 .line 45
+	PUSH.W	#L__3
+	CALL	_uart_printf
+	ADD	R15,#2
+;   46		uart_printf("Clock Speed (Hz):%d\n", osc_clock);
+.line 46
+	LD	R0,_osc_clock:RAM
+	PUSH	R0
+	PUSH.W	#L__4
+	CALL	_uart_printf
+	ADD	R15,#6
+;   47		uart_printf("OSCCTL:\t0x%.2X\n", OSCCTL);
+.line 47
+	LD.UB	R0,57504:RAM
+	PUSH	R0
+	PUSH.W	#L__5
+	CALL	_uart_printf
+	ADD	R15,#6
+;   48		uart_printf("OSCDIV:\t0x%.2X\n", OSCDIV);
+.line 48
+	LD.UB	R0,57505:RAM
+	PUSH	R0
+	PUSH.W	#L__6
+	CALL	_uart_printf
+	ADD	R15,#6
+;   49	}
+.line 49
 	UNLINK	
 	RET	
 
 
-;**************************** _oscillator_settings_display ***************************
+;**************************** _osc_print_config ***************************
 ;Name                         Addr/Register   Size   Type
+;_osc_clock                          STATIC      4   variable
+;_uart_printf                        IMPORT  -----   function
 
 
 ; Aggregate Stack Size: 0 (words)
 
 
-.endfunc "oscillator_settings_display",45,"_oscillator_settings_display"
-	XDEF _oscillator_settings_display
+.endfunc "osc_print_config",49,"_osc_print_config"
+	XREF _uart_printf:EROM
+	XDEF _osc_print_config
 	XDEF _get_osc_clock
 	XDEF _init_oscillator
 	END

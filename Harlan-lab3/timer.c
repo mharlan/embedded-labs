@@ -2,8 +2,10 @@
 #include "oscillator.h"
 #include "LED.h"
 #include "buttons.h"
+#include "uart.h"
 
 #include <zneo.h>
+#include <string.h>
 
 #define INTERVAL_1MS_INT 1
 #define INTERVAL_2MS_INT 2
@@ -84,5 +86,43 @@ float timer_interval_float(void)
 	}
 	else {
 		return INTERVAL_4MS_FLOAT;
+	}
+}
+
+void timers_print_config(const char *value)
+{
+	uart_printf("\n");
+	if(strcmp(value, "0") == 0) {
+		uart_printf("T0H:\t%.2X\n", T0H);
+		uart_printf("T0L:\t%.2X\n", T0L);
+		uart_printf("T0RH:\t%.2X\n", T0RH);
+		uart_printf("T0RL:\t%.2X\n", T0RL);
+		uart_printf("T0PWMH:\t%.2X\n", T0PWMH);
+		uart_printf("T0PWML:\t%.2X\n", T0PWML);
+		uart_printf("T0CTL0:\t%.2X\n", T0CTL0);
+		uart_printf("T0CTL1:\t%.2X\n", T0CTL1);
+	}
+	else if(strcmp(value, "1") == 0) {
+		uart_printf("T1H:\t%.2X\n", T1H);
+		uart_printf("T1L:\t%.2X\n", T1L);
+		uart_printf("T1RH:\t%.2X\n", T1RH);
+		uart_printf("T1RL:\t%.2X\n", T1RL);
+		uart_printf("T1PWMH:\t%.2X\n", T1PWMH);
+		uart_printf("T1PWML:\t%.2X\n", T1PWML);
+		uart_printf("T1CTL0:\t%.2X\n", T1CTL0);
+		uart_printf("T1CTL1:\t%.2X\n", T1CTL1);
+	}
+	else if(strcmp(value, "2") == 0) {
+		uart_printf("T2H:\t%.2X\n", T2H);
+		uart_printf("T2L:\t%.2X\n", T2L);
+		uart_printf("T2RH:\t%.2X\n", T2RH);
+		uart_printf("T2RL:\t%.2X\n", T2RL);
+		uart_printf("T2PWMH:\t%.2X\n", T2PWMH);
+		uart_printf("T2PWML:\t%.2X\n", T2PWML);
+		uart_printf("T2CTL0:\t%.2X\n", T2CTL0);
+		uart_printf("T2CTL1:\t%.2X\n", T2CTL1);
+	}
+	else {
+		uart_printf("Select a timer 0-2.\n");
 	}
 }

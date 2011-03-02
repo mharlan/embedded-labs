@@ -1,49 +1,53 @@
-ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	04:58:45	page: 1
+ZiLOG ZNeo ANSI C Compiler Version 1.10	Mar  1 2011	23:16:23	page: 1
 Local	Global	File: C:\USERS\MATT\DOCUMENTS\CSCI-4415-LABS\HARLAN-LAB3\OSCILLATOR.C
 
      1	    1	#include "oscillator.h"
-     2	   22	
-     3	   23	#include <zneo.h>
-     4	  549	
-     5	  550	static int osc_clock;
-     6	  551	
-     7	  552	#define CLOCK_5_52MHZ   5520000
-     8	  553	#define CLOCK_18_432MHZ 18432000
-     9	  554	
-    10	  555	/*
-    11	  556		Unlocks the oscillator control register and selects either
-    12	  557		the 5.5 or 18.43 mHz oscillator.
-    13	  558	
-    14	  559		OSC_5_52MHZ or OSC_18_432MHZ
-    15	  560	 */
-    16	  561	void init_oscillator(int osc)
-    17	  562	{
-    18	  563		// unlock the oscillator control register
-    19	  564		OSCCTL = 0xE7; OSCCTL = 0x18;  
-    20	  565	   
-    21	  566		if(osc == OSC_18_432MHZ) {                 
-    22	  567			// 61 = 0110_0001 = external 18.432 Hz
-    23	  568			OSCCTL = 0x61;
-    24	  569			osc_clock = CLOCK_18_432MHZ;
-    25	  570		}
-    26	  571		//default oscillator setting
-    27	  572		else {
-    28	  573			// A0 = 1010_0000 = internal 5.52 MHz
-    29	  574			OSCCTL = 0xA0;
-    30	  575			osc_clock = CLOCK_5_52MHZ;
-    31	  576		}
-    32	  577	}
-    33	  578	
-    34	  579	/*
-    35	  580	 	Return the current oscillator clockspeed in Hz.
-    36	  581	 */
-    37	  582	int get_osc_clock(void)
-    38	  583	{
-    39	  584		return osc_clock;
-    40	  585	}
-    41	  586	
-    42	  587	void oscillator_settings_display(void)
-    43	  588	{
-    44	  589		
-    45	  590	}
-    46	  591	ÿ
+     2	   22	#include "uart.h"
+     3	   98	
+     4	   99	#include <zneo.h>
+     5	  625	
+     6	  626	static int osc_clock;
+     7	  627	
+     8	  628	#define CLOCK_5_52MHZ   5520000
+     9	  629	#define CLOCK_18_432MHZ 18432000
+    10	  630	
+    11	  631	/*
+    12	  632		Unlocks the oscillator control register and selects either
+    13	  633		the 5.5 or 18.43 mHz oscillator.
+    14	  634	
+    15	  635		OSC_5_52MHZ or OSC_18_432MHZ
+    16	  636	 */
+    17	  637	void init_oscillator(int osc)
+    18	  638	{
+    19	  639		// unlock the oscillator control register
+    20	  640		OSCCTL = 0xE7; OSCCTL = 0x18;  
+    21	  641	   
+    22	  642		if(osc == OSC_18_432MHZ) {                 
+    23	  643			// 61 = 0110_0001 = external 18.432 Hz
+    24	  644			OSCCTL = 0x61;
+    25	  645			osc_clock = CLOCK_18_432MHZ;
+    26	  646		}
+    27	  647		//default oscillator setting
+    28	  648		else {
+    29	  649			// A0 = 1010_0000 = internal 5.52 MHz
+    30	  650			OSCCTL = 0xA0;
+    31	  651			osc_clock = CLOCK_5_52MHZ;
+    32	  652		}
+    33	  653	}
+    34	  654	
+    35	  655	/*
+    36	  656	 	Return the current oscillator clockspeed in Hz.
+    37	  657	 */
+    38	  658	int get_osc_clock(void)
+    39	  659	{
+    40	  660		return osc_clock;
+    41	  661	}
+    42	  662	
+    43	  663	void osc_print_config(void)
+    44	  664	{
+    45	  665		uart_printf("\n\nOscillator Configuration\n------------------------\n");
+    46	  666		uart_printf("Clock Speed (Hz):%d\n", osc_clock);
+    47	  667		uart_printf("OSCCTL:\t0x%.2X\n", OSCCTL);
+    48	  668		uart_printf("OSCDIV:\t0x%.2X\n", OSCDIV);
+    49	  669	}
+    50	  670	ÿ
