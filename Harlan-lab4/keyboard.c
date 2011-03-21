@@ -33,14 +33,13 @@ static const char scancode_map[NUM_KEYS]= {
 
 static unsigned int key_map[NUM_KEYS];
 
-
 static int keyboard_mode;
 
 void init_keyboard(void)
 {
 	init_ps2_port();
 
-	memset(key_map, 0, 128);
+	memset(key_map, 0, NUM_KEYS);
 }
 
 void keyboard_read(int mode)
