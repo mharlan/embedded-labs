@@ -1,6 +1,7 @@
 #include "buttons.h"
 #include "timer.h"
 #include "macro.h"
+#include "keyboard.h"
 
 #include <zneo.h>
 
@@ -100,6 +101,8 @@ static void handle_button_events(void)
 
 			macro_execute(MACRO0);
 		}
+
+		keyboard_disable();
 	}
 	else if(current == BUTTON_TWO) {
 		if(button_twice_timer && (last_button == BUTTON_TWO)) {
@@ -111,6 +114,8 @@ static void handle_button_events(void)
 
 			macro_execute(MACRO1);
 		}
+
+		keyboard_disable();
 	}
 	else if(current == BUTTON_THREE) {
 		if(button_twice_timer && (last_button == BUTTON_THREE)) {
@@ -122,6 +127,8 @@ static void handle_button_events(void)
 
 			macro_execute(MACRO2);
 		}
+
+		keyboard_disable();
 	}
 	//don't do anything if multiple buttons are pressed
 	else {

@@ -3,6 +3,7 @@
 #include "LED.h"
 #include "buttons.h"
 #include "uart.h"
+#include "speaker.h"
 
 #include <zneo.h>
 #include <string.h>
@@ -30,6 +31,7 @@ void interrupt timer_isr(void)
 
 	led_update();
 	button_events();
+	speaker_events();
 }
 
 void init_timer(int mode)

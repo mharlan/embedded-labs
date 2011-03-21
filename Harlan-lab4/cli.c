@@ -5,6 +5,7 @@
 #include "macro.h"
 #include "ports.h"
 #include "timer.h"
+#include "keyboard.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -46,6 +47,7 @@ void init_cli(void)
 	init_leds();
 	init_uart();
 	init_info();
+	init_keyboard();
 
 	cli_set_prompt(CLI_PROMPT);
 }
@@ -236,6 +238,12 @@ static void cli_process_command(char *command)
 		else if(strcmp(command, "uart0") == 0) {
 			cli_command_uart0(args);
 		}
+		else if(strcmp(command, "scan") == 0) {
+			keyboard_read(KEYBOARD_SCAN);
+		}
+		else if(strcmp(command, "type") == 0) {
+			keyboard_read(KEYBOARD_TYPE);
+		}
 		else {
 			uart_printf("--Command:%s, not found. Enter \"?\" to see a list of available commands.\n", command);
 		}
@@ -269,6 +277,13 @@ static void cli_command_question(void)
 
 	uart_printf("uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
 	uart_printf(" -Set the uart0 settings.\n");
+
+	uart_printf("scan\n");
+	uart_printf(" -Displays scan codes from a PS/2 keyboard. Press a button to quit.\n");
+
+	uart_printf("type\n");
+	uart_printf(" -Displays scan codes from a PS/2 keyboard. Press a button or ESC to quit.\n");
+
 
 	uart_printf("info\n");
 	uart_printf(" -Displays various system information.\n");

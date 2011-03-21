@@ -2,7 +2,6 @@
 #include "timer.h"
 #include "notes.h"
 #include "timer.h"
-//#include "rttl.h"
 #include "oscillator.h"
 
 #include <zneo.h>
@@ -47,8 +46,6 @@ void speaker_events(void)
 		
 		if(duration_timer >= duration_cutoff) {
 			disable_speaker_timer();
-		
-			//play_next_note();
 		}
 	}
 }
