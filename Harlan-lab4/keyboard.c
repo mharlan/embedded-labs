@@ -50,18 +50,18 @@ void keyboard_read(int mode)
 		if(keyboard_mode == KEYBOARD_SCAN) {
 			if(c == KEY_RELEASE) {
 				release = 1;
+				uart_printf("0x%.2X ", (unsigned int)c);
 
 				continue;
-			}
-
-			if(!key_map[c]) {
-				key_map[c] = 1;
-
-				uart_printf("0x%.2X ", (unsigned int)c);
 			}
 			else if(release) {
 				key_map[c] = 0;
 				release = 0;
+			}
+			else if(!key_map[c]) {
+				key_map[c] = 1;
+
+				uart_printf("0x%.2X ", (unsigned int)c);
 			}
 		}
 		//typing mode
