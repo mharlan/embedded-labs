@@ -3,33 +3,20 @@
 #include "ps2_port.h"
 #include "uart.h"
 #include "speaker.h"
+#include "scancodes.h"
 
 #include <string.h>
-
-#define ASCII_BACKSPACE 0x08
-
-#define NUM_KEYS   128
+#include <ctype.h>
 
 #define KEY_RELEASE   0xF0
 #define KEY_EXTENDED  0xE0 
 
-#define KEY_SHIFT     0x12
+#define KEY_LSHIFT    0x12
+#define KEY_RSHIFT    0x59
 #define KEY_ENTER     0x5A
 #define KEY_CTRL      0x14
 #define KEY_BACKSPACE 0x66
 #define KEY_ESCAPE    0x76
-
-#define SHIFT_ADJ   0x20
-
-static const char scancode_map[NUM_KEYS]= {
-	'?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?',
-	'q','1','?','?','?','z','s','a','w','2','?','?','c','x','d','e','4','3','?','?',' ',
-	'v','f','t','r','5','?','?','n','b','h','g','y','6','?','?','?','m','j','u','7','8',
-	'?','?','?','k','i','o','0','9','?','?','?','?','l','?','p','?','?','?','?','?','?',
-	'?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?',
-	'?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?','?',
-	'?','?'
-};
 
 static unsigned int key_map[NUM_KEYS];
 
@@ -37,56 +24,73 @@ static int keyboard_mode;
 
 void init_keyboard(void)
 {
+	init_speaker();
 	init_ps2_port();
-
-	memset(key_map, 0, NUM_KEYS);
 }
 
 void keyboard_read(int mode)
 {
 	unsigned char c;
+	
+	int release;
+	int extended;
 
 	ps2_enable();
-	play_note(4, "a", 1, 100);
+	play_note(6, "a", 4, 100);
 	
+	release = 0;
+	extended = 0;
 	keyboard_mode = mode;
+	memset(key_map, 0, NUM_KEYS);
+
 	while(keyboard_mode) {
 		while(((c = ps2_read_char()) == 0) && keyboard_mode) { ; }
 		
 		//scan code mode
 		if(keyboard_mode == KEYBOARD_SCAN) {
-			uart_printf("0x%.2X ", (unsigned int)c);
+			if(c == KEY_RELEASE) {
+				release = 1;
+
+				continue;
+			}
+
+			if(!key_map[c]) {
+				key_map[c] = 1;
+
+				uart_printf("0x%.2X ", (unsigned int)c);
+			}
+			else if(release) {
+				key_map[c] = 0;
+				release = 0;
+			}
 		}
 		//typing mode
 		else if(keyboard_mode == KEYBOARD_TYPE) {
 			if(c == KEY_RELEASE) {
+				release = 1;
+
 				continue;
 			}
 			else if(c == KEY_EXTENDED) {
+				extended = 1;
+
 				continue;
 			}
 			//key release
-			else if(key_map[c]) {
+			else if(release) {
 				key_map[c] = 0;
+				release = 0;
 			}
 			else {
 				key_map[c] = 1;
 
-				if(c == KEY_SHIFT) {
+				if(c == KEY_LSHIFT || c == KEY_RSHIFT) {
 					continue;
 				}
 				else if(c == KEY_CTRL) {
 					continue;
 				}
-				else if(c == KEY_BACKSPACE) {
-					uart_putchar(ASCII_BACKSPACE);
-				}
-				else if(c == KEY_ENTER) {
-					uart_putchar('\n');
-				}
 				else if(c == KEY_ESCAPE) {
-					uart_putchar('\n');
-					keyboard_mode = KEYBOARD_DISABLED;
 					break;
 				}
 				else {
@@ -94,8 +98,8 @@ void keyboard_read(int mode)
 						uart_printf("ctl-");
 					}
 					
-					if(key_map[KEY_SHIFT]) {
-						uart_putchar(scancode_map[c] - SHIFT_ADJ);
+					if(key_map[KEY_LSHIFT] || key_map[KEY_RSHIFT]) {
+						uart_putchar(scancode_shift_map[c]);
 					}
 					else {
 						uart_putchar(scancode_map[c]);
@@ -104,12 +108,17 @@ void keyboard_read(int mode)
 			}
 		}
 	}
+
+	keyboard_disable();
 }
 
 void keyboard_disable(void)
 {
-	ps2_disable();
-	play_note(4, "b", 1, 100);
+	if(keyboard_mode) {
+		ps2_disable();
+		play_note(6, "b", 4, 100);
 
-	keyboard_mode = KEYBOARD_DISABLED;
+		keyboard_mode = KEYBOARD_DISABLED;
+		uart_putchar('\r');
+	}
 }

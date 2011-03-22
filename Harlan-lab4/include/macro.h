@@ -8,6 +8,11 @@
 #define MACRO2 2
 
 /*
+	Initialize the macro module.
+ */
+extern void init_macro(void);
+
+/*
 	Set a specified macro.
  */
 extern void macro_set(int n, const char *macro);

@@ -8,6 +8,11 @@
 
 static char * macros[MACRO_MAX];
 
+void init_macro(void)
+{
+	memset(macros, 0, MACRO_MAX);
+}
+
 /*
 	Set a specified macro.
  */
@@ -20,9 +25,7 @@ void macro_set(int n, const char *macro)
 	}
 
 	//clear the old macro
-	if(macros[n] != NULL) {
-		free(macros[n]);
-	}
+	free(macros[n]);
 
 	macro_len = strlen(macro) + 2;
 	if(macro_len > MACRO_SIZE_MAX) {
@@ -45,13 +48,14 @@ void macro_set(int n, const char *macro)
 void macro_execute(int n)
 {
 	char *c;
-	int macro_len;
+
+	size_t macro_len;
 	int i;
 
 	if(n < 0 || n >= MACRO_MAX) {
 		return;
 	}
-
+	
 	c = macros[n];
 	macro_len = strlen(c);
 

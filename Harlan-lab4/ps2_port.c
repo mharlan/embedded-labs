@@ -18,11 +18,7 @@ static int current_bit = 0;
 
 void interrupt ps2_port_read(void)
 {
-	//make sure the clock is low
-	if(!(PDIN & PS2_CLOCK)) {
-		uart_printf("PS2 interrupt when clock wasn't low.\n");
-		return;
-	}
+	unsigned char check;
 
 	//start bit
 	if(!current_bit) {
@@ -37,16 +33,18 @@ void interrupt ps2_port_read(void)
 	else if(current_bit < 9) {
 		if(PDIN & PS2_DATA) {
 			ps2_data |= 1 << (current_bit - 1);
-			parity = ~parity;
+			parity = (parity) ? 0 : 1;
 		}
 		++current_bit;
 	}
 	//parity bit
 	else if(current_bit == 9) {
-		if(parity != (PDIN & PS2_DATA)) {
-			uart_printf("PS2 received bad data. throwing out:%c\n", ps2_data);
+		check = PDIN & PS2_DATA;
+
+		if(parity != check) {
 			ps2_data = 0x00;
 		}
+		++current_bit;
 	}
 	//stop bit
 	else {
@@ -57,9 +55,7 @@ void interrupt ps2_port_read(void)
 				write_pos = (write_pos + 1) % PS2_BUFFER_SIZE;
 			}
 		}
-		else {
-			uart_printf("There is something wrong with the ps2_port signals.\n");
-		}
+
 		current_bit = 0;
 	}
 }
@@ -96,7 +92,7 @@ unsigned char ps2_read_char(void)
 	char c;
 
 	if(read_pos == write_pos) {
-		return 0x00;
+		return 0;
 	}
 
 	c = ps2_buffer[read_pos];
