@@ -3,6 +3,9 @@
 
 #define NUM_KEYS 128
 
+/*
+	Scancode to printable character map. ? if not printable.
+ */
 const char scancode_map[NUM_KEYS]= {
 	'?',  //0x00
 	'?',  //0x01
@@ -141,6 +144,9 @@ const char scancode_map[NUM_KEYS]= {
 	'?'   //0x7F
 };
 
+/*
+	Scan codes for when shift is applied.
+ */
 const char scancode_shift_map[NUM_KEYS]= {
 	'?',  //0x00
 	'?',  //0x01

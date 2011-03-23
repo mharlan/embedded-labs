@@ -2,22 +2,22 @@
 	Author: Matthew Harlan
 	Email:  mharlan@gwmail.gwu.edu
 	Class:  CSCI-4415
-	Date: 	March 1st, 2011
-	Lab:    3
+	Date: 	March 22nd, 2011
+	Lab:    4
 	
-	Description: This program is a command line interface that communicates via
-	a serial port. Run the program and enter "?" to see a list of available commands.
+	Description: This program extends the command line interface with PS/2 keyboard functionality.
 
 	Other files: buttons.c buttons.h cli.c cli.h info.c info.h LED.c LED.h LED_ascii.h
 	macro.c macro.h oscillator.c oscillator.h ports.c ports.h timer.c timer.h uart.c uart.h
+	notes.h speaker.h speaker.c ps2_port.c ps2_port.h scancodes.h keyboard.c keyboard.h
 
 	Compile: Set the user include path to the include directory.
 	
-	Problems: I could not get access to ports J or K.
+	Problems: None.
 
 	Comments: None.
 
-	Enhancements: Transfers and receives over the UART using interrupts and buffers.
+	Enhancements: None.
  */
 
 #include "LED.h"
@@ -39,11 +39,11 @@ void main(void)
 	init_oscillator(OSC_5_52MHZ);
 	init_timer(TIMER_2MS);
 
-	//initialize the command line interface
-	init_cli();
-
 	//initialize button functionality
 	init_buttons();
+
+	//initialize the command line interface
+	init_cli();
 
 	//enable interrupts
 	EI();

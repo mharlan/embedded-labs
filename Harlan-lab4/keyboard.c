@@ -50,9 +50,6 @@ void keyboard_read(int mode)
 		if(keyboard_mode == KEYBOARD_SCAN) {
 			if(c == KEY_RELEASE) {
 				release = 1;
-				uart_printf("0x%.2X ", (unsigned int)c);
-
-				continue;
 			}
 			else if(release) {
 				key_map[c] = 0;
@@ -60,9 +57,12 @@ void keyboard_read(int mode)
 			}
 			else if(!key_map[c]) {
 				key_map[c] = 1;
-
-				uart_printf("0x%.2X ", (unsigned int)c);
 			}
+			else {
+				continue;
+			}
+
+			uart_printf("0x%.2X ", (unsigned int)c);
 		}
 		//typing mode
 		else if(keyboard_mode == KEYBOARD_TYPE) {
@@ -119,6 +119,6 @@ void keyboard_disable(void)
 		play_note(6, "b", 4, 100);
 
 		keyboard_mode = KEYBOARD_DISABLED;
-		uart_putchar('\r');
+		uart_putchar('\n');
 	}
 }

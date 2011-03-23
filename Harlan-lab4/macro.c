@@ -52,7 +52,7 @@ void macro_execute(int n)
 	size_t macro_len;
 	int i;
 
-	if(n < 0 || n >= MACRO_MAX) {
+	if(n < 0 || n >= MACRO_MAX || macros[n] == NULL) {
 		return;
 	}
 	

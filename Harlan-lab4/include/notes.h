@@ -18,7 +18,7 @@
 #define NOTE_GSHARP 9
 
 /*
-	Why the heck does an 
+	Note values for octaves 4-7 as index 0-3 in the array.
  */
 unsigned int note_values[NUM_OCTAVES][NUM_NOTES] = 
 {
