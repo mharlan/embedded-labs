@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-#define BUFFER_SIZE 512
+#define BUFFER_SIZE 256
 
 #define FREQ         5529600UL  //use internal oscillator
 #define DEFAULT_BAUD 57600UL    //our desired baud rate
@@ -201,11 +201,16 @@ void uart_printf(const char *format, ...)
 void uart_transfer_msg(char *text)
 {
 	int i;
+	int j;
+
 	char *msg;
 	
 	msg = text;
 	for(i = 0; *msg && i < BUFFER_SIZE; i++) {
-		while(uart_putchar(*msg)) { ; }	//wait if the buffer is full
+		//wait for the buffer to empty
+		while(uart_putchar(*msg)) { 
+			for(j = 0; j < 10000; ++j); 
+		}
 		msg++;
 	}
 }

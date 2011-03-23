@@ -138,7 +138,7 @@ int cli_strip_word(char **args)
 		++c;
 	}
 
-	if(*c == '\0') {
+	if(c == *args) {
 		return 1;
 	}
 	*c = '\0';

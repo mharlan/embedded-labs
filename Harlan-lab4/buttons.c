@@ -91,7 +91,10 @@ void button_events(void)
  */
 static void handle_button_events(void)
 {
-	if(current == BUTTON_ONE) {
+	if(keyboard_is_enabled()) {
+		keyboard_disable();
+	}
+	else if(current == BUTTON_ONE) {
 		if(button_twice_timer && (last_button == BUTTON_ONE)) {
 			button_twice_timer = 0;
 			last_button = BUTTON_NONE;
@@ -101,8 +104,6 @@ static void handle_button_events(void)
 
 			macro_execute(MACRO0);
 		}
-
-		keyboard_disable();
 	}
 	else if(current == BUTTON_TWO) {
 		if(button_twice_timer && (last_button == BUTTON_TWO)) {
@@ -114,8 +115,6 @@ static void handle_button_events(void)
 
 			macro_execute(MACRO1);
 		}
-
-		keyboard_disable();
 	}
 	else if(current == BUTTON_THREE) {
 		if(button_twice_timer && (last_button == BUTTON_THREE)) {
@@ -127,8 +126,6 @@ static void handle_button_events(void)
 
 			macro_execute(MACRO2);
 		}
-
-		keyboard_disable();
 	}
 	//don't do anything if multiple buttons are pressed
 	else {

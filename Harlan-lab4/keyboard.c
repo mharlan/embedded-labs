@@ -114,11 +114,14 @@ void keyboard_read(int mode)
 
 void keyboard_disable(void)
 {
-	if(keyboard_mode) {
-		ps2_disable();
-		play_note(6, "b", 4, 100);
+	ps2_disable();
+	play_note(6, "b", 4, 100);
 
-		keyboard_mode = KEYBOARD_DISABLED;
-		uart_putchar('\n');
-	}
+	keyboard_mode = KEYBOARD_DISABLED;
+	uart_putchar('\n');
+}
+
+int keyboard_is_enabled(void)
+{
+	return keyboard_mode;
 }

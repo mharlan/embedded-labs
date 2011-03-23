@@ -20,4 +20,9 @@ extern void keyboard_read(int mode);
  */
 extern void keyboard_disable(void);
 
+/*
+	Get the current status of the keyboard.
+ */
+extern int keyboard_is_enabled(void);
+
 #endif

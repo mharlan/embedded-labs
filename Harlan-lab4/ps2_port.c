@@ -1,3 +1,7 @@
+/*
+	PD0 - Data
+	PD1 - Clock
+ */
 
 #include "ps2_port.h"
 #include "uart.h"

@@ -15,7 +15,7 @@
 	
 	Problems: None.
 
-	Comments: None.
+	Comments: PD0 is data and PD1 is clock.
 
 	Enhancements: None.
  */
