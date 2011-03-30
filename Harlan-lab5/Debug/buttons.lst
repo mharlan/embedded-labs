@@ -1,0 +1,519 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\BUTTONS.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT NEAR_BSS
+00000000                   A     7    _button_timer:
+00000000                   A     8    	DS	4*1
+                           A     9    .define "button_timer"
+                           A    10    .alias "_button_timer"
+                           A    11    .class 147
+                           A    12    .value _button_timer
+                           A    13    .type 5
+                           A    14    .type 0
+                           A    15    .endef
+00000004                   A    16    _debounce_cutoff:
+00000004                   A    17    	DS	4*1
+                           A    18    .define "debounce_cutoff"
+                           A    19    .alias "_debounce_cutoff"
+                           A    20    .class 147
+                           A    21    .value _debounce_cutoff
+                           A    22    .type 5
+                           A    23    .type 0
+                           A    24    .endef
+00000008                   A    25    _button_twice_timer:
+00000008                   A    26    	DS	4*1
+                           A    27    .define "button_twice_timer"
+                           A    28    .alias "_button_twice_timer"
+                           A    29    .class 147
+                           A    30    .value _button_twice_timer
+                           A    31    .type 5
+                           A    32    .type 0
+                           A    33    .endef
+0000000C                   A    34    _button_twice_cutoff:
+0000000C                   A    35    	DS	4*1
+                           A    36    .define "button_twice_cutoff"
+                           A    37    .alias "_button_twice_cutoff"
+                           A    38    .class 147
+                           A    39    .value _button_twice_cutoff
+                           A    40    .type 5
+                           A    41    .type 0
+                           A    42    .endef
+00000010                   A    43    _last_button:
+00000010                   A    44    	DS	1
+                           A    45    .define "last_button"
+                           A    46    .alias "_last_button"
+                           A    47    .class 147
+                           A    48    .value _last_button
+                           A    49    .type 12
+                           A    50    .type 0
+                           A    51    .endef
+00000011                   A    52    _current:
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   2
+
+
+PC     Object              I  Line    Source buttons.src
+00000011                   A    53    	DS	1
+                           A    54    .define "current"
+                           A    55    .alias "_current"
+                           A    56    .class 147
+                           A    57    .value _current
+                           A    58    .type 12
+                           A    59    .type 0
+                           A    60    .endef
+00000012                   A    61    _previous:
+00000012                   A    62    	DS	1
+                           A    63    .define "previous"
+                           A    64    .alias "_previous"
+                           A    65    .class 147
+                           A    66    .value _previous
+                           A    67    .type 12
+                           A    68    .type 0
+                           A    69    .endef
+00000013                   A    70    _button_state:
+00000013                   A    71    	DS	2*1
+                           A    72    .define "button_state"
+                           A    73    .alias "_button_state"
+                           A    74    .class 147
+                           A    75    .value _button_state
+                           A    76    .type 13
+                           A    77    .type 0
+                           A    78    .endef
+                           A    79    ;    1	#include "buttons.h"
+                           A    80    ;    2	#include "timer.h"
+                           A    81    ;    3	#include "macro.h"
+                           A    82    ;    4	
+                           A    83    ;    5	#include <zneo.h>
+                           A    84    ;    6	
+                           A    85    ;    7	#define DEBOUNCE_CUTOFF     40 	//40 ms
+                           A    86    ;    8	#define BUTTON_TWICE_CUTOFF 500	//500 ms
+                           A    87    ;    9	
+                           A    88    ;   10	#define BUTTON_NONE  0xC8
+                           A    89    ;   11	#define BUTTON_ONE   0xC0
+                           A    90    ;   12	#define BUTTON_TWO   0x88
+                           A    91    ;   13	#define BUTTON_THREE 0x48
+                           A    92    ;   14	
+                           A    93    ;   15	#define BUTTON_PRESSED     1
+                           A    94    ;   16	#define BUTTON_NOT_PRESSED 0
+                           A    95    ;   17	
+                           A    96    ;   18	static volatile int button_timer;
+                           A    97    ;   19	static int debounce_cutoff;
+                           A    98    ;   20	static volatile int button_twice_timer;
+                           A    99    ;   21	static int button_twice_cutoff;
+                           A   100    ;   22	
+                           A   101    ;   23	static volatile unsigned char last_button;
+                           A   102    ;   24	static volatile unsigned char current;
+                           A   103    ;   25	static volatile unsigned char previous;
+                           A   104    ;   26	static volatile unsigned short button_state;
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   3
+
+
+PC     Object              I  Line    Source buttons.src
+                           A   105    	SEGMENT CODE
+                           A   106    ;   27	
+                           A   107    ;   28	static void handle_button_events(void);
+                           A   108    ;   29	
+                           A   109    ;   30	/*
+                           A   110    ;   31		Initializes the buttons.
+                           A   111    ;   32	 */
+                           A   112    ;   33	void init_buttons(void)
+                           A   113    ;   34	{
+00000000                   A   114    _init_buttons:
+                           A   115    .define "_init_buttons"
+                           A   116    .value _init_buttons
+                           A   117    .class 2
+                           A   118    .type 65
+                           A   119    .type 0
+                           A   120    .endef
+                           A   121    .begfunc "init_buttons",34,"_init_buttons"
+00000000 0800              A   122    	LINK	#0
+                           A   123    ;   35		//set as inputs
+                           A   124    ;   36		PDDD |= BUTTON_ONE;
+                           A   125    .line 36
+00000002 4500 00C0         A   126    	LD	R0,#192
+00000006 7350 E132         A   127    	OR.B	57650:RAM,R0
+                           A   128    ;   37		PFDD |= BUTTON_TWO + BUTTON_THREE;
+                           A   129    .line 37
+0000000A 4500 00D0         A   130    	LD	R0,#208
+0000000E 7350 E152         A   131    	OR.B	57682:RAM,R0
+                           A   132    ;   38	
+                           A   133    ;   39		current = BUTTON_NONE;
+                           A   134    .line 39
+00000012 4500 00C8         A   135    	LD	R0,#200
+00000016 0350 0011         A   136    	LD.B	_current:RAM,R0
+                           A   137    ;   40		previous = BUTTON_NONE;
+                           A   138    .line 40
+0000001A 0350 0012         A   139    	LD.B	_previous:RAM,R0
+                           A   140    ;   41		button_state = BUTTON_NOT_PRESSED;
+                           A   141    .line 41
+0000001E ADA4 0013         A   142    	CLR.W	_button_state:RAM
+                           A   143    ;   42		last_button = BUTTON_NONE;
+                           A   144    .line 42
+00000022 0350 0010         A   145    	LD.B	_last_button:RAM,R0
+                           A   146    ;   43	
+                           A   147    ;   44		button_timer = 0;
+                           A   148    .line 44
+00000026 ADA8 0000         A   149    	CLR	_button_timer:RAM
+                           A   150    ;   45		debounce_cutoff = DEBOUNCE_CUTOFF;
+                           A   151    .line 45
+0000002A 3028              A   152    	LD	R0,#40
+0000002C 0370 0004         A   153    	LD	_debounce_cutoff:RAM,R0
+                           A   154    ;   46	
+                           A   155    ;   47		button_twice_timer = 0;
+                           A   156    .line 47
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   4
+
+
+PC     Object              I  Line    Source buttons.src
+00000030 ADA8 0008         A   157    	CLR	_button_twice_timer:RAM
+                           A   158    ;   48		button_twice_cutoff = BUTTON_TWICE_CUTOFF;
+                           A   159    .line 48
+00000034 4500 01F4         A   160    	LD	R0,#500
+00000038 0370 000C         A   161    	LD	_button_twice_cutoff:RAM,R0
+                           A   162    ;   49	}
+                           A   163    .line 49
+0000003C 0001              A   164    	UNLINK	
+0000003E FFFC              A   165    	RET	
+                           A   166    
+                           A   167    
+                           A   168    ;**************************** _init_buttons ***************************
+                           A   169    ;Name                         Addr/Register   Size   Type
+                           A   170    ;_button_twice_cutoff                STATIC      4   variable
+                           A   171    ;_button_twice_timer                 STATIC      4   variable
+                           A   172    ;_debounce_cutoff                    STATIC      4   variable
+                           A   173    ;_button_timer                       STATIC      4   variable
+                           A   174    ;_last_button                        STATIC      1   variable
+                           A   175    ;_button_state                       STATIC      2   variable
+                           A   176    ;_previous                           STATIC      1   variable
+                           A   177    ;_current                            STATIC      1   variable
+                           A   178    
+                           A   179    
+                           A   180    ; Aggregate Stack Size: 0 (words)
+                           A   181    
+                           A   182    
+                           A   183    .endfunc "init_buttons",49,"_init_buttons"
+                           A   184    ;   50	
+                           A   185    ;   51	/*
+                           A   186    ;   52		Processes button events.
+                           A   187    ;   53	 */
+                           A   188    ;   54	void button_events(void)
+                           A   189    ;   55	{
+00000040                   A   190    _button_events:
+                           A   191    .define "_button_events"
+                           A   192    .value _button_events
+                           A   193    .class 2
+                           A   194    .type 65
+                           A   195    .type 0
+                           A   196    .endef
+                           A   197    .begfunc "button_events",55,"_button_events"
+00000040 0800              A   198    	LINK	#0
+                           A   199    ;   56		button_timer += timer_interval_int();
+                           A   200    .line 56
+00000042 F1 FFFFDD         A   201    	CALL	_timer_interval_int
+00000046 7070 0000         A   202    	ADD	_button_timer:RAM,R0
+                           A   203    ;   57	
+                           A   204    ;   58		if(button_twice_timer >= button_twice_cutoff) {
+                           A   205    .line 58
+0000004A 0340 000C         A   206    	LD	R0,_button_twice_cutoff:RAM
+0000004E 7570 0008         A   207    	CP	_button_twice_timer:RAM,R0
+00000052 E1 07             A   208    	JP	LT,_2_L_3
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   5
+
+
+PC     Object              I  Line    Source buttons.src
+                           A   209    ;   59			button_twice_timer = 0;
+                           A   210    .line 59
+00000054 ADA8 0008         A   211    	CLR	_button_twice_timer:RAM
+                           A   212    ;   60			last_button = BUTTON_NONE;
+                           A   213    .line 60
+00000058 4500 00C8         A   214    	LD	R0,#200
+0000005C 0350 0010         A   215    	LD.B	_last_button:RAM,R0
+                           A   216    ;   61		}
+                           A   217    ;   62		else if(button_twice_timer > 0) {
+                           A   218    .line 62
+00000060 C007              A   219    	JP	_2_L_10
+00000062                   A   220    _2_L_3:
+00000062 ADA9 0008         A   221    	CPZ	_button_twice_timer:RAM
+00000066 E2 04             A   222    	JP	LE,_2_L_10
+                           A   223    ;   63			button_twice_timer += timer_interval_int();
+                           A   224    .line 63
+00000068 F1 FFFFCA         A   225    	CALL	_timer_interval_int
+0000006C 7070 0008         A   226    	ADD	_button_twice_timer:RAM,R0
+                           A   227    ;   64		}
+00000070                   A   228    _2_L_10:
+                           A   229    .line 64
+                           A   230    ;   65	
+                           A   231    ;   66		//check buttons every debounce interval
+                           A   232    ;   67		if(button_timer >= debounce_cutoff) {
+                           A   233    .line 67
+00000070 0340 0004         A   234    	LD	R0,_debounce_cutoff:RAM
+00000074 7570 0000         A   235    	CP	_button_timer:RAM,R0
+00000078 E1 2E             A   236    	JP	LT,_2_L_11
+                           A   237    ;   68			button_timer = 0;
+                           A   238    .line 68
+0000007A ADA8 0000         A   239    	CLR	_button_timer:RAM
+                           A   240    ;   69			
+                           A   241    ;   70			previous = current;
+                           A   242    .line 70
+0000007E 0310 0011         A   243    	LD.SB	R0,_current:RAM
+00000082 0350 0012         A   244    	LD.B	_previous:RAM,R0
+                           A   245    ;   71			current = (PDIN & 0x08) | (PFIN & 0xC0);	//gets the state of all buttons
+                           A   246    .line 71
+00000086 0311 E150         A   247    	LD.SB	R1,57680:RAM
+0000008A AA21 00C0         A   248    	AND	R1,#192
+0000008E 0310 E130         A   249    	LD.SB	R0,57648:RAM
+00000092 AA20 0008         A   250    	AND	R0,#8
+00000096 4402              A   251    	LD	R2,R0
+00000098 A310              A   252    	OR	R0,R1
+0000009A 0350 0011         A   253    	LD.B	_current:RAM,R0
+                           A   254    ;   72			
+                           A   255    ;   73			if(current == previous) {
+                           A   256    .line 73
+0000009E 0310 0012         A   257    	LD.SB	R0,_previous:RAM
+000000A2 7550 0011         A   258    	CP.B	_current:RAM,R0
+000000A6 EE 17             A   259    	JP	NE,_2_L_11
+                           A   260    ;   74				if(current != BUTTON_NONE) {
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   6
+
+
+PC     Object              I  Line    Source buttons.src
+                           A   261    .line 74
+000000A8 4500 00C8         A   262    	LD	R0,#200
+000000AC 7550 0011         A   263    	CP.B	_current:RAM,R0
+000000B0 E6 08             A   264    	JP	EQ,_2_L_7
+                           A   265    ;   75					if(button_state == BUTTON_NOT_PRESSED) {
+                           A   266    .line 75
+000000B2 ADA5 0013         A   267    	CPZ.W	_button_state:RAM
+000000B6 EE 0F             A   268    	JP	NE,_2_L_11
+                           A   269    ;   76						button_state = BUTTON_PRESSED;
+                           A   270    .line 76
+000000B8 3001              A   271    	LD	R0,#1
+000000BA 0360 0013         A   272    	LD.W	_button_state:RAM,R0
+                           A   273    ;   77						handle_button_events();
+                           A   274    .line 77
+000000BE D00D              A   275    	CALL	_handle_button_events
+                           A   276    ;   78					}
+                           A   277    ;   79				}
+                           A   278    ;   80				else if(button_state == BUTTON_PRESSED) {
+                           A   279    .line 80
+000000C0 C00A              A   280    	JP	_2_L_11
+000000C2                   A   281    _2_L_7:
+000000C2 3001              A   282    	LD	R0,#1
+000000C4 7560 0013         A   283    	CP.W	_button_state:RAM,R0
+000000C8 EE 06             A   284    	JP	NE,_2_L_11
+                           A   285    ;   81					button_twice_timer += timer_interval_int();
+                           A   286    .line 81
+000000CA F1 FFFF99         A   287    	CALL	_timer_interval_int
+000000CE 7070 0008         A   288    	ADD	_button_twice_timer:RAM,R0
+                           A   289    ;   82					button_state = BUTTON_NOT_PRESSED;
+                           A   290    .line 82
+000000D2 ADA4 0013         A   291    	CLR.W	_button_state:RAM
+                           A   292    ;   83				}
+                           A   293    ;   84			}
+                           A   294    ;   85		}
+                           A   295    ;   86	}
+000000D6                   A   296    _2_L_11:
+                           A   297    .line 86
+000000D6 0001              A   298    	UNLINK	
+000000D8 FFFC              A   299    	RET	
+                           A   300    
+                           A   301    
+                           A   302    ;**************************** _button_events ***************************
+                           A   303    ;Name                         Addr/Register   Size   Type
+                           A   304    ;_handle_button_events               STATIC  -----   function
+                           A   305    ;_button_state                       STATIC      2   variable
+                           A   306    ;_previous                           STATIC      1   variable
+                           A   307    ;_current                            STATIC      1   variable
+                           A   308    ;_debounce_cutoff                    STATIC      4   variable
+                           A   309    ;_last_button                        STATIC      1   variable
+                           A   310    ;_button_twice_cutoff                STATIC      4   variable
+                           A   311    ;_button_twice_timer                 STATIC      4   variable
+                           A   312    ;_timer_interval_int                 IMPORT  -----   function
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   7
+
+
+PC     Object              I  Line    Source buttons.src
+                           A   313    ;_button_timer                       STATIC      4   variable
+                           A   314    
+                           A   315    
+                           A   316    ; Aggregate Stack Size: 0 (words)
+                           A   317    
+                           A   318    
+                           A   319    .endfunc "button_events",86,"_button_events"
+                           A   320    ;   87	
+                           A   321    ;   88	/*
+                           A   322    ;   89		Handles the button event.
+                           A   323    ;   90	 */
+                           A   324    ;   91	static void handle_button_events(void)
+                           A   325    ;   92	{
+000000DA                   A   326    _handle_button_events:
+                           A   327    .define "_handle_button_events"
+                           A   328    .value _handle_button_events
+                           A   329    .class 3
+                           A   330    .type 65
+                           A   331    .type 0
+                           A   332    .endef
+                           A   333    .begfunc "handle_button_events",92,"_handle_button_events"
+000000DA 0800              A   334    	LINK	#0
+                           A   335    ;   93		if(current == BUTTON_ONE) {
+                           A   336    .line 93
+000000DC 4500 00C0         A   337    	LD	R0,#192
+000000E0 7550 0011         A   338    	CP.B	_current:RAM,R0
+000000E4 EE 15             A   339    	JP	NE,_3_L_26
+                           A   340    ;   94			if(button_twice_timer && (last_button == BUTTON_ONE)) {
+                           A   341    .line 94
+000000E6 ADA9 0008         A   342    	CPZ	_button_twice_timer:RAM
+000000EA E6 0A             A   343    	JP	EQ,_3_L_14
+000000EC 7550 0010         A   344    	CP.B	_last_button:RAM,R0
+000000F0 EE 07             A   345    	JP	NE,_3_L_14
+                           A   346    ;   95				button_twice_timer = 0;
+                           A   347    .line 95
+000000F2 ADA8 0008         A   348    	CLR	_button_twice_timer:RAM
+                           A   349    ;   96				last_button = BUTTON_NONE;
+                           A   350    .line 96
+000000F6 4500 00C8         A   351    	LD	R0,#200
+000000FA 0350 0010         A   352    	LD.B	_last_button:RAM,R0
+                           A   353    ;   97			}
+                           A   354    ;   98			else {
+                           A   355    .line 98
+000000FE C03C              A   356    	JP	_3_L_27
+00000100                   A   357    _3_L_14:
+                           A   358    ;   99				last_button = BUTTON_ONE;
+                           A   359    .line 99
+00000100 4500 00C0         A   360    	LD	R0,#192
+00000104 0350 0010         A   361    	LD.B	_last_button:RAM,R0
+                           A   362    ;  100	
+                           A   363    ;  101				macro_execute(MACRO0);
+                           A   364    .line 101
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   8
+
+
+PC     Object              I  Line    Source buttons.src
+00000108 3100              A   365    	LD	R1,#0
+0000010A F1 FFFF79         A   366    	CALL	_macro_execute
+                           A   367    ;  102			}
+                           A   368    ;  103		}
+                           A   369    ;  104		else if(current == BUTTON_TWO) {
+                           A   370    .line 104
+0000010E C034              A   371    	JP	_3_L_27
+00000110                   A   372    _3_L_26:
+00000110 4500 0088         A   373    	LD	R0,#136
+00000114 7550 0011         A   374    	CP.B	_current:RAM,R0
+00000118 EE 15             A   375    	JP	NE,_3_L_24
+                           A   376    ;  105			if(button_twice_timer && (last_button == BUTTON_TWO)) {
+                           A   377    .line 105
+0000011A ADA9 0008         A   378    	CPZ	_button_twice_timer:RAM
+0000011E E6 0A             A   379    	JP	EQ,_3_L_17
+00000120 7550 0010         A   380    	CP.B	_last_button:RAM,R0
+00000124 EE 07             A   381    	JP	NE,_3_L_17
+                           A   382    ;  106				button_twice_timer = 0;
+                           A   383    .line 106
+00000126 ADA8 0008         A   384    	CLR	_button_twice_timer:RAM
+                           A   385    ;  107				last_button = BUTTON_NONE;
+                           A   386    .line 107
+0000012A 4500 00C8         A   387    	LD	R0,#200
+0000012E 0350 0010         A   388    	LD.B	_last_button:RAM,R0
+                           A   389    ;  108			}
+                           A   390    ;  109			else {
+                           A   391    .line 109
+00000132 C022              A   392    	JP	_3_L_27
+00000134                   A   393    _3_L_17:
+                           A   394    ;  110				last_button = BUTTON_TWO;
+                           A   395    .line 110
+00000134 4500 0088         A   396    	LD	R0,#136
+00000138 0350 0010         A   397    	LD.B	_last_button:RAM,R0
+                           A   398    ;  111	
+                           A   399    ;  112				macro_execute(MACRO1);
+                           A   400    .line 112
+0000013C 3101              A   401    	LD	R1,#1
+0000013E F1 FFFF5F         A   402    	CALL	_macro_execute
+                           A   403    ;  113			}
+                           A   404    ;  114		}
+                           A   405    ;  115		else if(current == BUTTON_THREE) {
+                           A   406    .line 115
+00000142 C01A              A   407    	JP	_3_L_27
+00000144                   A   408    _3_L_24:
+00000144 3048              A   409    	LD	R0,#72
+00000146 7550 0011         A   410    	CP.B	_current:RAM,R0
+0000014A EE 14             A   411    	JP	NE,_3_L_22
+                           A   412    ;  116			if(button_twice_timer && (last_button == BUTTON_THREE)) {
+                           A   413    .line 116
+0000014C ADA9 0008         A   414    	CPZ	_button_twice_timer:RAM
+00000150 E6 0A             A   415    	JP	EQ,_3_L_20
+00000152 7550 0010         A   416    	CP.B	_last_button:RAM,R0
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   9
+
+
+PC     Object              I  Line    Source buttons.src
+00000156 EE 07             A   417    	JP	NE,_3_L_20
+                           A   418    ;  117				button_twice_timer = 0;
+                           A   419    .line 117
+00000158 ADA8 0008         A   420    	CLR	_button_twice_timer:RAM
+                           A   421    ;  118				last_button = BUTTON_NONE;
+                           A   422    .line 118
+0000015C 4500 00C8         A   423    	LD	R0,#200
+00000160 0350 0010         A   424    	LD.B	_last_button:RAM,R0
+                           A   425    ;  119			}
+                           A   426    ;  120			else {
+                           A   427    .line 120
+00000164 C009              A   428    	JP	_3_L_27
+00000166                   A   429    _3_L_20:
+                           A   430    ;  121				last_button = BUTTON_THREE;
+                           A   431    .line 121
+00000166 3048              A   432    	LD	R0,#72
+00000168 0350 0010         A   433    	LD.B	_last_button:RAM,R0
+                           A   434    ;  122	
+                           A   435    ;  123				macro_execute(MACRO2);
+                           A   436    .line 123
+0000016C 3102              A   437    	LD	R1,#2
+0000016E F1 FFFF47         A   438    	CALL	_macro_execute
+                           A   439    ;  124			}
+                           A   440    ;  125		}
+                           A   441    ;  126		//don't do anything if multiple buttons are pressed
+                           A   442    ;  127		else {
+                           A   443    .line 127
+00000172 C002              A   444    	JP	_3_L_27
+00000174                   A   445    _3_L_22:
+                           A   446    ;  128			button_state = BUTTON_NOT_PRESSED;
+                           A   447    .line 128
+00000174 ADA4 0013         A   448    	CLR.W	_button_state:RAM
+                           A   449    ;  129		}
+                           A   450    ;  130	}
+00000178                   A   451    _3_L_27:
+                           A   452    .line 130
+00000178 0001              A   453    	UNLINK	
+0000017A FFFC              A   454    	RET	
+                           A   455    
+                           A   456    
+                           A   457    ;**************************** _handle_button_events ***************************
+                           A   458    ;Name                         Addr/Register   Size   Type
+                           A   459    ;_button_state                       STATIC      2   variable
+                           A   460    ;_macro_execute                      IMPORT  -----   function
+                           A   461    ;_last_button                        STATIC      1   variable
+                           A   462    ;_button_twice_timer                 STATIC      4   variable
+                           A   463    ;_current                            STATIC      1   variable
+                           A   464    
+                           A   465    
+                           A   466    ; Aggregate Stack Size: 0 (words)
+                           A   467    
+                           A   468    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:  10
+
+
+PC     Object              I  Line    Source buttons.src
+                           A   469    .endfunc "handle_button_events",130,"_handle_button_events"
+                           A   470    	XREF _macro_execute:EROM
+                           A   471    	XREF _timer_interval_int:EROM
+                           A   472    	XDEF _button_events
+                           A   473    	XDEF _init_buttons
+                           A   474    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 475

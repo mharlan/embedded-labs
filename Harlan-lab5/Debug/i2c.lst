@@ -1,0 +1,689 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\I2C.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT CODE
+                           A     7    .begrec "NONAME0",8
+                           A     8    .define "quot"
+                           A     9    .value 0
+                           A    10    .class 8
+                           A    11    .type 5
+                           A    12    .type 0
+                           A    13    .endef
+                           A    14    .define "rem"
+                           A    15    .value 4
+                           A    16    .class 8
+                           A    17    .type 5
+                           A    18    .type 0
+                           A    19    .endef
+                           A    20    .endrec "NONAME0"
+                           A    21    .begrec "NONAME1",8
+                           A    22    .define "quot"
+                           A    23    .value 0
+                           A    24    .class 8
+                           A    25    .type 5
+                           A    26    .type 0
+                           A    27    .endef
+                           A    28    .define "rem"
+                           A    29    .value 4
+                           A    30    .class 8
+                           A    31    .type 5
+                           A    32    .type 0
+                           A    33    .endef
+                           A    34    .endrec "NONAME1"
+                           A    35    ;    1	
+                           A    36    ;    2	#include "i2c.h"
+                           A    37    ;    3	#include "uart.h"
+                           A    38    ;    4	
+                           A    39    ;    5	#include <zneo.h>
+                           A    40    ;    6	#include <stdlib.h>
+                           A    41    ;    7	#include <stdarg.h>
+                           A    42    ;    8	
+                           A    43    ;    9	#define I2C_RETRY                   32      // Retry attempts when failing to receive ACK
+                           A    44    ;   10	#define I2C_TIMEOUT                 4024    // Timeout value for waiting for receive/transm
+                           A    45    ;   11	
+                           A    46    ;   12	// Defines for I2CCTL
+                           A    47    ;   13	#define	I2CCTL_ENABLE             0x80    
+                           A    48    ;   14	#define I2CCTL_DISABLE            0x00
+                           A    49    ;   15	#define I2CCTL_START              0x40   
+                           A    50    ;   16	#define I2CCTL_STOP               0x20    
+                           A    51    ;   17	#define I2CCTL_BIRQ               0x10    
+                           A    52    ;   18	#define I2CCTL_TXI                0x08   
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   2
+
+
+PC     Object              I  Line    Source i2c.src
+                           A    53    ;   19	#define I2CCTL_NACK               0x04   
+                           A    54    ;   20	#define I2CCTL_FLUSH              0x02   
+                           A    55    ;   21	#define I2CCTL_FILTER_ENABLE      0x01   
+                           A    56    ;   22	
+                           A    57    ;   23	// Defines for I2CISTAT
+                           A    58    ;   24	#define TRANSMIT_DATA_REG_EMPTY   0x80    
+                           A    59    ;   25	#define	RECEIVE_DATA_REG_FULL     0x40    
+                           A    60    ;   26	#define	RECEIVED_SAM              0x20    
+                           A    61    ;   27	#define RECEIVED_10BIT_ADDR       0x10    
+                           A    62    ;   28	#define I2C_RECEIVING             0x08    
+                           A    63    ;   29	#define I2C_ARBITRATION           0x04   
+                           A    64    ;   30	#define I2C_SPRS                  0x02    
+                           A    65    ;   31	#define	RECEIVED_NACK             0x01  
+                           A    66    ;   32	#define I2C_ACK                   0x40  
+                           A    67    ;   33	
+                           A    68    ;   34	
+                           A    69    ;   35	void init_i2c()
+                           A    70    ;   36	{
+00000000                   A    71    _init_i2c:
+                           A    72    .define "_init_i2c"
+                           A    73    .value _init_i2c
+                           A    74    .class 2
+                           A    75    .type 65
+                           A    76    .type 0
+                           A    77    .endef
+                           A    78    .begfunc "init_i2c",36,"_init_i2c"
+00000000 0800              A    79    	LINK	#0
+                           A    80    ;   37	
+                           A    81    ;   38	    // Set baud rate
+                           A    82    ;   39	    // BRG = systemclock/(4 * baudrate)
+                           A    83    ;   40	    I2CBR = 0x04;                      // about 100k @ 5.5296 MHz
+                           A    84    .line 40
+00000002 3004              A    85    	LD	R0,#4
+00000004 0360 E243         A    86    	LD.W	57923:RAM,R0
+                           A    87    ;   41	    PAAFL |= 0xC0;                     // Enable I2C alternate function
+                           A    88    .line 41
+00000008 4500 00C0         A    89    	LD	R0,#192
+0000000C 7350 E105         A    90    	OR.B	57605:RAM,R0
+                           A    91    ;   42	    I2CMODE = 0x00;                    // polling, 7bit, auto ack
+                           A    92    .line 42
+00000010 ADA0 E246         A    93    	CLR.B	57926:RAM
+                           A    94    ;   43	                                       // no GCE, no slave addr
+                           A    95    ;   44	                                       // no diags
+                           A    96    ;   45	    I2CCTL = I2CCTL_ENABLE;            // Enable Rx/Tx; 
+                           A    97    .line 45
+00000014 4500 0080         A    98    	LD	R0,#128
+00000018 0350 E242         A    99    	LD.B	57922:RAM,R0
+                           A   100    ;   46	
+                           A   101    ;   47	}
+                           A   102    .line 47
+0000001C 0001              A   103    	UNLINK	
+0000001E FFFC              A   104    	RET	
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   3
+
+
+PC     Object              I  Line    Source i2c.src
+                           A   105    
+                           A   106    
+                           A   107    ;**************************** _init_i2c ***************************
+                           A   108    ;Name                         Addr/Register   Size   Type
+                           A   109    
+                           A   110    
+                           A   111    ; Aggregate Stack Size: 0 (words)
+                           A   112    
+                           A   113    
+                           A   114    .endfunc "init_i2c",47,"_init_i2c"
+                           A   115    ;   48	
+                           A   116    ;   49	/*
+                           A   117    ;   50	 * Wait for transmission to complete
+                           A   118    ;   51	 */ 
+                           A   119    ;   52	void i2c_wait_TDRE() 
+                           A   120    ;   53	{
+00000020                   A   121    _i2c_wait_TDRE:
+                           A   122    .define "_i2c_wait_TDRE"
+                           A   123    .value _i2c_wait_TDRE
+                           A   124    .class 2
+                           A   125    .type 65
+                           A   126    .type 0
+                           A   127    .endef
+                           A   128    .begfunc "i2c_wait_TDRE",53,"_i2c_wait_TDRE"
+                           A   129    .line 53
+                           A   130    .define "timeout"
+                           A   131    .class 1
+                           A   132    .value -4
+                           A   133    .type 5
+                           A   134    .type 0
+                           A   135    .endef
+00000020 0804              A   136    	LINK	#4
+                           A   137    ;   54	    int timeout = 0;
+                           A   138    .line 54
+00000022 ADCE BFFC         A   139    	CLR	-4(R14)
+                           A   140    ;   55	
+                           A   141    ;   56	    while((I2CISTAT & TRANSMIT_DATA_REG_EMPTY) == 0x00) {
+00000026                   A   142    _2_L_1:
+                           A   143    .line 56
+00000026 4500 0080         A   144    	LD	R0,#128
+0000002A 7650 E241         A   145    	TM.B	57921:RAM,R0
+0000002E E6 FB             A   146    	JP	EQ,_2_L_1
+                           A   147    ;   57	        //if(++timeout == TIMEOUT)
+                           A   148    ;   58	        //break;
+                           A   149    ;   59	        ;
+                           A   150    ;   60	    }
+                           A   151    .line 60
+                           A   152    ;   61	}
+                           A   153    .line 61
+00000030 0001              A   154    	UNLINK	
+00000032 FFFC              A   155    	RET	
+                           A   156    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   4
+
+
+PC     Object              I  Line    Source i2c.src
+                           A   157    
+                           A   158    ;**************************** _i2c_wait_TDRE ***************************
+                           A   159    ;Name                         Addr/Register   Size   Type
+                           A   160    ;timeout                              R14-4      4   variable
+                           A   161    
+                           A   162    
+                           A   163    ; Aggregate Stack Size: -4 (words)
+                           A   164    
+                           A   165    
+                           A   166    .endfunc "i2c_wait_TDRE",61,"_i2c_wait_TDRE"
+                           A   167    ;   62	
+                           A   168    ;   63	/* 
+                           A   169    ;   64	 * Wait for data to arrive.
+                           A   170    ;   65	 */
+                           A   171    ;   66	void i2c_wait_RDRF() 
+                           A   172    ;   67	{
+00000034                   A   173    _i2c_wait_RDRF:
+                           A   174    .define "_i2c_wait_RDRF"
+                           A   175    .value _i2c_wait_RDRF
+                           A   176    .class 2
+                           A   177    .type 65
+                           A   178    .type 0
+                           A   179    .endef
+                           A   180    .begfunc "i2c_wait_RDRF",67,"_i2c_wait_RDRF"
+                           A   181    .line 67
+                           A   182    .define "timeout"
+                           A   183    .class 1
+                           A   184    .value -4
+                           A   185    .type 5
+                           A   186    .type 0
+                           A   187    .endef
+00000034 0804              A   188    	LINK	#4
+                           A   189    ;   68	    int timeout = 0;
+                           A   190    .line 68
+00000036 ADCE BFFC         A   191    	CLR	-4(R14)
+                           A   192    ;   69	
+                           A   193    ;   70	    while((I2CISTAT & RECEIVE_DATA_REG_FULL) == 0x00) {
+0000003A                   A   194    _3_L_4:
+                           A   195    .line 70
+0000003A 3040              A   196    	LD	R0,#64
+0000003C 7650 E241         A   197    	TM.B	57921:RAM,R0
+00000040 E6 FC             A   198    	JP	EQ,_3_L_4
+                           A   199    ;   71	        //if(++timeout == TIMEOUT)
+                           A   200    ;   72	        //break;
+                           A   201    ;   73	        ;
+                           A   202    ;   74	    }
+                           A   203    .line 74
+                           A   204    ;   75	}
+                           A   205    .line 75
+00000042 0001              A   206    	UNLINK	
+00000044 FFFC              A   207    	RET	
+                           A   208    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   5
+
+
+PC     Object              I  Line    Source i2c.src
+                           A   209    
+                           A   210    ;**************************** _i2c_wait_RDRF ***************************
+                           A   211    ;Name                         Addr/Register   Size   Type
+                           A   212    ;timeout                              R14-4      4   variable
+                           A   213    
+                           A   214    
+                           A   215    ; Aggregate Stack Size: -4 (words)
+                           A   216    
+                           A   217    
+                           A   218    .endfunc "i2c_wait_RDRF",75,"_i2c_wait_RDRF"
+                           A   219    ;   76	
+                           A   220    ;   77	/*
+                           A   221    ;   78	 * Flush the buffer and toggle the I2C on and off.
+                           A   222    ;   79	 */
+                           A   223    ;   80	void i2c_clear() 
+                           A   224    ;   81	{
+00000046                   A   225    _i2c_clear:
+                           A   226    .define "_i2c_clear"
+                           A   227    .value _i2c_clear
+                           A   228    .class 2
+                           A   229    .type 65
+                           A   230    .type 0
+                           A   231    .endef
+                           A   232    .begfunc "i2c_clear",81,"_i2c_clear"
+00000046 0800              A   233    	LINK	#0
+                           A   234    ;   82	    I2CCTL |= I2CCTL_FLUSH;
+                           A   235    .line 82
+00000048 3002              A   236    	LD	R0,#2
+0000004A 7350 E242         A   237    	OR.B	57922:RAM,R0
+                           A   238    ;   83	    I2CCTL &= ~I2CCTL_ENABLE;
+                           A   239    .line 83
+0000004E 307F              A   240    	LD	R0,#127
+00000050 7250 E242         A   241    	AND.B	57922:RAM,R0
+                           A   242    ;   84	    I2CCTL |= I2CCTL_ENABLE;
+                           A   243    .line 84
+00000054 4500 0080         A   244    	LD	R0,#128
+00000058 7350 E242         A   245    	OR.B	57922:RAM,R0
+                           A   246    ;   85	}
+                           A   247    .line 85
+0000005C 0001              A   248    	UNLINK	
+0000005E FFFC              A   249    	RET	
+                           A   250    
+                           A   251    
+                           A   252    ;**************************** _i2c_clear ***************************
+                           A   253    ;Name                         Addr/Register   Size   Type
+                           A   254    
+                           A   255    
+                           A   256    ; Aggregate Stack Size: 0 (words)
+                           A   257    
+                           A   258    
+                           A   259    .endfunc "i2c_clear",85,"_i2c_clear"
+                           A   260    ;   86	
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   6
+
+
+PC     Object              I  Line    Source i2c.src
+                           A   261    ;   87	/*
+                           A   262    ;   88	 * Write 1 byte to device.
+                           A   263    ;   89	 */
+                           A   264    ;   90	void i2c_write_byte(unsigned char addr, unsigned char data) 
+                           A   265    ;   91	{ 
+00000060                   A   266    _i2c_write_byte:
+                           A   267    .define "_i2c_write_byte"
+                           A   268    .value _i2c_write_byte
+                           A   269    .class 2
+                           A   270    .type 65
+                           A   271    .type 0
+                           A   272    .endef
+                           A   273    .begfunc "i2c_write_byte",91,"_i2c_write_byte"
+00000060 0802              A   274    	LINK	#2
+                           A   275    .line 91
+00000062 53F1              A   276    	LD.B	-1(R14),R1
+                           A   277    .define "addr"
+                           A   278    .class 9
+                           A   279    .value -1
+                           A   280    .type 12
+                           A   281    .type 0
+                           A   282    .endef
+00000064 53E2              A   283    	LD.B	-2(R14),R2
+                           A   284    .define "data"
+                           A   285    .class 9
+                           A   286    .value -2
+                           A   287    .type 12
+                           A   288    .type 0
+                           A   289    .endef
+                           A   290    ;   92	    i2c_wait_TDRE();              // wait for any previous
+                           A   291    .line 92
+00000066 DFDC              A   292    	CALL	_i2c_wait_TDRE
+                           A   293    ;   93	                                  // writes to complete
+                           A   294    ;   94	    I2CDATA = addr;
+                           A   295    .line 94
+00000068 6BF0              A   296    	LD.SB	R0,-1(R14)
+0000006A 0350 E240         A   297    	LD.B	57920:RAM,R0
+                           A   298    ;   95	    I2CCTL |= I2CCTL_START;
+                           A   299    .line 95
+0000006E 3040              A   300    	LD	R0,#64
+00000070 7350 E242         A   301    	OR.B	57922:RAM,R0
+                           A   302    ;   96	    i2c_wait_TDRE();
+                           A   303    .line 96
+00000074 DFD5              A   304    	CALL	_i2c_wait_TDRE
+                           A   305    ;   97	
+                           A   306    ;   98	    I2CDATA = data;
+                           A   307    .line 98
+00000076 6BE0              A   308    	LD.SB	R0,-2(R14)
+00000078 0350 E240         A   309    	LD.B	57920:RAM,R0
+                           A   310    ;   99	    i2c_wait_TDRE();
+                           A   311    .line 99
+0000007C DFD1              A   312    	CALL	_i2c_wait_TDRE
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   7
+
+
+PC     Object              I  Line    Source i2c.src
+                           A   313    ;  100	
+                           A   314    ;  101	    I2CCTL |= I2CCTL_STOP;
+                           A   315    .line 101
+0000007E 3020              A   316    	LD	R0,#32
+00000080 7350 E242         A   317    	OR.B	57922:RAM,R0
+                           A   318    ;  102	
+                           A   319    ;  103	}
+                           A   320    .line 103
+00000084 0001              A   321    	UNLINK	
+00000086 FFFC              A   322    	RET	
+                           A   323    
+                           A   324    
+                           A   325    ;**************************** _i2c_write_byte ***************************
+                           A   326    ;Name                         Addr/Register   Size   Type
+                           A   327    ;_i2c_wait_TDRE                      IMPORT  -----   function
+                           A   328    ;data                                 R14-2      1   parameter
+                           A   329    ;addr                                 R14-1      1   parameter
+                           A   330    
+                           A   331    
+                           A   332    ; Aggregate Stack Size: -2 (words)
+                           A   333    
+                           A   334    
+                           A   335    .endfunc "i2c_write_byte",103,"_i2c_write_byte"
+                           A   336    ;  104	
+                           A   337    ;  105	/*
+                           A   338    ;  106	 * Write 1 byte to device.
+                           A   339    ;  107	 */
+                           A   340    ;  108	void i2c_write_byte_no_stop(unsigned char addr, unsigned char data) 
+                           A   341    ;  109	{ 
+00000088                   A   342    _i2c_write_byte_no_stop:
+                           A   343    .define "_i2c_write_byte_no_stop"
+                           A   344    .value _i2c_write_byte_no_stop
+                           A   345    .class 2
+                           A   346    .type 65
+                           A   347    .type 0
+                           A   348    .endef
+                           A   349    .begfunc "i2c_write_byte_no_stop",109,"_i2c_write_byte_no_stop"
+00000088 0802              A   350    	LINK	#2
+                           A   351    .line 109
+0000008A 53F1              A   352    	LD.B	-1(R14),R1
+                           A   353    .define "addr"
+                           A   354    .class 9
+                           A   355    .value -1
+                           A   356    .type 12
+                           A   357    .type 0
+                           A   358    .endef
+0000008C 53E2              A   359    	LD.B	-2(R14),R2
+                           A   360    .define "data"
+                           A   361    .class 9
+                           A   362    .value -2
+                           A   363    .type 12
+                           A   364    .type 0
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   8
+
+
+PC     Object              I  Line    Source i2c.src
+                           A   365    .endef
+                           A   366    ;  110	    i2c_wait_TDRE();              // wait for any previous
+                           A   367    .line 110
+0000008E DFC8              A   368    	CALL	_i2c_wait_TDRE
+                           A   369    ;  111	                                  // writes to complete
+                           A   370    ;  112	    I2CDATA = addr;
+                           A   371    .line 112
+00000090 6BF0              A   372    	LD.SB	R0,-1(R14)
+00000092 0350 E240         A   373    	LD.B	57920:RAM,R0
+                           A   374    ;  113	    I2CCTL |= I2CCTL_START;
+                           A   375    .line 113
+00000096 3040              A   376    	LD	R0,#64
+00000098 7350 E242         A   377    	OR.B	57922:RAM,R0
+                           A   378    ;  114	    i2c_wait_TDRE();
+                           A   379    .line 114
+0000009C DFC1              A   380    	CALL	_i2c_wait_TDRE
+                           A   381    ;  115	
+                           A   382    ;  116	    I2CDATA = data;
+                           A   383    .line 116
+0000009E 6BE0              A   384    	LD.SB	R0,-2(R14)
+000000A0 0350 E240         A   385    	LD.B	57920:RAM,R0
+                           A   386    ;  117	    i2c_wait_TDRE();
+                           A   387    .line 117
+000000A4 DFBD              A   388    	CALL	_i2c_wait_TDRE
+                           A   389    ;  118	}
+                           A   390    .line 118
+000000A6 0001              A   391    	UNLINK	
+000000A8 FFFC              A   392    	RET	
+                           A   393    
+                           A   394    
+                           A   395    ;**************************** _i2c_write_byte_no_stop ***************************
+                           A   396    ;Name                         Addr/Register   Size   Type
+                           A   397    ;_i2c_wait_TDRE                      IMPORT  -----   function
+                           A   398    ;data                                 R14-2      1   parameter
+                           A   399    ;addr                                 R14-1      1   parameter
+                           A   400    
+                           A   401    
+                           A   402    ; Aggregate Stack Size: -2 (words)
+                           A   403    
+                           A   404    
+                           A   405    .endfunc "i2c_write_byte_no_stop",118,"_i2c_write_byte_no_stop"
+                           A   406    ;  119	
+                           A   407    ;  120	/*
+                           A   408    ;  121	 * Read a byte from a device
+                           A   409    ;  122	 */ 
+                           A   410    ;  123	unsigned char i2c_read_byte(unsigned char addr) 
+                           A   411    ;  124	{ 
+000000AA                   A   412    _i2c_read_byte:
+                           A   413    .define "_i2c_read_byte"
+                           A   414    .value _i2c_read_byte
+                           A   415    .class 2
+                           A   416    .type 76
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   9
+
+
+PC     Object              I  Line    Source i2c.src
+                           A   417    .type 0
+                           A   418    .endef
+                           A   419    .begfunc "i2c_read_byte",124,"_i2c_read_byte"
+000000AA 0802              A   420    	LINK	#2
+                           A   421    .line 124
+000000AC 53F1              A   422    	LD.B	-1(R14),R1
+                           A   423    .define "addr"
+                           A   424    .class 9
+                           A   425    .value -1
+                           A   426    .type 12
+                           A   427    .type 0
+                           A   428    .endef
+                           A   429    .define "data"
+                           A   430    .class 1
+                           A   431    .value -2
+                           A   432    .type 12
+                           A   433    .type 0
+                           A   434    .endef
+                           A   435    ;  125	    unsigned char data=0;
+                           A   436    .line 125
+000000AE ADCE 3FFE         A   437    	CLR.B	-2(R14)
+                           A   438    ;  126	
+                           A   439    ;  127	    i2c_wait_TDRE();              // wait for any previous
+                           A   440    .line 127
+000000B2 DFB6              A   441    	CALL	_i2c_wait_TDRE
+                           A   442    ;  128	                                  // writes to complete
+                           A   443    ;  129	    I2CDATA = addr;
+                           A   444    .line 129
+000000B4 6BF0              A   445    	LD.SB	R0,-1(R14)
+000000B6 0350 E240         A   446    	LD.B	57920:RAM,R0
+                           A   447    ;  130	    I2CCTL |= I2CCTL_START;
+                           A   448    .line 130
+000000BA 3040              A   449    	LD	R0,#64
+000000BC 7350 E242         A   450    	OR.B	57922:RAM,R0
+                           A   451    ;  131		I2CCTL |= I2CCTL_NACK;
+                           A   452    .line 131
+000000C0 3004              A   453    	LD	R0,#4
+000000C2 7350 E242         A   454    	OR.B	57922:RAM,R0
+                           A   455    ;  132	    i2c_wait_RDRF();
+                           A   456    .line 132
+000000C6 DFB6              A   457    	CALL	_i2c_wait_RDRF
+                           A   458    ;  133	            
+                           A   459    ;  134	    data = I2CDATA;
+                           A   460    .line 134
+000000C8 0310 E240         A   461    	LD.SB	R0,57920:RAM
+000000CC 53E0              A   462    	LD.B	-2(R14),R0
+                           A   463    ;  135	    I2CCTL |= I2CCTL_STOP;
+                           A   464    .line 135
+000000CE 3020              A   465    	LD	R0,#32
+000000D0 7350 E242         A   466    	OR.B	57922:RAM,R0
+                           A   467    ;  136	
+                           A   468    ;  137	    return data;
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  10
+
+
+PC     Object              I  Line    Source i2c.src
+                           A   469    .line 137
+000000D4 6BE0              A   470    	LD.SB	R0,-2(R14)
+                           A   471    ;  138	}
+                           A   472    .line 138
+000000D6 0001              A   473    	UNLINK	
+000000D8 FFFC              A   474    	RET	
+                           A   475    
+                           A   476    
+                           A   477    ;**************************** _i2c_read_byte ***************************
+                           A   478    ;Name                         Addr/Register   Size   Type
+                           A   479    ;_i2c_wait_RDRF                      IMPORT  -----   function
+                           A   480    ;_i2c_wait_TDRE                      IMPORT  -----   function
+                           A   481    ;data                                 R14-2      1   variable
+                           A   482    ;addr                                 R14-1      1   parameter
+                           A   483    
+                           A   484    
+                           A   485    ; Aggregate Stack Size: -2 (words)
+                           A   486    
+                           A   487    
+                           A   488    .endfunc "i2c_read_byte",138,"_i2c_read_byte"
+                           A   489    ;  139	
+                           A   490    ;  140	/* 
+                           A   491    ;  141	 * Send a sequence of I2C bytes 
+                           A   492    ;  142	 * with the first byte, set the START condition 
+                           A   493    ;  143	 * and with the last byte set the STOP condition
+                           A   494    ;  144	 */
+                           A   495    ;  145	void i2c_write_bytes(int n, ... ) 
+                           A   496    ;  146	{ 
+000000DA                   A   497    _i2c_write_bytes:
+                           A   498    .define "_i2c_write_bytes"
+                           A   499    .value _i2c_write_bytes
+                           A   500    .class 2
+                           A   501    .type 65
+                           A   502    .type 0
+                           A   503    .endef
+                           A   504    .begfunc "i2c_write_bytes",146,"_i2c_write_bytes"
+                           A   505    .line 146
+                           A   506    .define "n"
+                           A   507    .class 9
+                           A   508    .value 8
+                           A   509    .type 5
+                           A   510    .type 0
+                           A   511    .endef
+                           A   512    .define "i"
+                           A   513    .class 1
+                           A   514    .value -4
+                           A   515    .type 5
+                           A   516    .type 0
+                           A   517    .endef
+                           A   518    .define "ap"
+                           A   519    .class 1
+                           A   520    .value -6
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  11
+
+
+PC     Object              I  Line    Source i2c.src
+                           A   521    .type 140
+                           A   522    .type 0
+                           A   523    .endef
+                           A   524    .define "data"
+                           A   525    .class 1
+                           A   526    .value -10
+                           A   527    .type 5
+                           A   528    .type 0
+                           A   529    .endef
+000000DA 080A              A   530    	LINK	#10
+                           A   531    ;  147	    va_list ap;
+                           A   532    ;  148	    int i=0;
+                           A   533    .line 148
+000000DC ADCE BFFC         A   534    	CLR	-4(R14)
+                           A   535    ;  149	    int data=0;
+                           A   536    .line 149
+000000E0 ADCE BFF6         A   537    	CLR	-10(R14)
+                           A   538    ;  150	
+                           A   539    ;  151	    va_start(ap, n);                // prepare vararg list
+                           A   540    .line 151
+000000E4 4CC0              A   541    	LEA	R0,12(R14)
+000000E6 57A0              A   542    	LD.W	-6(R14),R0
+                           A   543    ;  152	
+                           A   544    ;  153	    i2c_wait_TDRE();                // wait for any previous transaction
+                           A   545    .line 153
+000000E8 DF9B              A   546    	CALL	_i2c_wait_TDRE
+000000EA C005              A   547    	JP	_8_L_15
+                           A   548    ;  154	
+                           A   549    ;  155	    for (i = 0; i < n; i++) {
+000000EC                   A   550    _8_L_16:
+                           A   551    .line 155
+000000EC 5C80              A   552    	LD	R0,8(R14)
+000000EE 7D0E FFFC         A   553    	CP	-4(R14),R0
+000000F2 E1 04             A   554    	JP	LT,_8_L_18
+000000F4 C01F              A   555    	JP	_8_L_19
+000000F6                   A   556    _8_L_15:
+000000F6 ADCE BFFC         A   557    	CLR	-4(R14)
+000000FA CFF8              A   558    	JP	_8_L_16
+000000FC                   A   559    _8_L_18:
+                           A   560    ;  156	
+                           A   561    ;  157	        data = va_arg(ap, int);     // get vararg n
+                           A   562    .line 157
+000000FC 3004              A   563    	LD	R0,#4
+000000FE 780E DFFA         A   564    	ADD.W	-6(R14),R0
+00000102 6FA0              A   565    	LD.SW	R0,-6(R14)
+00000104 4800 3FFC         A   566    	LD	R0,-4(R0)
+00000108 5B60              A   567    	LD	-10(R14),R0
+                           A   568    ;  158	        I2CDATA = data;             // send it
+                           A   569    .line 158
+0000010A 6B90              A   570    	LD.SB	R0,-7(R14)
+0000010C 0350 E240         A   571    	LD.B	57920:RAM,R0
+                           A   572    ;  159	
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  12
+
+
+PC     Object              I  Line    Source i2c.src
+                           A   573    ;  160	        if (i==0)                   // first byte? set STOP condition
+                           A   574    .line 160
+00000110 ADDE BFFC         A   575    	CPZ	-4(R14)
+00000114 EE 03             A   576    	JP	NE,_8_L_13
+                           A   577    ;  161	            I2CCTL |= I2CCTL_START;
+                           A   578    .line 161
+00000116 3040              A   579    	LD	R0,#64
+00000118 7350 E242         A   580    	OR.B	57922:RAM,R0
+0000011C                   A   581    _8_L_13:
+                           A   582    ;  162	
+                           A   583    ;  163	        i2c_wait_TDRE();            // wait for byte to go
+                           A   584    .line 163
+0000011C DF81              A   585    	CALL	_i2c_wait_TDRE
+                           A   586    ;  164	
+                           A   587    ;  165	        if (i==(n-1))               // last byte? set STOP condition
+                           A   588    .line 165
+0000011E 5C80              A   589    	LD	R0,8(R14)
+00000120 80FF              A   590    	ADD	R0,#-1
+00000122 7DE0 9FFC         A   591    	CP	R0,-4(R14)
+00000126 EE 03             A   592    	JP	NE,_8_L_17
+                           A   593    ;  166	            I2CCTL |= I2CCTL_STOP;
+                           A   594    .line 166
+00000128 3020              A   595    	LD	R0,#32
+0000012A 7350 E242         A   596    	OR.B	57922:RAM,R0
+                           A   597    ;  167	
+                           A   598    ;  168	    }
+0000012E                   A   599    _8_L_17:
+                           A   600    .line 168
+0000012E ADEE BFFC         A   601    	INC	-4(R14)
+00000132 CFDC              A   602    	JP	_8_L_16
+00000134                   A   603    _8_L_19:
+                           A   604    ;  169	    va_end(ap);   
+                           A   605    ;  170	}
+                           A   606    .line 170
+00000134 0001              A   607    	UNLINK	
+00000136 FFFC              A   608    	RET	
+                           A   609    
+                           A   610    
+                           A   611    ;**************************** _i2c_write_bytes ***************************
+                           A   612    ;Name                         Addr/Register   Size   Type
+                           A   613    ;_i2c_wait_TDRE                      IMPORT  -----   function
+                           A   614    ;data                                R14-10      4   variable
+                           A   615    ;ap                                   R14-6      2   variable
+                           A   616    ;i                                    R14-4      4   variable
+                           A   617    ;n                                    R14+8      4   parameter
+                           A   618    
+                           A   619    
+                           A   620    ; Aggregate Stack Size: -10 (words)
+                           A   621    
+                           A   622    
+                           A   623    .endfunc "i2c_write_bytes",170,"_i2c_write_bytes"
+                           A   624    	XDEF _i2c_write_bytes
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  13
+
+
+PC     Object              I  Line    Source i2c.src
+                           A   625    	XDEF _i2c_read_byte
+                           A   626    	XDEF _i2c_write_byte_no_stop
+                           A   627    	XDEF _i2c_write_byte
+                           A   628    	XDEF _i2c_clear
+                           A   629    	XDEF _i2c_wait_RDRF
+                           A   630    	XDEF _i2c_wait_TDRE
+                           A   631    	XDEF _init_i2c
+                           A   632    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 633

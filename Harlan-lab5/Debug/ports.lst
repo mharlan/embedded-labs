@@ -1,0 +1,1193 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\PORTS.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT ROM_TEXT
+00000000                   A     7    L__0:
+00000000 0A00              A     8    	DB	10,0
+00000002                   A     9    L__1:
+00000002 41                A    10    	DB	"A"
+00000003 00                A    11    	DB	0
+00000004                   A    12    L__3:
+00000004 5041494E 3A       A    13    	DB	"PAIN:"
+00000009 09                A    14    	DB	9
+0000000A 3078252E 3258     A    15    	DB	"0x%.2X"
+00000010 0A00              A    16    	DB	10,0
+00000012                   A    17    L__4:
+00000012 50414F55 543A     A    18    	DB	"PAOUT:"
+00000018 09                A    19    	DB	9
+00000019 3078252E 3258     A    20    	DB	"0x%.2X"
+0000001F 0A00              A    21    	DB	10,0
+00000021                   A    22    L__5:
+00000021 50414444 3A       A    23    	DB	"PADD:"
+00000026 09                A    24    	DB	9
+00000027 3078252E 3258     A    25    	DB	"0x%.2X"
+0000002D 0A00              A    26    	DB	10,0
+0000002F                   A    27    L__6:
+0000002F 50414844 453A     A    28    	DB	"PAHDE:"
+00000035 09                A    29    	DB	9
+00000036 3078252E 3258     A    30    	DB	"0x%.2X"
+0000003C 0A00              A    31    	DB	10,0
+0000003E                   A    32    L__7:
+0000003E 50414146 483A     A    33    	DB	"PAAFH:"
+00000044 09                A    34    	DB	9
+00000045 3078252E 3258     A    35    	DB	"0x%.2X"
+0000004B 0A00              A    36    	DB	10,0
+0000004D                   A    37    L__8:
+0000004D 50414146 4C3A     A    38    	DB	"PAAFL:"
+00000053 09                A    39    	DB	9
+00000054 3078252E 3258     A    40    	DB	"0x%.2X"
+0000005A 0A00              A    41    	DB	10,0
+0000005C                   A    42    L__9:
+0000005C 50414F43 3A       A    43    	DB	"PAOC:"
+00000061 09                A    44    	DB	9
+00000062 3078252E 3258     A    45    	DB	"0x%.2X"
+00000068 0A00              A    46    	DB	10,0
+0000006A                   A    47    L__10:
+0000006A 50415055 453A     A    48    	DB	"PAPUE:"
+00000070 09                A    49    	DB	9
+00000071 3078252E 3258     A    50    	DB	"0x%.2X"
+00000077 0A00              A    51    	DB	10,0
+00000079                   A    52    L__11:
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   2
+
+
+PC     Object              I  Line    Source ports.src
+00000079 5041534D 52453A   A    53    	DB	"PASMRE:"
+00000080 09                A    54    	DB	9
+00000081 3078252E 3258     A    55    	DB	"0x%.2X"
+00000087 0A00              A    56    	DB	10,0
+00000089                   A    57    L__12:
+00000089 5041494D          A    58    	DB	"PAIMUX1:0x%.2X"
+0000008D 5558313A 
+00000091 3078252E 3258 
+00000097 0A00              A    59    	DB	10,0
+00000099                   A    60    L__13:
+00000099 5041494D 55583A   A    61    	DB	"PAIMUX:"
+000000A0 09                A    62    	DB	9
+000000A1 3078252E 3258     A    63    	DB	"0x%.2X"
+000000A7 0A00              A    64    	DB	10,0
+000000A9                   A    65    L__14:
+000000A9 50414945          A    66    	DB	"PAIEDGE:0x%.2X"
+000000AD 4447453A 
+000000B1 3078252E 3258 
+000000B7 0A00              A    67    	DB	10,0
+000000B9                   A    68    L__15:
+000000B9 42                A    69    	DB	"B"
+000000BA 00                A    70    	DB	0
+000000BB                   A    71    L__17:
+000000BB 5042494E 3A       A    72    	DB	"PBIN:"
+000000C0 09                A    73    	DB	9
+000000C1 3078252E 3258     A    74    	DB	"0x%.2X"
+000000C7 0A00              A    75    	DB	10,0
+000000C9                   A    76    L__18:
+000000C9 50424F55 543A     A    77    	DB	"PBOUT:"
+000000CF 09                A    78    	DB	9
+000000D0 3078252E 3258     A    79    	DB	"0x%.2X"
+000000D6 0A00              A    80    	DB	10,0
+000000D8                   A    81    L__19:
+000000D8 50424444 3A       A    82    	DB	"PBDD:"
+000000DD 09                A    83    	DB	9
+000000DE 3078252E 3258     A    84    	DB	"0x%.2X"
+000000E4 0A00              A    85    	DB	10,0
+000000E6                   A    86    L__20:
+000000E6 50424844 453A     A    87    	DB	"PBHDE:"
+000000EC 09                A    88    	DB	9
+000000ED 3078252E 3258     A    89    	DB	"0x%.2X"
+000000F3 0A00              A    90    	DB	10,0
+000000F5                   A    91    L__21:
+000000F5 50424146 4C3A     A    92    	DB	"PBAFL:"
+000000FB 09                A    93    	DB	9
+000000FC 3078252E 3258     A    94    	DB	"0x%.2X"
+00000102 0A00              A    95    	DB	10,0
+00000104                   A    96    L__22:
+00000104 50424F43 3A       A    97    	DB	"PBOC:"
+00000109 09                A    98    	DB	9
+0000010A 3078252E 3258     A    99    	DB	"0x%.2X"
+00000110 0A00              A   100    	DB	10,0
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   3
+
+
+PC     Object              I  Line    Source ports.src
+00000112                   A   101    L__23:
+00000112 50425055 453A     A   102    	DB	"PBPUE:"
+00000118 09                A   103    	DB	9
+00000119 3078252E 3258     A   104    	DB	"0x%.2X"
+0000011F 0A00              A   105    	DB	10,0
+00000121                   A   106    L__24:
+00000121 5042534D 52453A   A   107    	DB	"PBSMRE:"
+00000128 09                A   108    	DB	9
+00000129 3078252E 3258     A   109    	DB	"0x%.2X"
+0000012F 0A00              A   110    	DB	10,0
+00000131                   A   111    L__25:
+00000131 43                A   112    	DB	"C"
+00000132 00                A   113    	DB	0
+00000133                   A   114    L__27:
+00000133 5043494E 3A       A   115    	DB	"PCIN:"
+00000138 09                A   116    	DB	9
+00000139 3078252E 3258     A   117    	DB	"0x%.2X"
+0000013F 0A00              A   118    	DB	10,0
+00000141                   A   119    L__28:
+00000141 50434F55 543A     A   120    	DB	"PCOUT:"
+00000147 09                A   121    	DB	9
+00000148 3078252E 3258     A   122    	DB	"0x%.2X"
+0000014E 0A00              A   123    	DB	10,0
+00000150                   A   124    L__29:
+00000150 50434444 3A       A   125    	DB	"PCDD:"
+00000155 09                A   126    	DB	9
+00000156 3078252E 3258     A   127    	DB	"0x%.2X"
+0000015C 0A00              A   128    	DB	10,0
+0000015E                   A   129    L__30:
+0000015E 50434844 453A     A   130    	DB	"PCHDE:"
+00000164 09                A   131    	DB	9
+00000165 3078252E 3258     A   132    	DB	"0x%.2X"
+0000016B 0A00              A   133    	DB	10,0
+0000016D                   A   134    L__31:
+0000016D 50434146 483A     A   135    	DB	"PCAFH:"
+00000173 09                A   136    	DB	9
+00000174 3078252E 3258     A   137    	DB	"0x%.2X"
+0000017A 0A00              A   138    	DB	10,0
+0000017C                   A   139    L__32:
+0000017C 50434146 4C3A     A   140    	DB	"PCAFL:"
+00000182 09                A   141    	DB	9
+00000183 3078252E 3258     A   142    	DB	"0x%.2X"
+00000189 0A00              A   143    	DB	10,0
+0000018B                   A   144    L__33:
+0000018B 50434F43 3A       A   145    	DB	"PCOC:"
+00000190 09                A   146    	DB	9
+00000191 3078252E 3258     A   147    	DB	"0x%.2X"
+00000197 0A00              A   148    	DB	10,0
+00000199                   A   149    L__34:
+00000199 50435055 453A     A   150    	DB	"PCPUE:"
+0000019F 09                A   151    	DB	9
+000001A0 3078252E 3258     A   152    	DB	"0x%.2X"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   4
+
+
+PC     Object              I  Line    Source ports.src
+000001A6 0A00              A   153    	DB	10,0
+000001A8                   A   154    L__35:
+000001A8 5043534D 52453A   A   155    	DB	"PCSMRE:"
+000001AF 09                A   156    	DB	9
+000001B0 3078252E 3258     A   157    	DB	"0x%.2X"
+000001B6 0A00              A   158    	DB	10,0
+000001B8                   A   159    L__36:
+000001B8 5043494D 55583A   A   160    	DB	"PCIMUX:"
+000001BF 09                A   161    	DB	9
+000001C0 3078252E 3258     A   162    	DB	"0x%.2X"
+000001C6 0A00              A   163    	DB	10,0
+000001C8                   A   164    L__37:
+000001C8 44                A   165    	DB	"D"
+000001C9 00                A   166    	DB	0
+000001CA                   A   167    L__39:
+000001CA 5044494E 3A       A   168    	DB	"PDIN:"
+000001CF 09                A   169    	DB	9
+000001D0 3078252E 3258     A   170    	DB	"0x%.2X"
+000001D6 0A00              A   171    	DB	10,0
+000001D8                   A   172    L__40:
+000001D8 50444F55 543A     A   173    	DB	"PDOUT:"
+000001DE 09                A   174    	DB	9
+000001DF 3078252E 3258     A   175    	DB	"0x%.2X"
+000001E5 0A00              A   176    	DB	10,0
+000001E7                   A   177    L__41:
+000001E7 50444444 3A       A   178    	DB	"PDDD:"
+000001EC 09                A   179    	DB	9
+000001ED 3078252E 3258     A   180    	DB	"0x%.2X"
+000001F3 0A00              A   181    	DB	10,0
+000001F5                   A   182    L__42:
+000001F5 50444844 453A     A   183    	DB	"PDHDE:"
+000001FB 09                A   184    	DB	9
+000001FC 3078252E 3258     A   185    	DB	"0x%.2X"
+00000202 0A00              A   186    	DB	10,0
+00000204                   A   187    L__43:
+00000204 50444146 483A     A   188    	DB	"PDAFH:"
+0000020A 09                A   189    	DB	9
+0000020B 3078252E 3258     A   190    	DB	"0x%.2X"
+00000211 0A00              A   191    	DB	10,0
+00000213                   A   192    L__44:
+00000213 50444146 4C3A     A   193    	DB	"PDAFL:"
+00000219 09                A   194    	DB	9
+0000021A 3078252E 3258     A   195    	DB	"0x%.2X"
+00000220 0A00              A   196    	DB	10,0
+00000222                   A   197    L__45:
+00000222 50444F43 3A       A   198    	DB	"PDOC:"
+00000227 09                A   199    	DB	9
+00000228 3078252E 3258     A   200    	DB	"0x%.2X"
+0000022E 0A00              A   201    	DB	10,0
+00000230                   A   202    L__46:
+00000230 50445055 453A     A   203    	DB	"PDPUE:"
+00000236 09                A   204    	DB	9
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   5
+
+
+PC     Object              I  Line    Source ports.src
+00000237 3078252E 3258     A   205    	DB	"0x%.2X"
+0000023D 0A00              A   206    	DB	10,0
+0000023F                   A   207    L__47:
+0000023F 5044534D 52453A   A   208    	DB	"PDSMRE:"
+00000246 09                A   209    	DB	9
+00000247 3078252E 3258     A   210    	DB	"0x%.2X"
+0000024D 0A00              A   211    	DB	10,0
+0000024F                   A   212    L__48:
+0000024F 45                A   213    	DB	"E"
+00000250 00                A   214    	DB	0
+00000251                   A   215    L__50:
+00000251 5045494E 3A       A   216    	DB	"PEIN:"
+00000256 09                A   217    	DB	9
+00000257 3078252E 3258     A   218    	DB	"0x%.2X"
+0000025D 0A00              A   219    	DB	10,0
+0000025F                   A   220    L__51:
+0000025F 50454F55 543A     A   221    	DB	"PEOUT:"
+00000265 09                A   222    	DB	9
+00000266 3078252E 3258     A   223    	DB	"0x%.2X"
+0000026C 0A00              A   224    	DB	10,0
+0000026E                   A   225    L__52:
+0000026E 50454444 3A       A   226    	DB	"PEDD:"
+00000273 09                A   227    	DB	9
+00000274 3078252E 3258     A   228    	DB	"0x%.2X"
+0000027A 0A00              A   229    	DB	10,0
+0000027C                   A   230    L__53:
+0000027C 50454844 453A     A   231    	DB	"PEHDE:"
+00000282 09                A   232    	DB	9
+00000283 3078252E 3258     A   233    	DB	"0x%.2X"
+00000289 0A00              A   234    	DB	10,0
+0000028B                   A   235    L__54:
+0000028B 50454F43 3A       A   236    	DB	"PEOC:"
+00000290 09                A   237    	DB	9
+00000291 3078252E 3258     A   238    	DB	"0x%.2X"
+00000297 0A00              A   239    	DB	10,0
+00000299                   A   240    L__55:
+00000299 50455055 453A     A   241    	DB	"PEPUE:"
+0000029F 09                A   242    	DB	9
+000002A0 3078252E 3258     A   243    	DB	"0x%.2X"
+000002A6 0A00              A   244    	DB	10,0
+000002A8                   A   245    L__56:
+000002A8 5045534D 52453A   A   246    	DB	"PESMRE:"
+000002AF 09                A   247    	DB	9
+000002B0 3078252E 3258     A   248    	DB	"0x%.2X"
+000002B6 0A00              A   249    	DB	10,0
+000002B8                   A   250    L__57:
+000002B8 46                A   251    	DB	"F"
+000002B9 00                A   252    	DB	0
+000002BA                   A   253    L__59:
+000002BA 5046494E 3A       A   254    	DB	"PFIN:"
+000002BF 09                A   255    	DB	9
+000002C0 3078252E 3258     A   256    	DB	"0x%.2X"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   6
+
+
+PC     Object              I  Line    Source ports.src
+000002C6 0A00              A   257    	DB	10,0
+000002C8                   A   258    L__60:
+000002C8 50464F55 543A     A   259    	DB	"PFOUT:"
+000002CE 09                A   260    	DB	9
+000002CF 3078252E 3258     A   261    	DB	"0x%.2X"
+000002D5 0A00              A   262    	DB	10,0
+000002D7                   A   263    L__61:
+000002D7 50464444 3A       A   264    	DB	"PFDD:"
+000002DC 09                A   265    	DB	9
+000002DD 3078252E 3258     A   266    	DB	"0x%.2X"
+000002E3 0A00              A   267    	DB	10,0
+000002E5                   A   268    L__62:
+000002E5 50464844 453A     A   269    	DB	"PFHDE:"
+000002EB 09                A   270    	DB	9
+000002EC 3078252E 3258     A   271    	DB	"0x%.2X"
+000002F2 0A00              A   272    	DB	10,0
+000002F4                   A   273    L__63:
+000002F4 50464146 4C3A     A   274    	DB	"PFAFL:"
+000002FA 09                A   275    	DB	9
+000002FB 3078252E 3258     A   276    	DB	"0x%.2X"
+00000301 0A00              A   277    	DB	10,0
+00000303                   A   278    L__64:
+00000303 50464F43 3A       A   279    	DB	"PFOC:"
+00000308 09                A   280    	DB	9
+00000309 3078252E 3258     A   281    	DB	"0x%.2X"
+0000030F 0A00              A   282    	DB	10,0
+00000311                   A   283    L__65:
+00000311 50465055 453A     A   284    	DB	"PFPUE:"
+00000317 09                A   285    	DB	9
+00000318 3078252E 3258     A   286    	DB	"0x%.2X"
+0000031E 0A00              A   287    	DB	10,0
+00000320                   A   288    L__66:
+00000320 5046534D 52453A   A   289    	DB	"PFSMRE:"
+00000327 09                A   290    	DB	9
+00000328 3078252E 3258     A   291    	DB	"0x%.2X"
+0000032E 0A00              A   292    	DB	10,0
+00000330                   A   293    L__67:
+00000330 47                A   294    	DB	"G"
+00000331 00                A   295    	DB	0
+00000332                   A   296    L__69:
+00000332 5047494E 3A       A   297    	DB	"PGIN:"
+00000337 09                A   298    	DB	9
+00000338 3078252E 3258     A   299    	DB	"0x%.2X"
+0000033E 0A00              A   300    	DB	10,0
+00000340                   A   301    L__70:
+00000340 50474F55 543A     A   302    	DB	"PGOUT:"
+00000346 09                A   303    	DB	9
+00000347 3078252E 3258     A   304    	DB	"0x%.2X"
+0000034D 0A00              A   305    	DB	10,0
+0000034F                   A   306    L__71:
+0000034F 50474444 3A       A   307    	DB	"PGDD:"
+00000354 09                A   308    	DB	9
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   7
+
+
+PC     Object              I  Line    Source ports.src
+00000355 3078252E 3258     A   309    	DB	"0x%.2X"
+0000035B 0A00              A   310    	DB	10,0
+0000035D                   A   311    L__72:
+0000035D 50474844 453A     A   312    	DB	"PGHDE:"
+00000363 09                A   313    	DB	9
+00000364 3078252E 3258     A   314    	DB	"0x%.2X"
+0000036A 0A00              A   315    	DB	10,0
+0000036C                   A   316    L__73:
+0000036C 50474146 4C3A     A   317    	DB	"PGAFL:"
+00000372 09                A   318    	DB	9
+00000373 3078252E 3258     A   319    	DB	"0x%.2X"
+00000379 0A00              A   320    	DB	10,0
+0000037B                   A   321    L__74:
+0000037B 50474F43 3A       A   322    	DB	"PGOC:"
+00000380 09                A   323    	DB	9
+00000381 3078252E 3258     A   324    	DB	"0x%.2X"
+00000387 0A00              A   325    	DB	10,0
+00000389                   A   326    L__75:
+00000389 50475055 453A     A   327    	DB	"PGPUE:"
+0000038F 09                A   328    	DB	9
+00000390 3078252E 3258     A   329    	DB	"0x%.2X"
+00000396 0A00              A   330    	DB	10,0
+00000398                   A   331    L__76:
+00000398 5047534D 52453A   A   332    	DB	"PGSMRE:"
+0000039F 09                A   333    	DB	9
+000003A0 3078252E 3258     A   334    	DB	"0x%.2X"
+000003A6 0A00              A   335    	DB	10,0
+000003A8                   A   336    L__77:
+000003A8 48                A   337    	DB	"H"
+000003A9 00                A   338    	DB	0
+000003AA                   A   339    L__79:
+000003AA 5048494E 3A       A   340    	DB	"PHIN:"
+000003AF 09                A   341    	DB	9
+000003B0 3078252E 3258     A   342    	DB	"0x%.2X"
+000003B6 0A00              A   343    	DB	10,0
+000003B8                   A   344    L__80:
+000003B8 50484F55 543A     A   345    	DB	"PHOUT:"
+000003BE 09                A   346    	DB	9
+000003BF 3078252E 3258     A   347    	DB	"0x%.2X"
+000003C5 0A00              A   348    	DB	10,0
+000003C7                   A   349    L__81:
+000003C7 50484444 3A       A   350    	DB	"PHDD:"
+000003CC 09                A   351    	DB	9
+000003CD 3078252E 3258     A   352    	DB	"0x%.2X"
+000003D3 0A00              A   353    	DB	10,0
+000003D5                   A   354    L__82:
+000003D5 50484844 453A     A   355    	DB	"PHHDE:"
+000003DB 09                A   356    	DB	9
+000003DC 3078252E 3258     A   357    	DB	"0x%.2X"
+000003E2 0A00              A   358    	DB	10,0
+000003E4                   A   359    L__83:
+000003E4 50484146 483A     A   360    	DB	"PHAFH:"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   8
+
+
+PC     Object              I  Line    Source ports.src
+000003EA 09                A   361    	DB	9
+000003EB 3078252E 3258     A   362    	DB	"0x%.2X"
+000003F1 0A00              A   363    	DB	10,0
+000003F3                   A   364    L__84:
+000003F3 50484146 4C3A     A   365    	DB	"PHAFL:"
+000003F9 09                A   366    	DB	9
+000003FA 3078252E 3258     A   367    	DB	"0x%.2X"
+00000400 0A00              A   368    	DB	10,0
+00000402                   A   369    L__85:
+00000402 50484F43 3A       A   370    	DB	"PHOC:"
+00000407 09                A   371    	DB	9
+00000408 3078252E 3258     A   372    	DB	"0x%.2X"
+0000040E 0A00              A   373    	DB	10,0
+00000410                   A   374    L__86:
+00000410 50485055 453A     A   375    	DB	"PHPUE:"
+00000416 09                A   376    	DB	9
+00000417 3078252E 3258     A   377    	DB	"0x%.2X"
+0000041D 0A00              A   378    	DB	10,0
+0000041F                   A   379    L__87:
+0000041F 5048534D 52453A   A   380    	DB	"PHSMRE:"
+00000426 09                A   381    	DB	9
+00000427 3078252E 3258     A   382    	DB	"0x%.2X"
+0000042D 0A00              A   383    	DB	10,0
+0000042F                   A   384    L__88:
+0000042F 4A                A   385    	DB	"J"
+00000430 00                A   386    	DB	0
+00000431                   A   387    L__90:
+00000431 506F7274          A   388    	DB	"Port J is unavailabe."
+00000435 204A2069 
+00000439 7320756E 
+0000043D 61766169 
+00000441 6C616265 2E 
+00000446 0A00              A   389    	DB	10,0
+00000448                   A   390    L__91:
+00000448 4B                A   391    	DB	"K"
+00000449 00                A   392    	DB	0
+0000044A                   A   393    L__93:
+0000044A 506F7274          A   394    	DB	"Port K is unavailabe."
+0000044E 204B2069 
+00000452 7320756E 
+00000456 61766169 
+0000045A 6C616265 2E 
+0000045F 0A00              A   395    	DB	10,0
+00000461                   A   396    L__94:
+00000461 53656C65          A   397    	DB	"Select a port A-K."
+00000465 63742061 
+00000469 20706F72 
+0000046D 7420412D 4B2E 
+00000473 0A00              A   398    	DB	10,0
+                           A   399    	SEGMENT CODE
+                           A   400    ;    1	#include "ports.h"
+                           A   401    ;    2	#include "uart.h"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   9
+
+
+PC     Object              I  Line    Source ports.src
+                           A   402    ;    3	
+                           A   403    ;    4	#include <zneo.h>
+                           A   404    ;    5	#include <string.h>
+                           A   405    ;    6	
+                           A   406    ;    7	void ports_print_config(const char *port)
+                           A   407    ;    8	{
+00000000                   A   408    _ports_print_config:
+                           A   409    .define "_ports_print_config"
+                           A   410    .value _ports_print_config
+                           A   411    .class 2
+                           A   412    .type 65
+                           A   413    .type 0
+                           A   414    .endef
+                           A   415    .begfunc "ports_print_config",8,"_ports_print_config"
+00000000 0802              A   416    	LINK	#2
+                           A   417    .line 8
+00000002 57E1              A   418    	LD.W	-2(R14),R1
+                           A   419    .define "port"
+                           A   420    .class 9
+                           A   421    .value -2
+                           A   422    .type 140
+                           A   423    .type 0
+                           A   424    .endef
+                           A   425    ;    9		uart_printf("\n");
+                           A   426    .line 9
+00000004 098F 0000         A   427    	PUSH.W	#L__0
+00000008 F1 FFFFFA         A   428    	CALL	_uart_printf
+0000000C 8F02              A   429    	ADD	R15,#2
+                           A   430    ;   10		if(strcmp(port, "A") == 0) {
+                           A   431    .line 10
+0000000E 6FE1              A   432    	LD.SW	R1,-2(R14)
+00000010 4502 0002         A   433    	LD	R2,#L__1
+00000014 F1 FFFFF4         A   434    	CALL	_strcmp
+00000018 9000              A   435    	CP	R0,#0
+0000001A EE 61             A   436    	JP	NE,_1_L_19
+                           A   437    ;   11			uart_printf("PAIN:\t0x%.2X\n", PAIN);
+                           A   438    .line 11
+0000001C 0300 E100         A   439    	LD.UB	R0,57600:RAM
+00000020 100F              A   440    	PUSH	R0
+00000022 098F 0004         A   441    	PUSH.W	#L__3
+00000026 F1 FFFFEB         A   442    	CALL	_uart_printf
+0000002A 8F06              A   443    	ADD	R15,#6
+                           A   444    ;   12			uart_printf("PAOUT:\t0x%.2X\n", PAOUT);
+                           A   445    .line 12
+0000002C 0300 E101         A   446    	LD.UB	R0,57601:RAM
+00000030 100F              A   447    	PUSH	R0
+00000032 098F 0012         A   448    	PUSH.W	#L__4
+00000036 F1 FFFFE3         A   449    	CALL	_uart_printf
+0000003A 8F06              A   450    	ADD	R15,#6
+                           A   451    ;   13			uart_printf("PADD:\t0x%.2X\n", PADD);
+                           A   452    .line 13
+0000003C 0300 E102         A   453    	LD.UB	R0,57602:RAM
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  10
+
+
+PC     Object              I  Line    Source ports.src
+00000040 100F              A   454    	PUSH	R0
+00000042 098F 0021         A   455    	PUSH.W	#L__5
+00000046 F1 FFFFDB         A   456    	CALL	_uart_printf
+0000004A 8F06              A   457    	ADD	R15,#6
+                           A   458    ;   14			uart_printf("PAHDE:\t0x%.2X\n", PAHDE);
+                           A   459    .line 14
+0000004C 0300 E103         A   460    	LD.UB	R0,57603:RAM
+00000050 100F              A   461    	PUSH	R0
+00000052 098F 002F         A   462    	PUSH.W	#L__6
+00000056 F1 FFFFD3         A   463    	CALL	_uart_printf
+0000005A 8F06              A   464    	ADD	R15,#6
+                           A   465    ;   15			uart_printf("PAAFH:\t0x%.2X\n", PAAFH);
+                           A   466    .line 15
+0000005C 0300 E104         A   467    	LD.UB	R0,57604:RAM
+00000060 100F              A   468    	PUSH	R0
+00000062 098F 003E         A   469    	PUSH.W	#L__7
+00000066 F1 FFFFCB         A   470    	CALL	_uart_printf
+0000006A 8F06              A   471    	ADD	R15,#6
+                           A   472    ;   16			uart_printf("PAAFL:\t0x%.2X\n", PAAFL);
+                           A   473    .line 16
+0000006C 0300 E105         A   474    	LD.UB	R0,57605:RAM
+00000070 100F              A   475    	PUSH	R0
+00000072 098F 004D         A   476    	PUSH.W	#L__8
+00000076 F1 FFFFC3         A   477    	CALL	_uart_printf
+0000007A 8F06              A   478    	ADD	R15,#6
+                           A   479    ;   17			uart_printf("PAOC:\t0x%.2X\n", PAOC);
+                           A   480    .line 17
+0000007C 0300 E106         A   481    	LD.UB	R0,57606:RAM
+00000080 100F              A   482    	PUSH	R0
+00000082 098F 005C         A   483    	PUSH.W	#L__9
+00000086 F1 FFFFBB         A   484    	CALL	_uart_printf
+0000008A 8F06              A   485    	ADD	R15,#6
+                           A   486    ;   18			uart_printf("PAPUE:\t0x%.2X\n", PAPUE);
+                           A   487    .line 18
+0000008C 0300 E107         A   488    	LD.UB	R0,57607:RAM
+00000090 100F              A   489    	PUSH	R0
+00000092 098F 006A         A   490    	PUSH.W	#L__10
+00000096 F1 FFFFB3         A   491    	CALL	_uart_printf
+0000009A 8F06              A   492    	ADD	R15,#6
+                           A   493    ;   19			uart_printf("PASMRE:\t0x%.2X\n", PASMRE);
+                           A   494    .line 19
+0000009C 0300 E108         A   495    	LD.UB	R0,57608:RAM
+000000A0 100F              A   496    	PUSH	R0
+000000A2 098F 0079         A   497    	PUSH.W	#L__11
+000000A6 F1 FFFFAB         A   498    	CALL	_uart_printf
+000000AA 8F06              A   499    	ADD	R15,#6
+                           A   500    ;   20			uart_printf("PAIMUX1:0x%.2X\n", PAIMUX1);
+                           A   501    .line 20
+000000AC 0300 E10C         A   502    	LD.UB	R0,57612:RAM
+000000B0 100F              A   503    	PUSH	R0
+000000B2 098F 0089         A   504    	PUSH.W	#L__12
+000000B6 F1 FFFFA3         A   505    	CALL	_uart_printf
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  11
+
+
+PC     Object              I  Line    Source ports.src
+000000BA 8F06              A   506    	ADD	R15,#6
+                           A   507    ;   21			uart_printf("PAIMUX:\t0x%.2X\n", PAIMUX);
+                           A   508    .line 21
+000000BC 0300 E10E         A   509    	LD.UB	R0,57614:RAM
+000000C0 100F              A   510    	PUSH	R0
+000000C2 098F 0099         A   511    	PUSH.W	#L__13
+000000C6 F1 FFFF9B         A   512    	CALL	_uart_printf
+000000CA 8F06              A   513    	ADD	R15,#6
+                           A   514    ;   22			uart_printf("PAIEDGE:0x%.2X\n", PAIEDGE);
+                           A   515    .line 22
+000000CC 0300 E10F         A   516    	LD.UB	R0,57615:RAM
+000000D0 100F              A   517    	PUSH	R0
+000000D2 098F 00A9         A   518    	PUSH.W	#L__14
+000000D6 F1 FFFF93         A   519    	CALL	_uart_printf
+000000DA 8F06              A   520    	ADD	R15,#6
+                           A   521    ;   23		}
+                           A   522    ;   24		else if(strcmp(port, "B") == 0) {
+                           A   523    .line 24
+000000DC C22F              A   524    	JP	_1_L_20
+000000DE                   A   525    _1_L_19:
+000000DE 6FE1              A   526    	LD.SW	R1,-2(R14)
+000000E0 4502 00B9         A   527    	LD	R2,#L__15
+000000E4 F1 FFFF8C         A   528    	CALL	_strcmp
+000000E8 9000              A   529    	CP	R0,#0
+000000EA EE 41             A   530    	JP	NE,_1_L_17
+                           A   531    ;   25			uart_printf("PBIN:\t0x%.2X\n", PBIN);
+                           A   532    .line 25
+000000EC 0300 E110         A   533    	LD.UB	R0,57616:RAM
+000000F0 100F              A   534    	PUSH	R0
+000000F2 098F 00BB         A   535    	PUSH.W	#L__17
+000000F6 F1 FFFF83         A   536    	CALL	_uart_printf
+000000FA 8F06              A   537    	ADD	R15,#6
+                           A   538    ;   26			uart_printf("PBOUT:\t0x%.2X\n", PBOUT);
+                           A   539    .line 26
+000000FC 0300 E111         A   540    	LD.UB	R0,57617:RAM
+00000100 100F              A   541    	PUSH	R0
+00000102 098F 00C9         A   542    	PUSH.W	#L__18
+00000106 F1 FFFF7B         A   543    	CALL	_uart_printf
+0000010A 8F06              A   544    	ADD	R15,#6
+                           A   545    ;   27			uart_printf("PBDD:\t0x%.2X\n", PBDD);
+                           A   546    .line 27
+0000010C 0300 E112         A   547    	LD.UB	R0,57618:RAM
+00000110 100F              A   548    	PUSH	R0
+00000112 098F 00D8         A   549    	PUSH.W	#L__19
+00000116 F1 FFFF73         A   550    	CALL	_uart_printf
+0000011A 8F06              A   551    	ADD	R15,#6
+                           A   552    ;   28			uart_printf("PBHDE:\t0x%.2X\n", PBHDE);
+                           A   553    .line 28
+0000011C 0300 E113         A   554    	LD.UB	R0,57619:RAM
+00000120 100F              A   555    	PUSH	R0
+00000122 098F 00E6         A   556    	PUSH.W	#L__20
+00000126 F1 FFFF6B         A   557    	CALL	_uart_printf
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  12
+
+
+PC     Object              I  Line    Source ports.src
+0000012A 8F06              A   558    	ADD	R15,#6
+                           A   559    ;   29			uart_printf("PBAFL:\t0x%.2X\n", PBAFL);
+                           A   560    .line 29
+0000012C 0300 E115         A   561    	LD.UB	R0,57621:RAM
+00000130 100F              A   562    	PUSH	R0
+00000132 098F 00F5         A   563    	PUSH.W	#L__21
+00000136 F1 FFFF63         A   564    	CALL	_uart_printf
+0000013A 8F06              A   565    	ADD	R15,#6
+                           A   566    ;   30			uart_printf("PBOC:\t0x%.2X\n", PBOC);
+                           A   567    .line 30
+0000013C 0300 E116         A   568    	LD.UB	R0,57622:RAM
+00000140 100F              A   569    	PUSH	R0
+00000142 098F 0104         A   570    	PUSH.W	#L__22
+00000146 F1 FFFF5B         A   571    	CALL	_uart_printf
+0000014A 8F06              A   572    	ADD	R15,#6
+                           A   573    ;   31			uart_printf("PBPUE:\t0x%.2X\n", PBPUE);
+                           A   574    .line 31
+0000014C 0300 E117         A   575    	LD.UB	R0,57623:RAM
+00000150 100F              A   576    	PUSH	R0
+00000152 098F 0112         A   577    	PUSH.W	#L__23
+00000156 F1 FFFF53         A   578    	CALL	_uart_printf
+0000015A 8F06              A   579    	ADD	R15,#6
+                           A   580    ;   32			uart_printf("PBSMRE:\t0x%.2X\n", PBSMRE);
+                           A   581    .line 32
+0000015C 0300 E118         A   582    	LD.UB	R0,57624:RAM
+00000160 100F              A   583    	PUSH	R0
+00000162 098F 0121         A   584    	PUSH.W	#L__24
+00000166 F1 FFFF4B         A   585    	CALL	_uart_printf
+0000016A 8F06              A   586    	ADD	R15,#6
+                           A   587    ;   33		}
+                           A   588    ;   34		else if(strcmp(port, "C") == 0) {
+                           A   589    .line 34
+0000016C C1E7              A   590    	JP	_1_L_20
+0000016E                   A   591    _1_L_17:
+0000016E 6FE1              A   592    	LD.SW	R1,-2(R14)
+00000170 4502 0131         A   593    	LD	R2,#L__25
+00000174 F1 FFFF44         A   594    	CALL	_strcmp
+00000178 9000              A   595    	CP	R0,#0
+0000017A EE 51             A   596    	JP	NE,_1_L_15
+                           A   597    ;   35			uart_printf("PCIN:\t0x%.2X\n", PCIN);
+                           A   598    .line 35
+0000017C 0300 E120         A   599    	LD.UB	R0,57632:RAM
+00000180 100F              A   600    	PUSH	R0
+00000182 098F 0133         A   601    	PUSH.W	#L__27
+00000186 F1 FFFF3B         A   602    	CALL	_uart_printf
+0000018A 8F06              A   603    	ADD	R15,#6
+                           A   604    ;   36			uart_printf("PCOUT:\t0x%.2X\n", PCOUT);
+                           A   605    .line 36
+0000018C 0300 E121         A   606    	LD.UB	R0,57633:RAM
+00000190 100F              A   607    	PUSH	R0
+00000192 098F 0141         A   608    	PUSH.W	#L__28
+00000196 F1 FFFF33         A   609    	CALL	_uart_printf
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  13
+
+
+PC     Object              I  Line    Source ports.src
+0000019A 8F06              A   610    	ADD	R15,#6
+                           A   611    ;   37			uart_printf("PCDD:\t0x%.2X\n", PCDD);
+                           A   612    .line 37
+0000019C 0300 E122         A   613    	LD.UB	R0,57634:RAM
+000001A0 100F              A   614    	PUSH	R0
+000001A2 098F 0150         A   615    	PUSH.W	#L__29
+000001A6 F1 FFFF2B         A   616    	CALL	_uart_printf
+000001AA 8F06              A   617    	ADD	R15,#6
+                           A   618    ;   38			uart_printf("PCHDE:\t0x%.2X\n", PCHDE);
+                           A   619    .line 38
+000001AC 0300 E123         A   620    	LD.UB	R0,57635:RAM
+000001B0 100F              A   621    	PUSH	R0
+000001B2 098F 015E         A   622    	PUSH.W	#L__30
+000001B6 F1 FFFF23         A   623    	CALL	_uart_printf
+000001BA 8F06              A   624    	ADD	R15,#6
+                           A   625    ;   39			uart_printf("PCAFH:\t0x%.2X\n", PCAFH);
+                           A   626    .line 39
+000001BC 0300 E124         A   627    	LD.UB	R0,57636:RAM
+000001C0 100F              A   628    	PUSH	R0
+000001C2 098F 016D         A   629    	PUSH.W	#L__31
+000001C6 F1 FFFF1B         A   630    	CALL	_uart_printf
+000001CA 8F06              A   631    	ADD	R15,#6
+                           A   632    ;   40			uart_printf("PCAFL:\t0x%.2X\n", PCAFL);
+                           A   633    .line 40
+000001CC 0300 E125         A   634    	LD.UB	R0,57637:RAM
+000001D0 100F              A   635    	PUSH	R0
+000001D2 098F 017C         A   636    	PUSH.W	#L__32
+000001D6 F1 FFFF13         A   637    	CALL	_uart_printf
+000001DA 8F06              A   638    	ADD	R15,#6
+                           A   639    ;   41			uart_printf("PCOC:\t0x%.2X\n", PCOC);
+                           A   640    .line 41
+000001DC 0300 E126         A   641    	LD.UB	R0,57638:RAM
+000001E0 100F              A   642    	PUSH	R0
+000001E2 098F 018B         A   643    	PUSH.W	#L__33
+000001E6 F1 FFFF0B         A   644    	CALL	_uart_printf
+000001EA 8F06              A   645    	ADD	R15,#6
+                           A   646    ;   42			uart_printf("PCPUE:\t0x%.2X\n", PCPUE);
+                           A   647    .line 42
+000001EC 0300 E127         A   648    	LD.UB	R0,57639:RAM
+000001F0 100F              A   649    	PUSH	R0
+000001F2 098F 0199         A   650    	PUSH.W	#L__34
+000001F6 F1 FFFF03         A   651    	CALL	_uart_printf
+000001FA 8F06              A   652    	ADD	R15,#6
+                           A   653    ;   43			uart_printf("PCSMRE:\t0x%.2X\n", PCSMRE);
+                           A   654    .line 43
+000001FC 0300 E128         A   655    	LD.UB	R0,57640:RAM
+00000200 100F              A   656    	PUSH	R0
+00000202 098F 01A8         A   657    	PUSH.W	#L__35
+00000206 F1 FFFEFB         A   658    	CALL	_uart_printf
+0000020A 8F06              A   659    	ADD	R15,#6
+                           A   660    ;   44			uart_printf("PCIMUX:\t0x%.2X\n", PCIMUX);	
+                           A   661    .line 44
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  14
+
+
+PC     Object              I  Line    Source ports.src
+0000020C 0300 E12E         A   662    	LD.UB	R0,57646:RAM
+00000210 100F              A   663    	PUSH	R0
+00000212 098F 01B8         A   664    	PUSH.W	#L__36
+00000216 F1 FFFEF3         A   665    	CALL	_uart_printf
+0000021A 8F06              A   666    	ADD	R15,#6
+                           A   667    ;   45		}
+                           A   668    ;   46		else if(strcmp(port, "D") == 0) {
+                           A   669    .line 46
+0000021C C18F              A   670    	JP	_1_L_20
+0000021E                   A   671    _1_L_15:
+0000021E 6FE1              A   672    	LD.SW	R1,-2(R14)
+00000220 4502 01C8         A   673    	LD	R2,#L__37
+00000224 F1 FFFEEC         A   674    	CALL	_strcmp
+00000228 9000              A   675    	CP	R0,#0
+0000022A EE 49             A   676    	JP	NE,_1_L_13
+                           A   677    ;   47			uart_printf("PDIN:\t0x%.2X\n", PDIN);
+                           A   678    .line 47
+0000022C 0300 E130         A   679    	LD.UB	R0,57648:RAM
+00000230 100F              A   680    	PUSH	R0
+00000232 098F 01CA         A   681    	PUSH.W	#L__39
+00000236 F1 FFFEE3         A   682    	CALL	_uart_printf
+0000023A 8F06              A   683    	ADD	R15,#6
+                           A   684    ;   48			uart_printf("PDOUT:\t0x%.2X\n", PDOUT);
+                           A   685    .line 48
+0000023C 0300 E131         A   686    	LD.UB	R0,57649:RAM
+00000240 100F              A   687    	PUSH	R0
+00000242 098F 01D8         A   688    	PUSH.W	#L__40
+00000246 F1 FFFEDB         A   689    	CALL	_uart_printf
+0000024A 8F06              A   690    	ADD	R15,#6
+                           A   691    ;   49			uart_printf("PDDD:\t0x%.2X\n", PDDD);
+                           A   692    .line 49
+0000024C 0300 E132         A   693    	LD.UB	R0,57650:RAM
+00000250 100F              A   694    	PUSH	R0
+00000252 098F 01E7         A   695    	PUSH.W	#L__41
+00000256 F1 FFFED3         A   696    	CALL	_uart_printf
+0000025A 8F06              A   697    	ADD	R15,#6
+                           A   698    ;   50			uart_printf("PDHDE:\t0x%.2X\n", PDHDE);
+                           A   699    .line 50
+0000025C 0300 E133         A   700    	LD.UB	R0,57651:RAM
+00000260 100F              A   701    	PUSH	R0
+00000262 098F 01F5         A   702    	PUSH.W	#L__42
+00000266 F1 FFFECB         A   703    	CALL	_uart_printf
+0000026A 8F06              A   704    	ADD	R15,#6
+                           A   705    ;   51			uart_printf("PDAFH:\t0x%.2X\n", PDAFH);
+                           A   706    .line 51
+0000026C 0300 E134         A   707    	LD.UB	R0,57652:RAM
+00000270 100F              A   708    	PUSH	R0
+00000272 098F 0204         A   709    	PUSH.W	#L__43
+00000276 F1 FFFEC3         A   710    	CALL	_uart_printf
+0000027A 8F06              A   711    	ADD	R15,#6
+                           A   712    ;   52			uart_printf("PDAFL:\t0x%.2X\n", PDAFL);
+                           A   713    .line 52
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  15
+
+
+PC     Object              I  Line    Source ports.src
+0000027C 0300 E135         A   714    	LD.UB	R0,57653:RAM
+00000280 100F              A   715    	PUSH	R0
+00000282 098F 0213         A   716    	PUSH.W	#L__44
+00000286 F1 FFFEBB         A   717    	CALL	_uart_printf
+0000028A 8F06              A   718    	ADD	R15,#6
+                           A   719    ;   53			uart_printf("PDOC:\t0x%.2X\n", PDOC);
+                           A   720    .line 53
+0000028C 0300 E136         A   721    	LD.UB	R0,57654:RAM
+00000290 100F              A   722    	PUSH	R0
+00000292 098F 0222         A   723    	PUSH.W	#L__45
+00000296 F1 FFFEB3         A   724    	CALL	_uart_printf
+0000029A 8F06              A   725    	ADD	R15,#6
+                           A   726    ;   54			uart_printf("PDPUE:\t0x%.2X\n", PDPUE);
+                           A   727    .line 54
+0000029C 0300 E137         A   728    	LD.UB	R0,57655:RAM
+000002A0 100F              A   729    	PUSH	R0
+000002A2 098F 0230         A   730    	PUSH.W	#L__46
+000002A6 F1 FFFEAB         A   731    	CALL	_uart_printf
+000002AA 8F06              A   732    	ADD	R15,#6
+                           A   733    ;   55			uart_printf("PDSMRE:\t0x%.2X\n", PDSMRE);
+                           A   734    .line 55
+000002AC 0300 E138         A   735    	LD.UB	R0,57656:RAM
+000002B0 100F              A   736    	PUSH	R0
+000002B2 098F 023F         A   737    	PUSH.W	#L__47
+000002B6 F1 FFFEA3         A   738    	CALL	_uart_printf
+000002BA 8F06              A   739    	ADD	R15,#6
+                           A   740    ;   56		}
+                           A   741    ;   57		else if(strcmp(port, "E") == 0) {
+                           A   742    .line 57
+000002BC C13F              A   743    	JP	_1_L_20
+000002BE                   A   744    _1_L_13:
+000002BE 6FE1              A   745    	LD.SW	R1,-2(R14)
+000002C0 4502 024F         A   746    	LD	R2,#L__48
+000002C4 F1 FFFE9C         A   747    	CALL	_strcmp
+000002C8 9000              A   748    	CP	R0,#0
+000002CA EE 39             A   749    	JP	NE,_1_L_11
+                           A   750    ;   58			uart_printf("PEIN:\t0x%.2X\n", PEIN);
+                           A   751    .line 58
+000002CC 0300 E140         A   752    	LD.UB	R0,57664:RAM
+000002D0 100F              A   753    	PUSH	R0
+000002D2 098F 0251         A   754    	PUSH.W	#L__50
+000002D6 F1 FFFE93         A   755    	CALL	_uart_printf
+000002DA 8F06              A   756    	ADD	R15,#6
+                           A   757    ;   59			uart_printf("PEOUT:\t0x%.2X\n", PEOUT);
+                           A   758    .line 59
+000002DC 0300 E141         A   759    	LD.UB	R0,57665:RAM
+000002E0 100F              A   760    	PUSH	R0
+000002E2 098F 025F         A   761    	PUSH.W	#L__51
+000002E6 F1 FFFE8B         A   762    	CALL	_uart_printf
+000002EA 8F06              A   763    	ADD	R15,#6
+                           A   764    ;   60			uart_printf("PEDD:\t0x%.2X\n", PEDD);
+                           A   765    .line 60
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  16
+
+
+PC     Object              I  Line    Source ports.src
+000002EC 0300 E142         A   766    	LD.UB	R0,57666:RAM
+000002F0 100F              A   767    	PUSH	R0
+000002F2 098F 026E         A   768    	PUSH.W	#L__52
+000002F6 F1 FFFE83         A   769    	CALL	_uart_printf
+000002FA 8F06              A   770    	ADD	R15,#6
+                           A   771    ;   61			uart_printf("PEHDE:\t0x%.2X\n", PEHDE);
+                           A   772    .line 61
+000002FC 0300 E143         A   773    	LD.UB	R0,57667:RAM
+00000300 100F              A   774    	PUSH	R0
+00000302 098F 027C         A   775    	PUSH.W	#L__53
+00000306 F1 FFFE7B         A   776    	CALL	_uart_printf
+0000030A 8F06              A   777    	ADD	R15,#6
+                           A   778    ;   62			uart_printf("PEOC:\t0x%.2X\n", PEOC);
+                           A   779    .line 62
+0000030C 0300 E146         A   780    	LD.UB	R0,57670:RAM
+00000310 100F              A   781    	PUSH	R0
+00000312 098F 028B         A   782    	PUSH.W	#L__54
+00000316 F1 FFFE73         A   783    	CALL	_uart_printf
+0000031A 8F06              A   784    	ADD	R15,#6
+                           A   785    ;   63			uart_printf("PEPUE:\t0x%.2X\n", PEPUE);
+                           A   786    .line 63
+0000031C 0300 E147         A   787    	LD.UB	R0,57671:RAM
+00000320 100F              A   788    	PUSH	R0
+00000322 098F 0299         A   789    	PUSH.W	#L__55
+00000326 F1 FFFE6B         A   790    	CALL	_uart_printf
+0000032A 8F06              A   791    	ADD	R15,#6
+                           A   792    ;   64			uart_printf("PESMRE:\t0x%.2X\n", PESMRE);
+                           A   793    .line 64
+0000032C 0300 E148         A   794    	LD.UB	R0,57672:RAM
+00000330 100F              A   795    	PUSH	R0
+00000332 098F 02A8         A   796    	PUSH.W	#L__56
+00000336 F1 FFFE63         A   797    	CALL	_uart_printf
+0000033A 8F06              A   798    	ADD	R15,#6
+                           A   799    ;   65		}
+                           A   800    ;   66		else if(strcmp(port, "F") == 0) {
+                           A   801    .line 66
+0000033C C0FF              A   802    	JP	_1_L_20
+0000033E                   A   803    _1_L_11:
+0000033E 6FE1              A   804    	LD.SW	R1,-2(R14)
+00000340 4502 02B8         A   805    	LD	R2,#L__57
+00000344 F1 FFFE5C         A   806    	CALL	_strcmp
+00000348 9000              A   807    	CP	R0,#0
+0000034A EE 41             A   808    	JP	NE,_1_L_9
+                           A   809    ;   67			uart_printf("PFIN:\t0x%.2X\n", PFIN);
+                           A   810    .line 67
+0000034C 0300 E150         A   811    	LD.UB	R0,57680:RAM
+00000350 100F              A   812    	PUSH	R0
+00000352 098F 02BA         A   813    	PUSH.W	#L__59
+00000356 F1 FFFE53         A   814    	CALL	_uart_printf
+0000035A 8F06              A   815    	ADD	R15,#6
+                           A   816    ;   68			uart_printf("PFOUT:\t0x%.2X\n", PFOUT);
+                           A   817    .line 68
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  17
+
+
+PC     Object              I  Line    Source ports.src
+0000035C 0300 E151         A   818    	LD.UB	R0,57681:RAM
+00000360 100F              A   819    	PUSH	R0
+00000362 098F 02C8         A   820    	PUSH.W	#L__60
+00000366 F1 FFFE4B         A   821    	CALL	_uart_printf
+0000036A 8F06              A   822    	ADD	R15,#6
+                           A   823    ;   69			uart_printf("PFDD:\t0x%.2X\n", PFDD);
+                           A   824    .line 69
+0000036C 0300 E152         A   825    	LD.UB	R0,57682:RAM
+00000370 100F              A   826    	PUSH	R0
+00000372 098F 02D7         A   827    	PUSH.W	#L__61
+00000376 F1 FFFE43         A   828    	CALL	_uart_printf
+0000037A 8F06              A   829    	ADD	R15,#6
+                           A   830    ;   70			uart_printf("PFHDE:\t0x%.2X\n", PFHDE);
+                           A   831    .line 70
+0000037C 0300 E153         A   832    	LD.UB	R0,57683:RAM
+00000380 100F              A   833    	PUSH	R0
+00000382 098F 02E5         A   834    	PUSH.W	#L__62
+00000386 F1 FFFE3B         A   835    	CALL	_uart_printf
+0000038A 8F06              A   836    	ADD	R15,#6
+                           A   837    ;   71			uart_printf("PFAFL:\t0x%.2X\n", PFAFL);
+                           A   838    .line 71
+0000038C 0300 E155         A   839    	LD.UB	R0,57685:RAM
+00000390 100F              A   840    	PUSH	R0
+00000392 098F 02F4         A   841    	PUSH.W	#L__63
+00000396 F1 FFFE33         A   842    	CALL	_uart_printf
+0000039A 8F06              A   843    	ADD	R15,#6
+                           A   844    ;   72			uart_printf("PFOC:\t0x%.2X\n", PFOC);
+                           A   845    .line 72
+0000039C 0300 E156         A   846    	LD.UB	R0,57686:RAM
+000003A0 100F              A   847    	PUSH	R0
+000003A2 098F 0303         A   848    	PUSH.W	#L__64
+000003A6 F1 FFFE2B         A   849    	CALL	_uart_printf
+000003AA 8F06              A   850    	ADD	R15,#6
+                           A   851    ;   73			uart_printf("PFPUE:\t0x%.2X\n", PFPUE);
+                           A   852    .line 73
+000003AC 0300 E157         A   853    	LD.UB	R0,57687:RAM
+000003B0 100F              A   854    	PUSH	R0
+000003B2 098F 0311         A   855    	PUSH.W	#L__65
+000003B6 F1 FFFE23         A   856    	CALL	_uart_printf
+000003BA 8F06              A   857    	ADD	R15,#6
+                           A   858    ;   74			uart_printf("PFSMRE:\t0x%.2X\n", PFSMRE);
+                           A   859    .line 74
+000003BC 0300 E158         A   860    	LD.UB	R0,57688:RAM
+000003C0 100F              A   861    	PUSH	R0
+000003C2 098F 0320         A   862    	PUSH.W	#L__66
+000003C6 F1 FFFE1B         A   863    	CALL	_uart_printf
+000003CA 8F06              A   864    	ADD	R15,#6
+                           A   865    ;   75		}
+                           A   866    ;   76		else if(strcmp(port, "G") == 0) {
+                           A   867    .line 76
+000003CC C0B7              A   868    	JP	_1_L_20
+000003CE                   A   869    _1_L_9:
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  18
+
+
+PC     Object              I  Line    Source ports.src
+000003CE 6FE1              A   870    	LD.SW	R1,-2(R14)
+000003D0 4502 0330         A   871    	LD	R2,#L__67
+000003D4 F1 FFFE14         A   872    	CALL	_strcmp
+000003D8 9000              A   873    	CP	R0,#0
+000003DA EE 41             A   874    	JP	NE,_1_L_7
+                           A   875    ;   77			uart_printf("PGIN:\t0x%.2X\n", PGIN);
+                           A   876    .line 77
+000003DC 0300 E160         A   877    	LD.UB	R0,57696:RAM
+000003E0 100F              A   878    	PUSH	R0
+000003E2 098F 0332         A   879    	PUSH.W	#L__69
+000003E6 F1 FFFE0B         A   880    	CALL	_uart_printf
+000003EA 8F06              A   881    	ADD	R15,#6
+                           A   882    ;   78			uart_printf("PGOUT:\t0x%.2X\n", PGOUT);
+                           A   883    .line 78
+000003EC 0300 E161         A   884    	LD.UB	R0,57697:RAM
+000003F0 100F              A   885    	PUSH	R0
+000003F2 098F 0340         A   886    	PUSH.W	#L__70
+000003F6 F1 FFFE03         A   887    	CALL	_uart_printf
+000003FA 8F06              A   888    	ADD	R15,#6
+                           A   889    ;   79			uart_printf("PGDD:\t0x%.2X\n", PGDD);
+                           A   890    .line 79
+000003FC 0300 E162         A   891    	LD.UB	R0,57698:RAM
+00000400 100F              A   892    	PUSH	R0
+00000402 098F 034F         A   893    	PUSH.W	#L__71
+00000406 F1 FFFDFB         A   894    	CALL	_uart_printf
+0000040A 8F06              A   895    	ADD	R15,#6
+                           A   896    ;   80			uart_printf("PGHDE:\t0x%.2X\n", PGHDE);
+                           A   897    .line 80
+0000040C 0300 E163         A   898    	LD.UB	R0,57699:RAM
+00000410 100F              A   899    	PUSH	R0
+00000412 098F 035D         A   900    	PUSH.W	#L__72
+00000416 F1 FFFDF3         A   901    	CALL	_uart_printf
+0000041A 8F06              A   902    	ADD	R15,#6
+                           A   903    ;   81			uart_printf("PGAFL:\t0x%.2X\n", PGAFL);
+                           A   904    .line 81
+0000041C 0300 E165         A   905    	LD.UB	R0,57701:RAM
+00000420 100F              A   906    	PUSH	R0
+00000422 098F 036C         A   907    	PUSH.W	#L__73
+00000426 F1 FFFDEB         A   908    	CALL	_uart_printf
+0000042A 8F06              A   909    	ADD	R15,#6
+                           A   910    ;   82			uart_printf("PGOC:\t0x%.2X\n", PGOC);
+                           A   911    .line 82
+0000042C 0300 E166         A   912    	LD.UB	R0,57702:RAM
+00000430 100F              A   913    	PUSH	R0
+00000432 098F 037B         A   914    	PUSH.W	#L__74
+00000436 F1 FFFDE3         A   915    	CALL	_uart_printf
+0000043A 8F06              A   916    	ADD	R15,#6
+                           A   917    ;   83			uart_printf("PGPUE:\t0x%.2X\n", PGPUE);
+                           A   918    .line 83
+0000043C 0300 E167         A   919    	LD.UB	R0,57703:RAM
+00000440 100F              A   920    	PUSH	R0
+00000442 098F 0389         A   921    	PUSH.W	#L__75
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  19
+
+
+PC     Object              I  Line    Source ports.src
+00000446 F1 FFFDDB         A   922    	CALL	_uart_printf
+0000044A 8F06              A   923    	ADD	R15,#6
+                           A   924    ;   84			uart_printf("PGSMRE:\t0x%.2X\n", PGSMRE);
+                           A   925    .line 84
+0000044C 0300 E168         A   926    	LD.UB	R0,57704:RAM
+00000450 100F              A   927    	PUSH	R0
+00000452 098F 0398         A   928    	PUSH.W	#L__76
+00000456 F1 FFFDD3         A   929    	CALL	_uart_printf
+0000045A 8F06              A   930    	ADD	R15,#6
+                           A   931    ;   85		}
+                           A   932    ;   86		else if(strcmp(port, "H") == 0) {
+                           A   933    .line 86
+0000045C C06F              A   934    	JP	_1_L_20
+0000045E                   A   935    _1_L_7:
+0000045E 6FE1              A   936    	LD.SW	R1,-2(R14)
+00000460 4502 03A8         A   937    	LD	R2,#L__77
+00000464 F1 FFFDCC         A   938    	CALL	_strcmp
+00000468 9000              A   939    	CP	R0,#0
+0000046A EE 49             A   940    	JP	NE,_1_L_5
+                           A   941    ;   87			uart_printf("PHIN:\t0x%.2X\n", PHIN);
+                           A   942    .line 87
+0000046C 0300 E170         A   943    	LD.UB	R0,57712:RAM
+00000470 100F              A   944    	PUSH	R0
+00000472 098F 03AA         A   945    	PUSH.W	#L__79
+00000476 F1 FFFDC3         A   946    	CALL	_uart_printf
+0000047A 8F06              A   947    	ADD	R15,#6
+                           A   948    ;   88			uart_printf("PHOUT:\t0x%.2X\n", PHOUT);
+                           A   949    .line 88
+0000047C 0300 E171         A   950    	LD.UB	R0,57713:RAM
+00000480 100F              A   951    	PUSH	R0
+00000482 098F 03B8         A   952    	PUSH.W	#L__80
+00000486 F1 FFFDBB         A   953    	CALL	_uart_printf
+0000048A 8F06              A   954    	ADD	R15,#6
+                           A   955    ;   89			uart_printf("PHDD:\t0x%.2X\n", PHDD);
+                           A   956    .line 89
+0000048C 0300 E172         A   957    	LD.UB	R0,57714:RAM
+00000490 100F              A   958    	PUSH	R0
+00000492 098F 03C7         A   959    	PUSH.W	#L__81
+00000496 F1 FFFDB3         A   960    	CALL	_uart_printf
+0000049A 8F06              A   961    	ADD	R15,#6
+                           A   962    ;   90			uart_printf("PHHDE:\t0x%.2X\n", PHHDE);
+                           A   963    .line 90
+0000049C 0300 E173         A   964    	LD.UB	R0,57715:RAM
+000004A0 100F              A   965    	PUSH	R0
+000004A2 098F 03D5         A   966    	PUSH.W	#L__82
+000004A6 F1 FFFDAB         A   967    	CALL	_uart_printf
+000004AA 8F06              A   968    	ADD	R15,#6
+                           A   969    ;   91			uart_printf("PHAFH:\t0x%.2X\n", PHAFH);
+                           A   970    .line 91
+000004AC 0300 E174         A   971    	LD.UB	R0,57716:RAM
+000004B0 100F              A   972    	PUSH	R0
+000004B2 098F 03E4         A   973    	PUSH.W	#L__83
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  20
+
+
+PC     Object              I  Line    Source ports.src
+000004B6 F1 FFFDA3         A   974    	CALL	_uart_printf
+000004BA 8F06              A   975    	ADD	R15,#6
+                           A   976    ;   92			uart_printf("PHAFL:\t0x%.2X\n", PHAFL);
+                           A   977    .line 92
+000004BC 0300 E175         A   978    	LD.UB	R0,57717:RAM
+000004C0 100F              A   979    	PUSH	R0
+000004C2 098F 03F3         A   980    	PUSH.W	#L__84
+000004C6 F1 FFFD9B         A   981    	CALL	_uart_printf
+000004CA 8F06              A   982    	ADD	R15,#6
+                           A   983    ;   93			uart_printf("PHOC:\t0x%.2X\n", PHOC);
+                           A   984    .line 93
+000004CC 0300 E176         A   985    	LD.UB	R0,57718:RAM
+000004D0 100F              A   986    	PUSH	R0
+000004D2 098F 0402         A   987    	PUSH.W	#L__85
+000004D6 F1 FFFD93         A   988    	CALL	_uart_printf
+000004DA 8F06              A   989    	ADD	R15,#6
+                           A   990    ;   94			uart_printf("PHPUE:\t0x%.2X\n", PHPUE);
+                           A   991    .line 94
+000004DC 0300 E177         A   992    	LD.UB	R0,57719:RAM
+000004E0 100F              A   993    	PUSH	R0
+000004E2 098F 0410         A   994    	PUSH.W	#L__86
+000004E6 F1 FFFD8B         A   995    	CALL	_uart_printf
+000004EA 8F06              A   996    	ADD	R15,#6
+                           A   997    ;   95			uart_printf("PHSMRE:\t0x%.2X\n", PHSMRE);
+                           A   998    .line 95
+000004EC 0300 E178         A   999    	LD.UB	R0,57720:RAM
+000004F0 100F              A  1000    	PUSH	R0
+000004F2 098F 041F         A  1001    	PUSH.W	#L__87
+000004F6 F1 FFFD83         A  1002    	CALL	_uart_printf
+000004FA 8F06              A  1003    	ADD	R15,#6
+                           A  1004    ;   96		}
+                           A  1005    ;   97		else if(strcmp(port, "J") == 0) {
+                           A  1006    .line 97
+000004FC C01F              A  1007    	JP	_1_L_20
+000004FE                   A  1008    _1_L_5:
+000004FE 6FE1              A  1009    	LD.SW	R1,-2(R14)
+00000500 4502 042F         A  1010    	LD	R2,#L__88
+00000504 F1 FFFD7C         A  1011    	CALL	_strcmp
+00000508 9000              A  1012    	CP	R0,#0
+0000050A EE 06             A  1013    	JP	NE,_1_L_3
+                           A  1014    ;   98			uart_printf("Port J is unavailabe.\n");
+                           A  1015    .line 98
+0000050C 098F 0431         A  1016    	PUSH.W	#L__90
+00000510 F1 FFFD76         A  1017    	CALL	_uart_printf
+00000514 8F02              A  1018    	ADD	R15,#2
+                           A  1019    ;   99			/*
+                           A  1020    ;  100			uart_printf("PJIN:\t0x%.2X\n", PJIN);
+                           A  1021    ;  101			uart_printf("PJOUT:\t0x%.2X\n", PJOUT);
+                           A  1022    ;  102			uart_printf("PJDD:\t0x%.2X\n", PJDD);
+                           A  1023    ;  103			uart_printf("PJHDE:\t0x%.2X\n", PJHDE);
+                           A  1024    ;  104			uart_printf("PJOC:\t0x%.2X\n", PJOC);
+                           A  1025    ;  105			uart_printf("PJPUE:\t0x%.2X\n", PJPUE);
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  21
+
+
+PC     Object              I  Line    Source ports.src
+                           A  1026    ;  106			uart_printf("PJSMRE:\t0x%.2X\n", PJSMRE);
+                           A  1027    ;  107			*/	
+                           A  1028    ;  108		}
+                           A  1029    ;  109		else if(strcmp(port, "K") == 0) {
+                           A  1030    .line 109
+00000516 C012              A  1031    	JP	_1_L_20
+00000518                   A  1032    _1_L_3:
+00000518 6FE1              A  1033    	LD.SW	R1,-2(R14)
+0000051A 4502 0448         A  1034    	LD	R2,#L__91
+0000051E F1 FFFD6F         A  1035    	CALL	_strcmp
+00000522 9000              A  1036    	CP	R0,#0
+00000524 EE 06             A  1037    	JP	NE,_1_L_1
+                           A  1038    ;  110			uart_printf("Port K is unavailabe.\n");
+                           A  1039    .line 110
+00000526 098F 044A         A  1040    	PUSH.W	#L__93
+0000052A F1 FFFD69         A  1041    	CALL	_uart_printf
+0000052E 8F02              A  1042    	ADD	R15,#2
+                           A  1043    ;  111			/*
+                           A  1044    ;  112			uart_printf("PKIN:\t0x%.2X\n", PKIN);
+                           A  1045    ;  113			uart_printf("PKOUT:\t0x%.2X\n", PKOUT);
+                           A  1046    ;  114			uart_printf("PKDD:\t0x%.2X\n", PKDD);
+                           A  1047    ;  115			uart_printf("PKHDE:\t0x%.2X\n", PKHDE);
+                           A  1048    ;  116			uart_printf("PKAFL:\t0x%.2X\n", PKAFL);
+                           A  1049    ;  117			uart_printf("PKOC:\t0x%.2X\n", PKOC);
+                           A  1050    ;  118			uart_printf("PKPUE:\t0x%.2X\n", PKPUE);
+                           A  1051    ;  119			uart_printf("PKSMRE:\t0x%.2X\n", PKSMRE);
+                           A  1052    ;  120			*/
+                           A  1053    ;  121		}
+                           A  1054    ;  122		else {
+                           A  1055    .line 122
+00000530 C005              A  1056    	JP	_1_L_20
+00000532                   A  1057    _1_L_1:
+                           A  1058    ;  123			uart_printf("Select a port A-K.\n");
+                           A  1059    .line 123
+00000532 098F 0461         A  1060    	PUSH.W	#L__94
+00000536 F1 FFFD63         A  1061    	CALL	_uart_printf
+0000053A 8F02              A  1062    	ADD	R15,#2
+                           A  1063    ;  124		}
+                           A  1064    ;  125	}
+0000053C                   A  1065    _1_L_20:
+                           A  1066    .line 125
+0000053C 0001              A  1067    	UNLINK	
+0000053E FFFC              A  1068    	RET	
+                           A  1069    
+                           A  1070    
+                           A  1071    ;**************************** _ports_print_config ***************************
+                           A  1072    ;Name                         Addr/Register   Size   Type
+                           A  1073    ;_strcmp                             IMPORT  -----   function
+                           A  1074    ;_uart_printf                        IMPORT  -----   function
+                           A  1075    ;port                                 R14-2      2   parameter
+                           A  1076    
+                           A  1077    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  22
+
+
+PC     Object              I  Line    Source ports.src
+                           A  1078    ; Aggregate Stack Size: -2 (words)
+                           A  1079    
+                           A  1080    
+                           A  1081    .endfunc "ports_print_config",125,"_ports_print_config"
+                           A  1082    	XREF _strcmp:EROM
+                           A  1083    	XREF _uart_printf:EROM
+                           A  1084    	XDEF _ports_print_config
+                           A  1085    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 1086

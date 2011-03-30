@@ -1,0 +1,360 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\24LC16B.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT CODE
+                           A     7    ;    1	
+                           A     8    ;    2	#include "24lc16b.h"
+                           A     9    ;    3	#include "i2c.h"
+                           A    10    ;    4	#include "uart.h"
+                           A    11    ;    5	#include "delay.h"
+                           A    12    ;    6	
+                           A    13    ;    7	#define CLEAR_UPPER   0x0F
+                           A    14    ;    8	#define DEVICE_WRITE  0xA0
+                           A    15    ;    9	#define DEVICE_READ (DEVICE_WRITE+1)
+                           A    16    ;   10	#define BLOCK_ADDR    0x0700
+                           A    17    ;   11	#define BLOCK_SHIFT   7
+                           A    18    ;   12	
+                           A    19    ;   13	void init_24lc16b(void)
+                           A    20    ;   14	{
+00000000                   A    21    _init_24lc16b:
+                           A    22    .define "_init_24lc16b"
+                           A    23    .value _init_24lc16b
+                           A    24    .class 2
+                           A    25    .type 65
+                           A    26    .type 0
+                           A    27    .endef
+                           A    28    .begfunc "init_24lc16b",14,"_init_24lc16b"
+00000000 0800              A    29    	LINK	#0
+                           A    30    ;   15		init_i2c();
+                           A    31    .line 15
+00000002 F1 FFFFFD         A    32    	CALL	_init_i2c
+                           A    33    ;   16	}
+                           A    34    .line 16
+00000006 0001              A    35    	UNLINK	
+00000008 FFFC              A    36    	RET	
+                           A    37    
+                           A    38    
+                           A    39    ;**************************** _init_24lc16b ***************************
+                           A    40    ;Name                         Addr/Register   Size   Type
+                           A    41    ;_init_i2c                           IMPORT  -----   function
+                           A    42    
+                           A    43    
+                           A    44    ; Aggregate Stack Size: 0 (words)
+                           A    45    
+                           A    46    
+                           A    47    .endfunc "init_24lc16b",16,"_init_24lc16b"
+                           A    48    ;   17	
+                           A    49    ;   18	void _24lc16b_write_bytes_addr(long int addr, int length)
+                           A    50    ;   19	{
+0000000A                   A    51    __24lc16b_write_bytes_addr:
+                           A    52    .define "__24lc16b_write_bytes_addr"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   2
+
+
+PC     Object              I  Line    Source 24lc16b.src
+                           A    53    .value __24lc16b_write_bytes_addr
+                           A    54    .class 2
+                           A    55    .type 65
+                           A    56    .type 0
+                           A    57    .endef
+                           A    58    .begfunc "_24lc16b_write_bytes_addr",19,"__24lc16b_write_bytes_addr"
+0000000A 080D              A    59    	LINK	#13
+                           A    60    .line 19
+0000000C 5BC1              A    61    	LD	-4(R14),R1
+                           A    62    .define "addr"
+                           A    63    .class 9
+                           A    64    .value -4
+                           A    65    .type 5
+                           A    66    .type 0
+                           A    67    .endef
+0000000E 5B82              A    68    	LD	-8(R14),R2
+                           A    69    .define "length"
+                           A    70    .class 9
+                           A    71    .value -8
+                           A    72    .type 5
+                           A    73    .type 0
+                           A    74    .endef
+                           A    75    .define "ctrl"
+                           A    76    .class 1
+                           A    77    .value -9
+                           A    78    .type 12
+                           A    79    .type 0
+                           A    80    .endef
+                           A    81    .define "i"
+                           A    82    .class 1
+                           A    83    .value -13
+                           A    84    .type 5
+                           A    85    .type 0
+                           A    86    .endef
+00000010 C005              A    87    	JP	_2_L_1
+                           A    88    ;   20		unsigned char ctrl;
+                           A    89    ;   21		int i;
+                           A    90    ;   22	
+                           A    91    ;   23		for(i = 0; i < length; ++i) {
+00000012                   A    92    _2_L_2:
+                           A    93    .line 23
+00000012 5F80              A    94    	LD	R0,-8(R14)
+00000014 7D0E FFF3         A    95    	CP	-13(R14),R0
+00000018 E1 04             A    96    	JP	LT,_2_L_4
+0000001A C01E              A    97    	JP	_2_L_5
+0000001C                   A    98    _2_L_1:
+0000001C ADCE BFF3         A    99    	CLR	-13(R14)
+00000020 CFF8              A   100    	JP	_2_L_2
+00000022                   A   101    _2_L_4:
+                           A   102    ;   24			ctrl = (unsigned char)((BLOCK_ADDR & addr) >> BLOCK_SHIFT);
+                           A   103    .line 24
+00000022 5FC0              A   104    	LD	R0,-4(R14)
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   3
+
+
+PC     Object              I  Line    Source 24lc16b.src
+00000024 AA20 0700         A   105    	AND	R0,#1792
+00000028 B870              A   106    	SRA	R0,#7
+0000002A 5370              A   107    	LD.B	-9(R14),R0
+                           A   108    ;   25			ctrl |= DEVICE_WRITE;
+                           A   109    .line 25
+0000002C 4500 00A0         A   110    	LD	R0,#160
+00000030 7B0E BFF7         A   111    	OR.B	-9(R14),R0
+                           A   112    ;   26	
+                           A   113    ;   27			i2c_write_bytes(3, ctrl, addr, i);
+                           A   114    .line 27
+00000034 6370              A   115    	LD.UB	R0,-9(R14)
+00000036 5F31              A   116    	LD	R1,-13(R14)
+00000038 101F              A   117    	PUSH	R1
+0000003A 5FC1              A   118    	LD	R1,-4(R14)
+0000003C 101F              A   119    	PUSH	R1
+0000003E 100F              A   120    	PUSH	R0
+00000040 0D03              A   121    	PUSH	#3
+00000042 F1 FFFFDD         A   122    	CALL	_i2c_write_bytes
+00000046 8F10              A   123    	ADD	R15,#16
+                           A   124    ;   28			delay_ms(5);
+                           A   125    .line 28
+00000048 3105              A   126    	LD	R1,#5
+0000004A F1 FFFFD9         A   127    	CALL	_delay_ms
+                           A   128    ;   29	
+                           A   129    ;   30			++addr;
+                           A   130    .line 30
+0000004E ADEE BFFC         A   131    	INC	-4(R14)
+                           A   132    ;   31		}
+                           A   133    .line 31
+00000052 ADEE BFF3         A   134    	INC	-13(R14)
+00000056 CFDD              A   135    	JP	_2_L_2
+                           A   136    ;   32	}
+00000058                   A   137    _2_L_5:
+                           A   138    .line 32
+00000058 0001              A   139    	UNLINK	
+0000005A FFFC              A   140    	RET	
+                           A   141    
+                           A   142    
+                           A   143    ;**************************** __24lc16b_write_bytes_addr ***************************
+                           A   144    ;Name                         Addr/Register   Size   Type
+                           A   145    ;_delay_ms                           IMPORT  -----   function
+                           A   146    ;_i2c_write_bytes                    IMPORT  -----   function
+                           A   147    ;i                                   R14-13      4   variable
+                           A   148    ;ctrl                                 R14-9      1   variable
+                           A   149    ;length                               R14-8      4   parameter
+                           A   150    ;addr                                 R14-4      4   parameter
+                           A   151    
+                           A   152    
+                           A   153    ; Aggregate Stack Size: -13 (words)
+                           A   154    
+                           A   155    
+                           A   156    .endfunc "_24lc16b_write_bytes_addr",32,"__24lc16b_write_bytes_addr"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   4
+
+
+PC     Object              I  Line    Source 24lc16b.src
+                           A   157    	SEGMENT ROM_TEXT
+00000000                   A   158    L__5:
+00000000 0A                A   159    	DB	10
+00000001 252E3458 202D20   A   160    	DB	"%.4X - "
+00000008 00                A   161    	DB	0
+00000009                   A   162    L__6:
+00000009 252E3258 20       A   163    	DB	"%.2X "
+0000000E 00                A   164    	DB	0
+                           A   165    	SEGMENT CODE
+                           A   166    ;   33	
+                           A   167    ;   34	void _24lc16b_read_bytes_hex_dump(long int addr, int length)
+                           A   168    ;   35	{
+0000005C                   A   169    __24lc16b_read_bytes_hex_dump:
+                           A   170    .define "__24lc16b_read_bytes_hex_dump"
+                           A   171    .value __24lc16b_read_bytes_hex_dump
+                           A   172    .class 2
+                           A   173    .type 65
+                           A   174    .type 0
+                           A   175    .endef
+                           A   176    .begfunc "_24lc16b_read_bytes_hex_dump",35,"__24lc16b_read_bytes_hex_dump"
+0000005C 080E              A   177    	LINK	#14
+                           A   178    .line 35
+0000005E 5BC1              A   179    	LD	-4(R14),R1
+                           A   180    .define "addr"
+                           A   181    .class 9
+                           A   182    .value -4
+                           A   183    .type 5
+                           A   184    .type 0
+                           A   185    .endef
+00000060 5B82              A   186    	LD	-8(R14),R2
+                           A   187    .define "length"
+                           A   188    .class 9
+                           A   189    .value -8
+                           A   190    .type 5
+                           A   191    .type 0
+                           A   192    .endef
+                           A   193    .define "ctrl"
+                           A   194    .class 1
+                           A   195    .value -9
+                           A   196    .type 12
+                           A   197    .type 0
+                           A   198    .endef
+                           A   199    .define "data"
+                           A   200    .class 1
+                           A   201    .value -10
+                           A   202    .type 12
+                           A   203    .type 0
+                           A   204    .endef
+                           A   205    .define "i"
+                           A   206    .class 1
+                           A   207    .value -14
+                           A   208    .type 5
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   5
+
+
+PC     Object              I  Line    Source 24lc16b.src
+                           A   209    .type 0
+                           A   210    .endef
+00000062 C005              A   211    	JP	_3_L_8
+                           A   212    ;   36		unsigned char ctrl;
+                           A   213    ;   37		unsigned char data;
+                           A   214    ;   38		int i;
+                           A   215    ;   39	
+                           A   216    ;   40		for(i = 0; i < length; ++i) {
+00000064                   A   217    _3_L_9:
+                           A   218    .line 40
+00000064 5F80              A   219    	LD	R0,-8(R14)
+00000066 7D0E FFF2         A   220    	CP	-14(R14),R0
+0000006A E1 04             A   221    	JP	LT,_3_L_11
+0000006C C030              A   222    	JP	_3_L_12
+0000006E                   A   223    _3_L_8:
+0000006E ADCE BFF2         A   224    	CLR	-14(R14)
+00000072 CFF8              A   225    	JP	_3_L_9
+00000074                   A   226    _3_L_11:
+                           A   227    ;   41			if((i % 8) == 0) {
+                           A   228    .line 41
+00000074 3008              A   229    	LD	R0,#8
+00000076 5F21              A   230    	LD	R1,-14(R14)
+00000078 AF01              A   231    	SDIV	R1,R0
+0000007A 9000              A   232    	CP	R0,#0
+0000007C EE 07             A   233    	JP	NE,_3_L_7
+                           A   234    ;   42				uart_printf("\n%.4X - ", addr);
+                           A   235    .line 42
+0000007E 5FC0              A   236    	LD	R0,-4(R14)
+00000080 100F              A   237    	PUSH	R0
+00000082 098F 0000         A   238    	PUSH.W	#L__5
+00000086 F1 FFFFBB         A   239    	CALL	_uart_printf
+0000008A 8F06              A   240    	ADD	R15,#6
+                           A   241    ;   43			}
+0000008C                   A   242    _3_L_7:
+                           A   243    .line 43
+                           A   244    ;   44	
+                           A   245    ;   45			ctrl = (unsigned char)((BLOCK_ADDR & addr) >> BLOCK_SHIFT);
+                           A   246    .line 45
+0000008C 5FC0              A   247    	LD	R0,-4(R14)
+0000008E AA20 0700         A   248    	AND	R0,#1792
+00000092 B870              A   249    	SRA	R0,#7
+00000094 5370              A   250    	LD.B	-9(R14),R0
+                           A   251    ;   46			ctrl |= DEVICE_WRITE;
+                           A   252    .line 46
+00000096 4500 00A0         A   253    	LD	R0,#160
+0000009A 7B0E BFF7         A   254    	OR.B	-9(R14),R0
+                           A   255    ;   47	
+                           A   256    ;   48			i2c_write_byte(ctrl, addr);
+                           A   257    .line 48
+0000009E 6BF2              A   258    	LD.SB	R2,-1(R14)
+000000A0 6B71              A   259    	LD.SB	R1,-9(R14)
+000000A2 F1 FFFFAD         A   260    	CALL	_i2c_write_byte
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   6
+
+
+PC     Object              I  Line    Source 24lc16b.src
+                           A   261    ;   49			delay_ms(5);
+                           A   262    .line 49
+000000A6 3105              A   263    	LD	R1,#5
+000000A8 F1 FFFFAA         A   264    	CALL	_delay_ms
+                           A   265    ;   50	
+                           A   266    ;   51			data = i2c_read_byte(ctrl+1);
+                           A   267    .line 51
+000000AC 6B71              A   268    	LD.SB	R1,-9(R14)
+000000AE 8101              A   269    	ADD	R1,#1
+000000B0 F1 FFFFA6         A   270    	CALL	_i2c_read_byte
+000000B4 5360              A   271    	LD.B	-10(R14),R0
+                           A   272    ;   52			++addr;
+                           A   273    .line 52
+000000B6 ADEE BFFC         A   274    	INC	-4(R14)
+                           A   275    ;   53	
+                           A   276    ;   54			uart_printf("%.2X ", data);
+                           A   277    .line 54
+000000BA 6360              A   278    	LD.UB	R0,-10(R14)
+000000BC 100F              A   279    	PUSH	R0
+000000BE 098F 0009         A   280    	PUSH.W	#L__6
+000000C2 F1 FFFF9D         A   281    	CALL	_uart_printf
+000000C6 8F06              A   282    	ADD	R15,#6
+                           A   283    ;   55		}
+                           A   284    .line 55
+000000C8 ADEE BFF2         A   285    	INC	-14(R14)
+000000CC CFCB              A   286    	JP	_3_L_9
+000000CE                   A   287    _3_L_12:
+                           A   288    ;   56	
+                           A   289    ;   57		uart_putchar('\n');
+                           A   290    .line 57
+000000CE 310A              A   291    	LD	R1,#10
+000000D0 F1 FFFF96         A   292    	CALL	_uart_putchar
+                           A   293    ;   58	}
+                           A   294    .line 58
+000000D4 0001              A   295    	UNLINK	
+000000D6 FFFC              A   296    	RET	
+                           A   297    
+                           A   298    
+                           A   299    ;**************************** __24lc16b_read_bytes_hex_dump ***************************
+                           A   300    ;Name                         Addr/Register   Size   Type
+                           A   301    ;_uart_putchar                       IMPORT  -----   function
+                           A   302    ;_i2c_read_byte                      IMPORT  -----   function
+                           A   303    ;_delay_ms                           IMPORT  -----   function
+                           A   304    ;_i2c_write_byte                     IMPORT  -----   function
+                           A   305    ;_uart_printf                        IMPORT  -----   function
+                           A   306    ;i                                   R14-14      4   variable
+                           A   307    ;data                                R14-10      1   variable
+                           A   308    ;ctrl                                 R14-9      1   variable
+                           A   309    ;length                               R14-8      4   parameter
+                           A   310    ;addr                                 R14-4      4   parameter
+                           A   311    
+                           A   312    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   7
+
+
+PC     Object              I  Line    Source 24lc16b.src
+                           A   313    ; Aggregate Stack Size: -14 (words)
+                           A   314    
+                           A   315    
+                           A   316    .endfunc "_24lc16b_read_bytes_hex_dump",58,"__24lc16b_read_bytes_hex_dump"
+                           A   317    	XREF _delay_ms:EROM
+                           A   318    	XREF _uart_printf:EROM
+                           A   319    	XREF _uart_putchar:EROM
+                           A   320    	XREF _i2c_read_byte:EROM
+                           A   321    	XREF _i2c_write_byte:EROM
+                           A   322    	XREF _i2c_write_bytes:EROM
+                           A   323    	XREF _init_i2c:EROM
+                           A   324    	XDEF __24lc16b_read_bytes_hex_dump
+                           A   325    	XDEF __24lc16b_write_bytes_addr
+                           A   326    	XDEF _init_24lc16b
+                           A   327    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 328

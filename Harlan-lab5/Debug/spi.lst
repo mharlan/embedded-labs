@@ -1,0 +1,546 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\SPI.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT CODE
+                           A     7    .begrec "NONAME0",8
+                           A     8    .define "quot"
+                           A     9    .value 0
+                           A    10    .class 8
+                           A    11    .type 5
+                           A    12    .type 0
+                           A    13    .endef
+                           A    14    .define "rem"
+                           A    15    .value 4
+                           A    16    .class 8
+                           A    17    .type 5
+                           A    18    .type 0
+                           A    19    .endef
+                           A    20    .endrec "NONAME0"
+                           A    21    .begrec "NONAME1",8
+                           A    22    .define "quot"
+                           A    23    .value 0
+                           A    24    .class 8
+                           A    25    .type 5
+                           A    26    .type 0
+                           A    27    .endef
+                           A    28    .define "rem"
+                           A    29    .value 4
+                           A    30    .class 8
+                           A    31    .type 5
+                           A    32    .type 0
+                           A    33    .endef
+                           A    34    .endrec "NONAME1"
+                           A    35    ;    1	/* 
+                           A    36    ;    2	 * The beginings of an SPI Master library
+                           A    37    ;    3	 * February 26, 2009
+                           A    38    ;    4	 *
+                           A    39    ;    5	 * TODO:
+                           A    40    ;    6	 *  - Add error trapping
+                           A    41    ;    7	 *        data underrun, overrun, collision, slave abort
+                           A    42    ;    8	 *  - Add timeouts in the wait loops
+                           A    43    ;    9	 * 
+                           A    44    ;   10	 *  - Add SPI Slave functions
+                           A    45    ;   11	 *
+                           A    46    ;   12	 */
+                           A    47    ;   13	
+                           A    48    ;   14	#include "spi.h"
+                           A    49    ;   15	#include "oscillator.h"
+                           A    50    ;   16	
+                           A    51    ;   17	#include <zneo.h>
+                           A    52    ;   18	#include <stdlib.h>
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   2
+
+
+PC     Object              I  Line    Source spi.src
+                           A    53    ;   19	 
+                           A    54    ;   20	// ESPI STATUS register definitions
+                           A    55    ;   21	#define ESPISTAT_TDRE             0x80
+                           A    56    ;   22	#define ESPISTAT_TUND             0x40
+                           A    57    ;   23	#define ESPISTAT_COL              0x20
+                           A    58    ;   24	#define ESPISTAT_ABT              0x10
+                           A    59    ;   25	#define ESPISTAT_ROVR             0x08
+                           A    60    ;   26	#define ESPISTAT_RDRF             0x04
+                           A    61    ;   27	#define ESPISTAT_TFST             0x02
+                           A    62    ;   28	#define ESPISTAT_SLAS             0x01
+                           A    63    ;   29	
+                           A    64    ;   30	// ESPI CONTROL register definitions
+                           A    65    ;   31	#define ESPICTL_DIRQE             0x80
+                           A    66    ;   32	#define ESPICTL_ESPIEN_BLOCK      0x00
+                           A    67    ;   33	#define ESPICTL_ESPIEN_RECEIVE    0x01
+                           A    68    ;   34	#define ESPICTL_ESPIEN_TRANSMIT   0x40
+                           A    69    ;   35	#define ESPICTL_BRGCTK            0x20
+                           A    70    ;   36	#define ESPICTL_PHASE_1           0x10
+                           A    71    ;   37	#define ESPICTL_PHASE_0           0x00
+                           A    72    ;   38	#define ESPICTL_CLKPOL_1          0x08
+                           A    73    ;   39	#define ESPICTL_CLKPOL_0          0x00
+                           A    74    ;   40	#define ESPICTL_WOR               0x04
+                           A    75    ;   41	#define ESPICTL_MMEN              0x02
+                           A    76    ;   42	
+                           A    77    ;   43	// ESPI MODE register definitions
+                           A    78    ;   44	#define ESPIMODE_SSMD_SPI         0x00
+                           A    79    ;   45	#define ESPIMODE_SSMD_LOOPBACK    0x20
+                           A    80    ;   46	#define ESPIMODE_SSMD_I2S         0x40
+                           A    81    ;   47	#define ESPIMODE_NUMBITS_8        0x00
+                           A    82    ;   48	#define ESPIMODE_NUMBITS_1        0x04
+                           A    83    ;   49	#define ESPIMODE_NUMBITS_2        0x08
+                           A    84    ;   50	#define ESPIMODE_NUMBITS_3        0x0C
+                           A    85    ;   51	#define ESPIMODE_NUMBITS_4        0x10
+                           A    86    ;   52	#define ESPIMODE_NUMBITS_5        0x14
+                           A    87    ;   53	#define ESPIMODE_NUMBITS_6        0x18
+                           A    88    ;   54	#define ESPIMODE_NUMBITS_7        0x1C
+                           A    89    ;   55	#define ESPIMODE_SSIO_INPUT       0x00
+                           A    90    ;   56	#define ESPIMODE_SSIO_OUTPUT      0x02
+                           A    91    ;   57	#define ESPIMODE_SSPO_LOW         0x00
+                           A    92    ;   58	#define ESPIMODE_SSPO_HIGH        0x01
+                           A    93    ;   59	
+                           A    94    ;   60	void init_spi() 
+                           A    95    ;   61	{
+00000000                   A    96    _init_spi:
+                           A    97    .define "_init_spi"
+                           A    98    .value _init_spi
+                           A    99    .class 2
+                           A   100    .type 65
+                           A   101    .type 0
+                           A   102    .endef
+                           A   103    .begfunc "init_spi",61,"_init_spi"
+00000000 0800              A   104    	LINK	#0
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   3
+
+
+PC     Object              I  Line    Source spi.src
+                           A   105    ;   62	    PCAF |= 0x3C;                 // Set AltFun bits 00111100 = 3C 
+                           A   106    .line 62
+00000002 303C              A   107    	LD	R0,#60
+00000004 7360 E124         A   108    	OR.W	57636:RAM,R0
+                           A   109    ;   63	                                  // for MISO, MOSI, SS, SCLK
+                           A   110    ;   64	
+                           A   111    ;   65	    ESPICTL = ESPICTL_ESPIEN_TRANSMIT + ESPICTL_ESPIEN_RECEIVE +
+                           A   112    ;   66	              ESPICTL_PHASE_0 + ESPICTL_CLKPOL_0 + ESPICTL_MMEN;  
+                           A   113    .line 66
+00000008 3043              A   114    	LD	R0,#67
+0000000A 0350 E262         A   115    	LD.B	57954:RAM,R0
+                           A   116    ;   67	        
+                           A   117    ;   68	    ESPIMODE = ESPIMODE_SSPO_LOW + ESPIMODE_SSIO_OUTPUT;   
+                           A   118    .line 68
+0000000E 3002              A   119    	LD	R0,#2
+00000010 0350 E263         A   120    	LD.B	57955:RAM,R0
+                           A   121    ;   69	       
+                           A   122    ;   70	    // Set the SPI baud rate slow so we can see it easily on an oscope
+                           A   123    ;   71	    // approx 1Kbit
+                           A   124    ;   72	    ESPIBR = get_osc_clock() / (2 * 1000);        
+                           A   125    .line 72
+00000014 F1 FFFFF4         A   126    	CALL	_get_osc_clock
+00000018 4501 07D0         A   127    	LD	R1,#2000
+0000001C AF10              A   128    	SDIV	R0,R1
+0000001E 0360 E266         A   129    	LD.W	57958:RAM,R0
+                           A   130    ;   73	}
+                           A   131    .line 73
+00000022 0001              A   132    	UNLINK	
+00000024 FFFC              A   133    	RET	
+                           A   134    
+                           A   135    
+                           A   136    ;**************************** _init_spi ***************************
+                           A   137    ;Name                         Addr/Register   Size   Type
+                           A   138    ;_get_osc_clock                      IMPORT  -----   function
+                           A   139    
+                           A   140    
+                           A   141    ; Aggregate Stack Size: 0 (words)
+                           A   142    
+                           A   143    
+                           A   144    .endfunc "init_spi",73,"_init_spi"
+                           A   145    ;   74	
+                           A   146    ;   75	void spi_wait_TDRE(void) 
+                           A   147    ;   76	{
+00000026                   A   148    _spi_wait_TDRE:
+                           A   149    .define "_spi_wait_TDRE"
+                           A   150    .value _spi_wait_TDRE
+                           A   151    .class 2
+                           A   152    .type 65
+                           A   153    .type 0
+                           A   154    .endef
+00000026 0800              A   155    	LINK	#0
+                           A   156    .begfunc "spi_wait_TDRE",76,"_spi_wait_TDRE"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   4
+
+
+PC     Object              I  Line    Source spi.src
+                           A   157    ;   77	    while(!(ESPISTAT & ESPISTAT_TDRE));
+00000028                   A   158    _2_L_1:
+                           A   159    .line 77
+00000028 4500 0080         A   160    	LD	R0,#128
+0000002C 7650 E264         A   161    	TM.B	57956:RAM,R0
+00000030 E6 FB             A   162    	JP	EQ,_2_L_1
+                           A   163    ;   78	}
+                           A   164    .line 78
+00000032 0001              A   165    	UNLINK	
+00000034 FFFC              A   166    	RET	
+                           A   167    
+                           A   168    
+                           A   169    ;**************************** _spi_wait_TDRE ***************************
+                           A   170    ;Name                         Addr/Register   Size   Type
+                           A   171    
+                           A   172    
+                           A   173    ; Aggregate Stack Size: 0 (words)
+                           A   174    
+                           A   175    
+                           A   176    .endfunc "spi_wait_TDRE",78,"_spi_wait_TDRE"
+                           A   177    ;   79	
+                           A   178    ;   80	
+                           A   179    ;   81	void spi_wait_RDRF(void) 
+                           A   180    ;   82	{
+00000036                   A   181    _spi_wait_RDRF:
+                           A   182    .define "_spi_wait_RDRF"
+                           A   183    .value _spi_wait_RDRF
+                           A   184    .class 2
+                           A   185    .type 65
+                           A   186    .type 0
+                           A   187    .endef
+00000036 0800              A   188    	LINK	#0
+                           A   189    .begfunc "spi_wait_RDRF",82,"_spi_wait_RDRF"
+                           A   190    ;   83	    while(!(ESPISTAT & ESPISTAT_RDRF));
+00000038                   A   191    _3_L_4:
+                           A   192    .line 83
+00000038 3004              A   193    	LD	R0,#4
+0000003A 7650 E264         A   194    	TM.B	57956:RAM,R0
+0000003E E6 FC             A   195    	JP	EQ,_3_L_4
+                           A   196    ;   84	}
+                           A   197    .line 84
+00000040 0001              A   198    	UNLINK	
+00000042 FFFC              A   199    	RET	
+                           A   200    
+                           A   201    
+                           A   202    ;**************************** _spi_wait_RDRF ***************************
+                           A   203    ;Name                         Addr/Register   Size   Type
+                           A   204    
+                           A   205    
+                           A   206    ; Aggregate Stack Size: 0 (words)
+                           A   207    
+                           A   208    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   5
+
+
+PC     Object              I  Line    Source spi.src
+                           A   209    .endfunc "spi_wait_RDRF",84,"_spi_wait_RDRF"
+                           A   210    ;   85	
+                           A   211    ;   86	void spi_wait_TFST(void) 
+                           A   212    ;   87	{
+00000044                   A   213    _spi_wait_TFST:
+                           A   214    .define "_spi_wait_TFST"
+                           A   215    .value _spi_wait_TFST
+                           A   216    .class 2
+                           A   217    .type 65
+                           A   218    .type 0
+                           A   219    .endef
+00000044 0800              A   220    	LINK	#0
+                           A   221    .begfunc "spi_wait_TFST",87,"_spi_wait_TFST"
+                           A   222    ;   88	    while(ESPISTAT & ESPISTAT_TFST);
+00000046                   A   223    _4_L_7:
+                           A   224    .line 88
+00000046 3002              A   225    	LD	R0,#2
+00000048 7650 E264         A   226    	TM.B	57956:RAM,R0
+0000004C EE FC             A   227    	JP	NE,_4_L_7
+                           A   228    ;   89	}
+                           A   229    .line 89
+0000004E 0001              A   230    	UNLINK	
+00000050 FFFC              A   231    	RET	
+                           A   232    
+                           A   233    
+                           A   234    ;**************************** _spi_wait_TFST ***************************
+                           A   235    ;Name                         Addr/Register   Size   Type
+                           A   236    
+                           A   237    
+                           A   238    ; Aggregate Stack Size: 0 (words)
+                           A   239    
+                           A   240    
+                           A   241    .endfunc "spi_wait_TFST",89,"_spi_wait_TFST"
+                           A   242    ;   90	
+                           A   243    ;   91	void spi_enable(void)
+                           A   244    ;   92	{
+00000052                   A   245    _spi_enable:
+                           A   246    .define "_spi_enable"
+                           A   247    .value _spi_enable
+                           A   248    .class 2
+                           A   249    .type 65
+                           A   250    .type 0
+                           A   251    .endef
+                           A   252    .begfunc "spi_enable",92,"_spi_enable"
+00000052 0800              A   253    	LINK	#0
+                           A   254    ;   93		ESPITDCR |= 0x01;             // Set SS
+                           A   255    .line 93
+00000054 3001              A   256    	LD	R0,#1
+00000056 7350 E261         A   257    	OR.B	57953:RAM,R0
+                           A   258    ;   94	}
+                           A   259    .line 94
+0000005A 0001              A   260    	UNLINK	
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   6
+
+
+PC     Object              I  Line    Source spi.src
+0000005C FFFC              A   261    	RET	
+                           A   262    
+                           A   263    
+                           A   264    ;**************************** _spi_enable ***************************
+                           A   265    ;Name                         Addr/Register   Size   Type
+                           A   266    
+                           A   267    
+                           A   268    ; Aggregate Stack Size: 0 (words)
+                           A   269    
+                           A   270    
+                           A   271    .endfunc "spi_enable",94,"_spi_enable"
+                           A   272    ;   95	
+                           A   273    ;   96	void spi_disable(void)
+                           A   274    ;   97	{
+0000005E                   A   275    _spi_disable:
+                           A   276    .define "_spi_disable"
+                           A   277    .value _spi_disable
+                           A   278    .class 2
+                           A   279    .type 65
+                           A   280    .type 0
+                           A   281    .endef
+                           A   282    .begfunc "spi_disable",97,"_spi_disable"
+0000005E 0800              A   283    	LINK	#0
+                           A   284    ;   98		ESPITDCR &= 0xFE;             // Clear SS to stop communication
+                           A   285    .line 98
+00000060 4500 00FE         A   286    	LD	R0,#254
+00000064 7250 E261         A   287    	AND.B	57953:RAM,R0
+                           A   288    ;   99	}
+                           A   289    .line 99
+00000068 0001              A   290    	UNLINK	
+0000006A FFFC              A   291    	RET	
+                           A   292    
+                           A   293    
+                           A   294    ;**************************** _spi_disable ***************************
+                           A   295    ;Name                         Addr/Register   Size   Type
+                           A   296    
+                           A   297    
+                           A   298    ; Aggregate Stack Size: 0 (words)
+                           A   299    
+                           A   300    
+                           A   301    .endfunc "spi_disable",99,"_spi_disable"
+                           A   302    ;  100	
+                           A   303    ;  101	void spi_transfer(unsigned char byte)
+                           A   304    ;  102	{
+0000006C                   A   305    _spi_transfer:
+                           A   306    .define "_spi_transfer"
+                           A   307    .value _spi_transfer
+                           A   308    .class 2
+                           A   309    .type 65
+                           A   310    .type 0
+                           A   311    .endef
+                           A   312    .begfunc "spi_transfer",102,"_spi_transfer"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   7
+
+
+PC     Object              I  Line    Source spi.src
+0000006C 0802              A   313    	LINK	#2
+                           A   314    .line 102
+0000006E 53F1              A   315    	LD.B	-1(R14),R1
+                           A   316    .define "byte"
+                           A   317    .class 9
+                           A   318    .value -1
+                           A   319    .type 12
+                           A   320    .type 0
+                           A   321    .endef
+                           A   322    .define "dummy"
+                           A   323    .class 1
+                           A   324    .value -2
+                           A   325    .type 12
+                           A   326    .type 0
+                           A   327    .endef
+                           A   328    ;  103		unsigned char dummy;
+                           A   329    ;  104	
+                           A   330    ;  105		ESPIDATA = byte;              // Control message
+                           A   331    .line 105
+00000070 6BF0              A   332    	LD.SB	R0,-1(R14)
+00000072 0350 E260         A   333    	LD.B	57952:RAM,R0
+                           A   334    ;  106	
+                           A   335    ;  107	    spi_wait_TDRE();              // Wait for transmission to complete
+                           A   336    .line 107
+00000076 DFD7              A   337    	CALL	_spi_wait_TDRE
+                           A   338    ;  108	    spi_wait_RDRF();              // Wait for recived byte to complete
+                           A   339    .line 108
+00000078 DFDE              A   340    	CALL	_spi_wait_RDRF
+                           A   341    ;  109	  
+                           A   342    ;  110	    dummy = ESPIDATA;              
+                           A   343    .line 110
+0000007A 0310 E260         A   344    	LD.SB	R0,57952:RAM
+0000007E 53E0              A   345    	LD.B	-2(R14),R0
+                           A   346    ;  111		spi_wait_TFST();              // Wait for SPI transfer to complete
+                           A   347    .line 111
+00000080 DFE1              A   348    	CALL	_spi_wait_TFST
+                           A   349    ;  112	}
+                           A   350    .line 112
+00000082 0001              A   351    	UNLINK	
+00000084 FFFC              A   352    	RET	
+                           A   353    
+                           A   354    
+                           A   355    ;**************************** _spi_transfer ***************************
+                           A   356    ;Name                         Addr/Register   Size   Type
+                           A   357    ;dummy                                R14-2      1   variable
+                           A   358    ;byte                                 R14-1      1   parameter
+                           A   359    
+                           A   360    
+                           A   361    ; Aggregate Stack Size: -2 (words)
+                           A   362    
+                           A   363    
+                           A   364    .endfunc "spi_transfer",112,"_spi_transfer"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   8
+
+
+PC     Object              I  Line    Source spi.src
+                           A   365    ;  113	
+                           A   366    ;  114	void spi_write(unsigned char addr, unsigned char data) 
+                           A   367    ;  115	{
+00000086                   A   368    _spi_write:
+                           A   369    .define "_spi_write"
+                           A   370    .value _spi_write
+                           A   371    .class 2
+                           A   372    .type 65
+                           A   373    .type 0
+                           A   374    .endef
+                           A   375    .begfunc "spi_write",115,"_spi_write"
+00000086 0802              A   376    	LINK	#2
+                           A   377    .line 115
+00000088 53F1              A   378    	LD.B	-1(R14),R1
+                           A   379    .define "addr"
+                           A   380    .class 9
+                           A   381    .value -1
+                           A   382    .type 12
+                           A   383    .type 0
+                           A   384    .endef
+0000008A 53E2              A   385    	LD.B	-2(R14),R2
+                           A   386    .define "data"
+                           A   387    .class 9
+                           A   388    .value -2
+                           A   389    .type 12
+                           A   390    .type 0
+                           A   391    .endef
+                           A   392    ;  116	    spi_transfer(addr);
+                           A   393    .line 116
+0000008C 6BF1              A   394    	LD.SB	R1,-1(R14)
+0000008E DFEE              A   395    	CALL	_spi_transfer
+                           A   396    ;  117		spi_transfer(data);
+                           A   397    .line 117
+00000090 6BE1              A   398    	LD.SB	R1,-2(R14)
+00000092 DFEC              A   399    	CALL	_spi_transfer
+                           A   400    ;  118	}
+                           A   401    .line 118
+00000094 0001              A   402    	UNLINK	
+00000096 FFFC              A   403    	RET	
+                           A   404    
+                           A   405    
+                           A   406    ;**************************** _spi_write ***************************
+                           A   407    ;Name                         Addr/Register   Size   Type
+                           A   408    ;_spi_transfer                       IMPORT  -----   function
+                           A   409    ;data                                 R14-2      1   parameter
+                           A   410    ;addr                                 R14-1      1   parameter
+                           A   411    
+                           A   412    
+                           A   413    ; Aggregate Stack Size: -2 (words)
+                           A   414    
+                           A   415    
+                           A   416    .endfunc "spi_write",118,"_spi_write"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   9
+
+
+PC     Object              I  Line    Source spi.src
+                           A   417    ;  119	
+                           A   418    ;  120	unsigned char spi_read(unsigned char addr) 
+                           A   419    ;  121	{
+00000098                   A   420    _spi_read:
+                           A   421    .define "_spi_read"
+                           A   422    .value _spi_read
+                           A   423    .class 2
+                           A   424    .type 76
+                           A   425    .type 0
+                           A   426    .endef
+                           A   427    .begfunc "spi_read",121,"_spi_read"
+00000098 0802              A   428    	LINK	#2
+                           A   429    .line 121
+0000009A 53F1              A   430    	LD.B	-1(R14),R1
+                           A   431    .define "addr"
+                           A   432    .class 9
+                           A   433    .value -1
+                           A   434    .type 12
+                           A   435    .type 0
+                           A   436    .endef
+                           A   437    .define "data"
+                           A   438    .class 1
+                           A   439    .value -2
+                           A   440    .type 12
+                           A   441    .type 0
+                           A   442    .endef
+                           A   443    ;  122		unsigned char data;
+                           A   444    ;  123	
+                           A   445    ;  124		spi_transfer(addr);
+                           A   446    .line 124
+0000009C 6BF1              A   447    	LD.SB	R1,-1(R14)
+0000009E DFE6              A   448    	CALL	_spi_transfer
+                           A   449    ;  125	
+                           A   450    ;  126	    ESPIDATA = 0x00;              // Send dummy byte (8 bits sends 8 clocks
+                           A   451    .line 126
+000000A0 ADA0 E260         A   452    	CLR.B	57952:RAM
+                           A   453    ;  127	                                  // so that we get 8 bits from the device. 
+                           A   454    ;  128	
+                           A   455    ;  129	    spi_wait_RDRF();              // Wait for receive to complete
+                           A   456    .line 129
+000000A4 DFC8              A   457    	CALL	_spi_wait_RDRF
+                           A   458    ;  130	    data = ESPIDATA;              // Get received byte. This one we want.
+                           A   459    .line 130
+000000A6 0310 E260         A   460    	LD.SB	R0,57952:RAM
+000000AA 53E0              A   461    	LD.B	-2(R14),R0
+                           A   462    ;  131	    spi_wait_TFST();              // Wait for transfer to complete
+                           A   463    .line 131
+000000AC DFCB              A   464    	CALL	_spi_wait_TFST
+                           A   465    ;  132	
+                           A   466    ;  133	    ESPITDCR &= 0xFE;             // Clear SS 
+                           A   467    .line 133
+000000AE 4500 00FE         A   468    	LD	R0,#254
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:  10
+
+
+PC     Object              I  Line    Source spi.src
+000000B2 7250 E261         A   469    	AND.B	57953:RAM,R0
+                           A   470    ;  134	
+                           A   471    ;  135	    return data;
+                           A   472    .line 135
+000000B6 6BE0              A   473    	LD.SB	R0,-2(R14)
+                           A   474    ;  136	}
+                           A   475    .line 136
+000000B8 0001              A   476    	UNLINK	
+000000BA FFFC              A   477    	RET	
+                           A   478    
+                           A   479    
+                           A   480    ;**************************** _spi_read ***************************
+                           A   481    ;Name                         Addr/Register   Size   Type
+                           A   482    ;_spi_transfer                       IMPORT  -----   function
+                           A   483    ;data                                 R14-2      1   variable
+                           A   484    ;addr                                 R14-1      1   parameter
+                           A   485    
+                           A   486    
+                           A   487    ; Aggregate Stack Size: -2 (words)
+                           A   488    
+                           A   489    
+                           A   490    .endfunc "spi_read",136,"_spi_read"
+                           A   491    	XREF _get_osc_clock:EROM
+                           A   492    	XDEF _spi_read
+                           A   493    	XDEF _spi_write
+                           A   494    	XDEF _spi_transfer
+                           A   495    	XDEF _spi_disable
+                           A   496    	XDEF _spi_enable
+                           A   497    	XDEF _spi_wait_TFST
+                           A   498    	XDEF _spi_wait_RDRF
+                           A   499    	XDEF _spi_wait_TDRE
+                           A   500    	XDEF _init_spi
+                           A   501    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 502

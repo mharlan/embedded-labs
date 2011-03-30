@@ -1,0 +1,201 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\INFO.C"
+                           A     5    .debug "C"
+                           A     6    	DEFINE ___part_num_segment,SPACE=ROM,ORG=%40
+                           A     7    	SEGMENT ___part_num_segment
+00000040                   A     8    _part_num:
+00000040                   A     9    	DS	20
+                           A    10    .define "part_num"
+                           A    11    .alias "_part_num"
+                           A    12    .class 51
+                           A    13    .value _part_num
+                           A    14    .dim 20
+                           A    15    .type 108
+                           A    16    .type 0
+                           A    17    .endef
+                           A    18    ;    1	#include "info.h"
+                           A    19    ;    2	#include "uart.h"
+                           A    20    ;    3	#include "oscillator.h"
+                           A    21    ;    4	
+                           A    22    ;    5	#include <zneo.h>
+                           A    23    ;    6	#include <string.h>
+                           A    24    ;    7	
+                           A    25    ;    8	#define FLASH_INFO_EN  0x80
+                           A    26    ;    9	
+                           A    27    ;   10	#define PART_NUM_START 0x000040
+                           A    28    ;   11	#define PART_NUM_SIZE  20
+                           A    29    ;   12	
+                           A    30    ;   13	const unsigned char part_num[PART_NUM_SIZE] _At PART_NUM_START;
+                           A    31    	SEGMENT CODE
+                           A    32    ;   14	
+                           A    33    ;   15	/*
+                           A    34    ;   16		Get access to the information section of the flash memory.
+                           A    35    ;   17	 */
+                           A    36    ;   18	void init_info(void)
+                           A    37    ;   19	{
+00000000                   A    38    _init_info:
+                           A    39    .define "_init_info"
+                           A    40    .value _init_info
+                           A    41    .class 2
+                           A    42    .type 65
+                           A    43    .type 0
+                           A    44    .endef
+                           A    45    .begfunc "init_info",19,"_init_info"
+00000000 0800              A    46    	LINK	#0
+                           A    47    ;   20		FCTL |= FLASH_INFO_EN;
+                           A    48    .line 20
+00000002 4500 0080         A    49    	LD	R0,#128
+00000006 7350 E061         A    50    	OR.B	57441:RAM,R0
+                           A    51    ;   21	}
+                           A    52    .line 21
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   2
+
+
+PC     Object              I  Line    Source info.src
+0000000A 0001              A    53    	UNLINK	
+0000000C FFFC              A    54    	RET	
+                           A    55    
+                           A    56    
+                           A    57    ;**************************** _init_info ***************************
+                           A    58    ;Name                         Addr/Register   Size   Type
+                           A    59    
+                           A    60    
+                           A    61    ; Aggregate Stack Size: 0 (words)
+                           A    62    
+                           A    63    
+                           A    64    .endfunc "init_info",21,"_init_info"
+                           A    65    	SEGMENT NEAR_TEXT
+00000000                   A    66    L__4:
+00000000 32313A35          A    67    	DB	"21:55:20"
+00000004 353A3230 
+00000008 00                A    68    	DB	0
+00000009                   A    69    L__5:
+00000009 4D617220          A    70    	DB	"Mar 29 2011"
+0000000D 32392032 303131 
+00000014 00                A    71    	DB	0
+                           A    72    	SEGMENT ROM_TEXT
+00000000                   A    73    L__1:
+00000000 0A                A    74    	DB	10
+00000001 50617274          A    75    	DB	"Part Information"
+00000005 20496E66 
+00000009 6F726D61 
+0000000D 74696F6E 
+00000011 0A                A    76    	DB	10
+00000012 2D2D2D2D          A    77    	DB	"------------------------"
+00000016 2D2D2D2D 
+0000001A 2D2D2D2D 
+0000001E 2D2D2D2D 
+00000022 2D2D2D2D 
+00000026 2D2D2D2D 
+0000002A 0A00              A    78    	DB	10,0
+0000002C                   A    79    L__2:
+0000002C 55617274          A    80    	DB	"Uart0 Baudrate: %u"
+00000030 30204261 
+00000034 75647261 
+00000038 74653A20 2575 
+0000003E 0A00              A    81    	DB	10,0
+00000040                   A    82    L__3:
+00000040 50617274          A    83    	DB	"Part Number: %s"
+00000044 204E756D 
+00000048 6265723A 202573 
+0000004F 0A00              A    84    	DB	10,0
+00000051                   A    85    L__6:
+00000051 436F6D70          A    86    	DB	"Compile Date: %s"
+00000055 696C6520 
+00000059 44617465 
+0000005D 3A202573 
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   3
+
+
+PC     Object              I  Line    Source info.src
+00000061 0A                A    87    	DB	10
+00000062 436F6D70          A    88    	DB	"Compile Time: %s"
+00000066 696C6520 
+0000006A 54696D65 
+0000006E 3A202573 
+00000072 0A00              A    89    	DB	10,0
+                           A    90    	SEGMENT CODE
+                           A    91    ;   22	
+                           A    92    ;   23	/*
+                           A    93    ;   24	 	Displays various system information.
+                           A    94    ;   25	 */
+                           A    95    ;   26	void info_display(void)
+                           A    96    ;   27	{
+0000000E                   A    97    _info_display:
+                           A    98    .define "_info_display"
+                           A    99    .value _info_display
+                           A   100    .class 2
+                           A   101    .type 65
+                           A   102    .type 0
+                           A   103    .endef
+                           A   104    .begfunc "info_display",27,"_info_display"
+0000000E 0800              A   105    	LINK	#0
+                           A   106    ;   28		uart_printf("\nPart Information\n------------------------\n");
+                           A   107    .line 28
+00000010 098F 0000         A   108    	PUSH.W	#L__1
+00000014 F1 FFFFF4         A   109    	CALL	_uart_printf
+00000018 8F02              A   110    	ADD	R15,#2
+                           A   111    ;   29		uart_printf("Uart0 Baudrate: %u\n", uart_get_baudrate());
+                           A   112    .line 29
+0000001A F1 FFFFF1         A   113    	CALL	_uart_get_baudrate
+0000001E 100F              A   114    	PUSH	R0
+00000020 098F 002C         A   115    	PUSH.W	#L__2
+00000024 F1 FFFFEC         A   116    	CALL	_uart_printf
+00000028 8F06              A   117    	ADD	R15,#6
+                           A   118    ;   30		uart_printf("Part Number: %s\n", part_num);
+                           A   119    .line 30
+0000002A 098F 0040         A   120    	PUSH.W	#_part_num
+0000002E 098F 0040         A   121    	PUSH.W	#L__3
+00000032 F1 FFFFE5         A   122    	CALL	_uart_printf
+00000036 8F04              A   123    	ADD	R15,#4
+                           A   124    ;   31		uart_printf("Compile Date: %s\nCompile Time: %s\n", __DATE__, __TIME__);
+                           A   125    .line 31
+00000038 098F 0000         A   126    	PUSH.W	#L__4
+0000003C 098F 0009         A   127    	PUSH.W	#L__5
+00000040 098F 0051         A   128    	PUSH.W	#L__6
+00000044 F1 FFFFDC         A   129    	CALL	_uart_printf
+00000048 8F06              A   130    	ADD	R15,#6
+                           A   131    ;   32	
+                           A   132    ;   33		osc_print_config();
+                           A   133    .line 33
+0000004A F1 FFFFD9         A   134    	CALL	_osc_print_config
+                           A   135    ;   34	}
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   4
+
+
+PC     Object              I  Line    Source info.src
+                           A   136    .line 34
+0000004E 0001              A   137    	UNLINK	
+00000050 FFFC              A   138    	RET	
+                           A   139    
+                           A   140    
+                           A   141    ;**************************** _info_display ***************************
+                           A   142    ;Name                         Addr/Register   Size   Type
+                           A   143    ;_osc_print_config                   IMPORT  -----   function
+                           A   144    ;_part_num                           STATIC     20   variable
+                           A   145    ;_uart_get_baudrate                  IMPORT  -----   function
+                           A   146    ;_uart_printf                        IMPORT  -----   function
+                           A   147    
+                           A   148    
+                           A   149    ; Aggregate Stack Size: 0 (words)
+                           A   150    
+                           A   151    
+                           A   152    .endfunc "info_display",34,"_info_display"
+                           A   153    	XREF _osc_print_config:EROM
+                           A   154    	XREF _uart_get_baudrate:EROM
+                           A   155    	XREF _uart_printf:EROM
+                           A   156    	XDEF _info_display
+                           A   157    	XDEF _init_info
+                           A   158    	XDEF _part_num
+                           A   159    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 160

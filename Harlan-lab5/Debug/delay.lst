@@ -1,0 +1,108 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\DELAY.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT CODE
+                           A     7    ;    1	
+                           A     8    ;    2	#include "delay.h"
+                           A     9    ;    3	#include "oscillator.h"
+                           A    10    ;    4	
+                           A    11    ;    5	#include <zneo.h>
+                           A    12    ;    6	
+                           A    13    ;    7	void delay_ms(int ms)
+                           A    14    ;    8	{
+00000000                   A    15    _delay_ms:
+                           A    16    .define "_delay_ms"
+                           A    17    .value _delay_ms
+                           A    18    .class 2
+                           A    19    .type 65
+                           A    20    .type 0
+                           A    21    .endef
+                           A    22    .begfunc "delay_ms",8,"_delay_ms"
+00000000 0804              A    23    	LINK	#4
+                           A    24    .line 8
+00000002 5BC1              A    25    	LD	-4(R14),R1
+                           A    26    .define "ms"
+                           A    27    .class 9
+                           A    28    .value -4
+                           A    29    .type 5
+                           A    30    .type 0
+                           A    31    .endef
+                           A    32    ;    9		PADD &= 0xFE;
+                           A    33    .line 9
+00000004 4500 00FE         A    34    	LD	R0,#254
+00000008 7250 E102         A    35    	AND.B	57602:RAM,R0
+                           A    36    ;   10	    PAOUT |= 0x01;                  // take PA0 high;
+                           A    37    .line 10
+0000000C 3001              A    38    	LD	R0,#1
+0000000E 7350 E101         A    39    	OR.B	57601:RAM,R0
+                           A    40    ;   11	
+                           A    41    ;   12	    T2CTL0 = 0;                     // no settings
+                           A    42    .line 12
+00000012 ADA0 E326         A    43    	CLR.B	58150:RAM
+                           A    44    ;   13	    T2CTL1 = 0x38;                  // disable, one shot
+                           A    45    .line 13
+00000016 3038              A    46    	LD	R0,#56
+00000018 0350 E327         A    47    	LD.B	58151:RAM,R0
+                           A    48    ;   14	    T2HL=1;                         // initial value 
+                           A    49    .line 14
+0000001C 3001              A    50    	LD	R0,#1
+0000001E 0360 E320         A    51    	LD.W	58144:RAM,R0
+                           A    52    ;   15	    T2R = get_osc_clock() / 128 / 1000 * ms;    // reload
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   2
+
+
+PC     Object              I  Line    Source delay.src
+                           A    53    .line 15
+00000022 F1 FFFFED         A    54    	CALL	_get_osc_clock
+00000026 4501 0080         A    55    	LD	R1,#128
+0000002A AF10              A    56    	SDIV	R0,R1
+0000002C 4501 03E8         A    57    	LD	R1,#1000
+00000030 AF10              A    58    	SDIV	R0,R1
+00000032 5FC1              A    59    	LD	R1,-4(R14)
+00000034 B110              A    60    	SMUL	R0,R1
+00000036 0360 E322         A    61    	LD.W	58146:RAM,R0
+                           A    62    ;   16	    T2CTL1 |= 0x80;                 // start it
+                           A    63    .line 16
+0000003A 4500 0080         A    64    	LD	R0,#128
+0000003E 7350 E327         A    65    	OR.B	58151:RAM,R0
+                           A    66    ;   17	    while(T2CTL1 & 0x80) ;          // wait for it to be done
+00000042                   A    67    _1_L_0:
+                           A    68    .line 17
+00000042 4500 0080         A    69    	LD	R0,#128
+00000046 7650 E327         A    70    	TM.B	58151:RAM,R0
+0000004A EE FB             A    71    	JP	NE,_1_L_0
+                           A    72    ;   18	
+                           A    73    ;   19	    PAOUT &= 0xFE;                  // take PA0 low
+                           A    74    .line 19
+0000004C 4500 00FE         A    75    	LD	R0,#254
+00000050 7250 E101         A    76    	AND.B	57601:RAM,R0
+                           A    77    ;   20	}
+                           A    78    .line 20
+00000054 0001              A    79    	UNLINK	
+00000056 FFFC              A    80    	RET	
+                           A    81    
+                           A    82    
+                           A    83    ;**************************** _delay_ms ***************************
+                           A    84    ;Name                         Addr/Register   Size   Type
+                           A    85    ;_get_osc_clock                      IMPORT  -----   function
+                           A    86    ;ms                                   R14-4      4   parameter
+                           A    87    
+                           A    88    
+                           A    89    ; Aggregate Stack Size: -4 (words)
+                           A    90    
+                           A    91    
+                           A    92    .endfunc "delay_ms",20,"_delay_ms"
+                           A    93    	XREF _get_osc_clock:EROM
+                           A    94    	XDEF _delay_ms
+                           A    95    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 96

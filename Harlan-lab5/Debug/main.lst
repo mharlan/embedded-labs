@@ -1,0 +1,232 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\MAIN.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT CODE
+                           A     7    .begrec "fmt_type",16
+                           A     8    .define "status"
+                           A     9    .value 0
+                           A    10    .class 8
+                           A    11    .type 12
+                           A    12    .type 0
+                           A    13    .endef
+                           A    14    .define "flags"
+                           A    15    .value 1
+                           A    16    .class 8
+                           A    17    .type 12
+                           A    18    .type 0
+                           A    19    .endef
+                           A    20    .define "size"
+                           A    21    .value 2
+                           A    22    .class 8
+                           A    23    .type 12
+                           A    24    .type 0
+                           A    25    .endef
+                           A    26    .define "chr"
+                           A    27    .value 3
+                           A    28    .class 8
+                           A    29    .type 12
+                           A    30    .type 0
+                           A    31    .endef
+                           A    32    .define "type"
+                           A    33    .value 4
+                           A    34    .class 8
+                           A    35    .type 12
+                           A    36    .type 0
+                           A    37    .endef
+                           A    38    .define "field_width"
+                           A    39    .value 5
+                           A    40    .class 8
+                           A    41    .type 2
+                           A    42    .type 0
+                           A    43    .endef
+                           A    44    .define "precision"
+                           A    45    .value 6
+                           A    46    .class 8
+                           A    47    .type 2
+                           A    48    .type 0
+                           A    49    .endef
+                           A    50    .define "set_begin"
+                           A    51    .value 7
+                           A    52    .class 8
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   2
+
+
+PC     Object              I  Line    Source main.src
+                           A    53    .type 140
+                           A    54    .type 0
+                           A    55    .endef
+                           A    56    .define "set_end"
+                           A    57    .value 9
+                           A    58    .class 8
+                           A    59    .type 140
+                           A    60    .type 0
+                           A    61    .endef
+                           A    62    .define "pad_whole"
+                           A    63    .value 11
+                           A    64    .class 8
+                           A    65    .type 12
+                           A    66    .type 0
+                           A    67    .endef
+                           A    68    .define "pad_pre_fract"
+                           A    69    .value 12
+                           A    70    .class 8
+                           A    71    .type 12
+                           A    72    .type 0
+                           A    73    .endef
+                           A    74    .define "pad_post_fract"
+                           A    75    .value 13
+                           A    76    .class 8
+                           A    77    .type 12
+                           A    78    .type 0
+                           A    79    .endef
+                           A    80    .define "pad_at"
+                           A    81    .value 14
+                           A    82    .class 8
+                           A    83    .type 140
+                           A    84    .type 0
+                           A    85    .endef
+                           A    86    .endrec "fmt_type"
+                           A    87    .begrec "flt_info",12
+                           A    88    .define "flags"
+                           A    89    .value 0
+                           A    90    .class 8
+                           A    91    .type 12
+                           A    92    .type 0
+                           A    93    .endef
+                           A    94    .define "exp"
+                           A    95    .value 1
+                           A    96    .class 8
+                           A    97    .type 2
+                           A    98    .type 0
+                           A    99    .endef
+                           A   100    .define "digits"
+                           A   101    .value 2
+                           A   102    .class 8
+                           A   103    .dim 10
+                           A   104    .type 108
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   3
+
+
+PC     Object              I  Line    Source main.src
+                           A   105    .type 0
+                           A   106    .endef
+                           A   107    .endrec "flt_info"
+                           A   108    ;    1	/*
+                           A   109    ;    2		Author: Matthew Harlan
+                           A   110    ;    3		Email:  mharlan@gwmail.gwu.edu
+                           A   111    ;    4		Class:  CSCI-4415
+                           A   112    ;    5		Date: 	March 22nd, 2011
+                           A   113    ;    6		Lab:    4
+                           A   114    ;    7		
+                           A   115    ;    8		Description: This program extends the command line interface with PS/2 keyboard functio
+                           A   116    ;    9	
+                           A   117    ;   10		Other files: buttons.c buttons.h cli.c cli.h info.c info.h LED.c LED.h LED_ascii.h
+                           A   118    ;   11		macro.c macro.h oscillator.c oscillator.h ports.c ports.h timer.c timer.h uart.c uart.h
+                           A   119    ;   12		notes.h speaker.h speaker.c ps2_port.c ps2_port.h scancodes.h keyboard.c keyboard.h
+                           A   120    ;   13	
+                           A   121    ;   14		Compile: Set the user include path to the include directory.
+                           A   122    ;   15		
+                           A   123    ;   16		Problems: None.
+                           A   124    ;   17	
+                           A   125    ;   18		Comments: PD0 is data and PD1 is clock.
+                           A   126    ;   19	
+                           A   127    ;   20		Enhancements: None.
+                           A   128    ;   21	 */
+                           A   129    ;   22	
+                           A   130    ;   23	#include "LED.h"
+                           A   131    ;   24	#include "oscillator.h"
+                           A   132    ;   25	#include "buttons.h"
+                           A   133    ;   26	#include "timer.h"
+                           A   134    ;   27	#include "cli.h"
+                           A   135    ;   28	#include "macro.h"
+                           A   136    ;   29	
+                           A   137    ;   30	#include <zneo.h>
+                           A   138    ;   31	#include <stdio.h>
+                           A   139    ;   32	
+                           A   140    ;   33	/*
+                           A   141    ;   34		Intializes the LED, sets the default value, and loops.
+                           A   142    ;   35	 */
+                           A   143    ;   36	void main(void)
+                           A   144    ;   37	{
+00000000                   A   145    _main:
+                           A   146    .define "_main"
+                           A   147    .value _main
+                           A   148    .class 2
+                           A   149    .type 65
+                           A   150    .type 0
+                           A   151    .endef
+                           A   152    .begfunc "main",37,"_main"
+00000000 0800              A   153    	LINK	#0
+                           A   154    ;   38		//initialize the oscillator and global timer
+                           A   155    ;   39		init_oscillator(OSC_5_52MHZ);
+                           A   156    .line 39
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   4
+
+
+PC     Object              I  Line    Source main.src
+00000002 3101              A   157    	LD	R1,#1
+00000004 F1 FFFFFC         A   158    	CALL	_init_oscillator
+                           A   159    ;   40		init_timer(TIMER_2MS);
+                           A   160    .line 40
+00000008 3102              A   161    	LD	R1,#2
+0000000A F1 FFFFF9         A   162    	CALL	_init_timer
+                           A   163    ;   41	
+                           A   164    ;   42		//initialize button functionality
+                           A   165    ;   43		init_buttons();
+                           A   166    .line 43
+0000000E F1 FFFFF7         A   167    	CALL	_init_buttons
+                           A   168    ;   44	
+                           A   169    ;   45		//initialize the command line interface
+                           A   170    ;   46		init_cli();
+                           A   171    .line 46
+00000012 F1 FFFFF5         A   172    	CALL	_init_cli
+                           A   173    ;   47	
+                           A   174    ;   48		//enable interrupts
+                           A   175    ;   49		EI();
+                           A   176    .line 49
+00000016 FFFA              A   177    	EI
+                           A   178    ;   50	
+                           A   179    ;   51		cli_loop();
+                           A   180    .line 51
+00000018 F1 FFFFF2         A   181    	CALL	_cli_loop
+                           A   182    .line 52
+0000001C 0001              A   183    	UNLINK	
+0000001E FFFC              A   184    	RET	
+                           A   185    
+                           A   186    
+                           A   187    ;**************************** _main ***************************
+                           A   188    ;Name                         Addr/Register   Size   Type
+                           A   189    ;_cli_loop                           IMPORT  -----   function
+                           A   190    ;_EI                                 IMPORT  -----   function
+                           A   191    ;_init_cli                           IMPORT  -----   function
+                           A   192    ;_init_buttons                       IMPORT  -----   function
+                           A   193    ;_init_timer                         IMPORT  -----   function
+                           A   194    ;_init_oscillator                    IMPORT  -----   function
+                           A   195    
+                           A   196    
+                           A   197    ; Aggregate Stack Size: 0 (words)
+                           A   198    
+                           A   199    
+                           A   200    .endfunc "main",52,"_main"
+                           A   201    	XREF _cli_loop:EROM
+                           A   202    	XREF _init_cli:EROM
+                           A   203    	XREF _init_timer:EROM
+                           A   204    	XREF _init_buttons:EROM
+                           A   205    	XREF _init_oscillator:EROM
+                           A   206    	XDEF _main
+                           A   207    	END
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   5
+
+
+PC     Object              I  Line    Source 
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 208

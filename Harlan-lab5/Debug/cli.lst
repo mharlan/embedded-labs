@@ -1,0 +1,3684 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\CLI.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT NEAR_BSS
+00000000                   A     7    _cli_prompt:
+00000000                   A     8    	DS	256
+                           A     9    .define "cli_prompt"
+                           A    10    .alias "_cli_prompt"
+                           A    11    .class 147
+                           A    12    .value _cli_prompt
+                           A    13    .dim 256
+                           A    14    .type 108
+                           A    15    .type 0
+                           A    16    .endef
+                           A    17    	SEGMENT CODE
+                           A    18    .begrec "NONAME0",8
+                           A    19    .define "quot"
+                           A    20    .value 0
+                           A    21    .class 8
+                           A    22    .type 5
+                           A    23    .type 0
+                           A    24    .endef
+                           A    25    .define "rem"
+                           A    26    .value 4
+                           A    27    .class 8
+                           A    28    .type 5
+                           A    29    .type 0
+                           A    30    .endef
+                           A    31    .endrec "NONAME0"
+                           A    32    .begrec "NONAME1",8
+                           A    33    .define "quot"
+                           A    34    .value 0
+                           A    35    .class 8
+                           A    36    .type 5
+                           A    37    .type 0
+                           A    38    .endef
+                           A    39    .define "rem"
+                           A    40    .value 4
+                           A    41    .class 8
+                           A    42    .type 5
+                           A    43    .type 0
+                           A    44    .endef
+                           A    45    .endrec "NONAME1"
+                           A    46    	SEGMENT ROM_TEXT
+00000000                   A    47    L__0:
+00000000 3E20              A    48    	DB	"> "
+00000002 00                A    49    	DB	0
+                           A    50    ;    1	
+                           A    51    ;    2	#include "25lc040a.h"
+                           A    52    ;    3	#include "24lc16b.h"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   2
+
+
+PC     Object              I  Line    Source cli.src
+                           A    53    ;    4	#include "cli.h"
+                           A    54    ;    5	#include "LED.h"
+                           A    55    ;    6	#include "uart.h"
+                           A    56    ;    7	#include "info.h"
+                           A    57    ;    8	#include "macro.h"
+                           A    58    ;    9	#include "ports.h"
+                           A    59    ;   10	#include "timer.h"
+                           A    60    ;   11	
+                           A    61    ;   12	#include <stdlib.h>
+                           A    62    ;   13	#include <string.h>
+                           A    63    ;   14	#include <ctype.h>
+                           A    64    ;   15	
+                           A    65    ;   16	#define CLI_PROMPT      "> "
+                           A    66    ;   17	#define CLI_BUFFER_SIZE 256
+                           A    67    ;   18	
+                           A    68    ;   19	#define ASCII_DEL 0x7F
+                           A    69    ;   20	
+                           A    70    ;   21	static char cli_prompt[CLI_BUFFER_SIZE];
+                           A    71    	SEGMENT CODE
+                           A    72    ;   22	
+                           A    73    ;   23	static void cli_process_command(const char *command);
+                           A    74    ;   24	
+                           A    75    ;   25	/*
+                           A    76    ;   26		Zero arguement CLI functions.
+                           A    77    ;   27	 */
+                           A    78    ;   28	static void cli_command_info(void);
+                           A    79    ;   29	static void cli_command_question(void);
+                           A    80    ;   30	
+                           A    81    ;   31	/*
+                           A    82    ;   32		Variable arguement CLI functions.
+                           A    83    ;   33	
+                           A    84    ;   34		Multiple arguements encoded as strings, separated by
+                           A    85    ;   35		whitespace and quotes.
+                           A    86    ;   36	 */
+                           A    87    ;   37	static void cli_command_echo(char *args);
+                           A    88    ;   38	static void cli_command_display(char *args);
+                           A    89    ;   39	static void cli_command_hex(char *args);
+                           A    90    ;   40	static void cli_command_set(char *args);
+                           A    91    ;   41	static void cli_command_switch(char *args);
+                           A    92    ;   42	static void cli_command_port(char *args);
+                           A    93    ;   43	static void cli_command_timer(char *args);
+                           A    94    ;   44	static void cli_command_uart0(char *args);
+                           A    95    ;   45	static void cli_command_memory(const char *command, char *args);
+                           A    96    ;   46	
+                           A    97    ;   47	void init_cli(void)
+                           A    98    ;   48	{
+00000000                   A    99    _init_cli:
+                           A   100    .define "_init_cli"
+                           A   101    .value _init_cli
+                           A   102    .class 2
+                           A   103    .type 65
+                           A   104    .type 0
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   3
+
+
+PC     Object              I  Line    Source cli.src
+                           A   105    .endef
+                           A   106    .begfunc "init_cli",48,"_init_cli"
+00000000 0800              A   107    	LINK	#0
+                           A   108    ;   49		//initialize the hardware
+                           A   109    ;   50		init_leds();
+                           A   110    .line 50
+00000002 F1 FFFFFD         A   111    	CALL	_init_leds
+                           A   112    ;   51		init_uart();
+                           A   113    .line 51
+00000006 F1 FFFFFB         A   114    	CALL	_init_uart
+                           A   115    ;   52		init_info();
+                           A   116    .line 52
+0000000A F1 FFFFF9         A   117    	CALL	_init_info
+                           A   118    ;   53		init_24lc16b();
+                           A   119    .line 53
+0000000E F1 FFFFF7         A   120    	CALL	_init_24lc16b
+                           A   121    ;   54		init_25lc040a();
+                           A   122    .line 54
+00000012 F1 FFFFF5         A   123    	CALL	_init_25lc040a
+                           A   124    ;   55	
+                           A   125    ;   56		cli_set_prompt(CLI_PROMPT);
+                           A   126    .line 56
+00000016 4501 0000         A   127    	LD	R1,#L__0
+0000001A D101              A   128    	CALL	_cli_set_prompt
+                           A   129    ;   57	}
+                           A   130    .line 57
+0000001C 0001              A   131    	UNLINK	
+0000001E FFFC              A   132    	RET	
+                           A   133    
+                           A   134    
+                           A   135    ;**************************** _init_cli ***************************
+                           A   136    ;Name                         Addr/Register   Size   Type
+                           A   137    ;_cli_set_prompt                     IMPORT  -----   function
+                           A   138    ;_init_25lc040a                      IMPORT  -----   function
+                           A   139    ;_init_24lc16b                       IMPORT  -----   function
+                           A   140    ;_init_info                          IMPORT  -----   function
+                           A   141    ;_init_uart                          IMPORT  -----   function
+                           A   142    ;_init_leds                          IMPORT  -----   function
+                           A   143    
+                           A   144    
+                           A   145    ; Aggregate Stack Size: 0 (words)
+                           A   146    
+                           A   147    
+                           A   148    .endfunc "init_cli",57,"_init_cli"
+                           A   149    	SEGMENT ROM_TEXT
+00000003                   A   150    L__2:
+00000003 2573              A   151    	DB	"%s"
+00000005 00                A   152    	DB	0
+00000006                   A   153    L__6:
+00000006 2573              A   154    	DB	"%s"
+00000008 00                A   155    	DB	0
+00000009                   A   156    L__12:
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   4
+
+
+PC     Object              I  Line    Source cli.src
+00000009 0A                A   157    	DB	10
+0000000A 2D2D4572          A   158    	DB	"--Error--, command is too long. Command ignored."
+0000000E 726F722D 
+00000012 2D2C2063 
+00000016 6F6D6D61 
+0000001A 6E642069 
+0000001E 7320746F 
+00000022 6F206C6F 
+00000026 6E672E20 
+0000002A 436F6D6D 
+0000002E 616E6420 
+00000032 69676E6F 
+00000036 7265642E 
+0000003A 0A00              A   159    	DB	10,0
+0000003C                   A   160    L__13:
+0000003C 2573              A   161    	DB	"%s"
+0000003E 00                A   162    	DB	0
+                           A   163    	SEGMENT CODE
+                           A   164    ;   58	
+                           A   165    ;   59	void cli_loop(void)
+                           A   166    ;   60	{
+00000020                   A   167    _cli_loop:
+                           A   168    .define "_cli_loop"
+                           A   169    .value _cli_loop
+                           A   170    .class 2
+                           A   171    .type 65
+                           A   172    .type 0
+                           A   173    .endef
+                           A   174    .begfunc "cli_loop",60,"_cli_loop"
+                           A   175    .line 60
+                           A   176    .define "c"
+                           A   177    .class 1
+                           A   178    .value -1
+                           A   179    .type 12
+                           A   180    .type 0
+                           A   181    .endef
+                           A   182    .define "buffer_pos"
+                           A   183    .class 1
+                           A   184    .value -5
+                           A   185    .type 5
+                           A   186    .type 0
+                           A   187    .endef
+                           A   188    .define "buffer"
+                           A   189    .class 1
+                           A   190    .value -261
+                           A   191    .dim 256
+                           A   192    .type 108
+                           A   193    .type 0
+                           A   194    .endef
+00000020 0800              A   195    	LINK	#0
+00000022 AA1F 0105         A   196    	SUB	R15,#261
+                           A   197    ;   61		char buffer[CLI_BUFFER_SIZE];
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   5
+
+
+PC     Object              I  Line    Source cli.src
+                           A   198    ;   62		char c;
+                           A   199    ;   63	
+                           A   200    ;   64		int buffer_pos;
+                           A   201    ;   65	
+                           A   202    ;   66		uart_printf("%s", cli_prompt);
+                           A   203    .line 66
+00000026 098F 0000         A   204    	PUSH.W	#_cli_prompt
+0000002A 098F 0003         A   205    	PUSH.W	#L__2
+0000002E F1 FFFFE7         A   206    	CALL	_uart_printf
+00000032 8F04              A   207    	ADD	R15,#4
+                           A   208    ;   67	
+                           A   209    ;   68		buffer_pos = 0;
+                           A   210    .line 68
+00000034 ADCE BFFB         A   211    	CLR	-5(R14)
+                           A   212    ;   69	
+                           A   213    ;   70		while(1) {
+00000038                   A   214    _2_L_18:
+                           A   215    .line 70
+                           A   216    ;   71			//wait until a character is available
+                           A   217    ;   72			while((c = uart_getchar()) == 0) { ; }
+00000038                   A   218    _2_L_1:
+                           A   219    .line 72
+00000038 F1 FFFFE2         A   220    	CALL	_uart_getchar
+0000003C 53F0              A   221    	LD.B	-1(R14),R0
+0000003E ADDE 3FFF         A   222    	CPZ.B	-1(R14)
+00000042 E6 FA             A   223    	JP	EQ,_2_L_1
+                           A   224    ;   73	
+                           A   225    ;   74			//new line means end of the command
+                           A   226    ;   75			if(c == '\n') {
+                           A   227    .line 75
+00000044 300A              A   228    	LD	R0,#10
+00000046 7D0E BFFF         A   229    	CP.B	-1(R14),R0
+0000004A EE 1C             A   230    	JP	NE,_2_L_14
+                           A   231    ;   76				//only process a command if something was entered
+                           A   232    ;   77				if(buffer_pos) {
+                           A   233    .line 77
+0000004C ADDE BFFB         A   234    	CPZ	-5(R14)
+00000050 E6 08             A   235    	JP	EQ,_2_L_4
+                           A   236    ;   78					buffer[buffer_pos] = '\0';
+                           A   237    .line 78
+00000052 6FD0              A   238    	LD.SW	R0,-3(R14)
+00000054 48E1 BEFB         A   239    	LEA	R1,-261(R14)
+00000058 A010              A   240    	ADD	R0,R1
+0000005A AC00              A   241    	CLR.B	(R0)
+                           A   242    ;   79					cli_process_command(buffer);
+                           A   243    .line 79
+0000005C 48E1 BEFB         A   244    	LEA	R1,-261(R14)
+00000060 D0F9              A   245    	CALL	_cli_process_command
+                           A   246    ;   80				}
+00000062                   A   247    _2_L_4:
+                           A   248    .line 80
+                           A   249    ;   81	
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   6
+
+
+PC     Object              I  Line    Source cli.src
+                           A   250    ;   82				buffer_pos = 0;
+                           A   251    .line 82
+00000062 ADCE BFFB         A   252    	CLR	-5(R14)
+                           A   253    ;   83				memset(buffer, 0, CLI_BUFFER_SIZE);
+                           A   254    .line 83
+00000066 48E1 BEFB         A   255    	LEA	R1,-261(R14)
+0000006A 3200              A   256    	LD	R2,#0
+0000006C 4503 0100         A   257    	LD	R3,#256
+00000070 F1 FFFFC6         A   258    	CALL	_memset
+                           A   259    ;   84	
+                           A   260    ;   85				uart_printf("%s", cli_prompt);
+                           A   261    .line 85
+00000074 098F 0000         A   262    	PUSH.W	#_cli_prompt
+00000078 098F 0006         A   263    	PUSH.W	#L__6
+0000007C F1 FFFFC0         A   264    	CALL	_uart_printf
+00000080 8F04              A   265    	ADD	R15,#4
+                           A   266    ;   86			}
+                           A   267    ;   87			//there is more to come...
+                           A   268    ;   88			else if(isgraph(c) || isspace(c)) {
+                           A   269    .line 88
+00000082 C021              A   270    	JP	_2_L_17
+00000084                   A   271    _2_L_14:
+00000084 63F1              A   272    	LD.UB	R1,-1(R14)
+00000086 F1 FFFFBB         A   273    	CALL	_isgraph
+0000008A 9000              A   274    	CP	R0,#0
+0000008C EE 05             A   275    	JP	NE,_2_L_11
+0000008E 63F1              A   276    	LD.UB	R1,-1(R14)
+00000090 F1 FFFFB6         A   277    	CALL	_isspace
+00000094 9000              A   278    	CP	R0,#0
+00000096 E6 09             A   279    	JP	EQ,_2_L_12
+00000098                   A   280    _2_L_11:
+                           A   281    ;   89				buffer[buffer_pos++] = c;
+                           A   282    .line 89
+00000098 5FB0              A   283    	LD	R0,-5(R14)
+0000009A 48E1 BEFB         A   284    	LEA	R1,-261(R14)
+0000009E A010              A   285    	ADD	R0,R1
+000000A0 6BF1              A   286    	LD.SB	R1,-1(R14)
+000000A2 0E10              A   287    	LD.B	(R0),R1
+000000A4 ADEE BFFB         A   288    	INC	-5(R14)
+                           A   289    ;   90			}
+                           A   290    ;   91			//
+                           A   291    ;   92			else if(c == ASCII_DEL) {
+                           A   292    .line 92
+000000A8 C00E              A   293    	JP	_2_L_17
+000000AA                   A   294    _2_L_12:
+000000AA 307F              A   295    	LD	R0,#127
+000000AC 7D0E BFFF         A   296    	CP.B	-1(R14),R0
+000000B0 EE C3             A   297    	JP	NE,_2_L_18
+                           A   298    ;   93				if(buffer_pos) {
+                           A   299    .line 93
+000000B2 ADDE BFFB         A   300    	CPZ	-5(R14)
+000000B6 E6 07             A   301    	JP	EQ,_2_L_17
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   7
+
+
+PC     Object              I  Line    Source cli.src
+                           A   302    ;   94					buffer_pos--;
+                           A   303    .line 94
+000000B8 ADFE BFFB         A   304    	DEC	-5(R14)
+                           A   305    ;   95					buffer[buffer_pos] = '\0';
+                           A   306    .line 95
+000000BC 6FD0              A   307    	LD.SW	R0,-3(R14)
+000000BE 48E1 BEFB         A   308    	LEA	R1,-261(R14)
+000000C2 A010              A   309    	ADD	R0,R1
+000000C4 AC00              A   310    	CLR.B	(R0)
+                           A   311    ;   96				}
+                           A   312    ;   97			}
+                           A   313    ;   98			//ignore for now
+                           A   314    ;   99			else {
+                           A   315    .line 99
+                           A   316    ;  100				continue;
+                           A   317    ;  101			}
+000000C6                   A   318    _2_L_17:
+                           A   319    .line 101
+                           A   320    ;  102	
+                           A   321    ;  103			//is the command too long?
+                           A   322    ;  104			if(buffer_pos >= CLI_BUFFER_SIZE) {
+                           A   323    .line 104
+000000C6 4500 0100         A   324    	LD	R0,#256
+000000CA 7D0E FFFB         A   325    	CP	-5(R14),R0
+000000CE E1 B4             A   326    	JP	LT,_2_L_18
+                           A   327    ;  105				uart_printf("\n--Error--, command is too long. Command ignored.\n");
+                           A   328    .line 105
+000000D0 098F 0009         A   329    	PUSH.W	#L__12
+000000D4 F1 FFFF94         A   330    	CALL	_uart_printf
+000000D8 8F02              A   331    	ADD	R15,#2
+                           A   332    ;  106				
+                           A   333    ;  107				buffer_pos = 0;
+                           A   334    .line 107
+000000DA ADCE BFFB         A   335    	CLR	-5(R14)
+                           A   336    ;  108				memset(buffer, 0, CLI_BUFFER_SIZE);
+                           A   337    .line 108
+000000DE 48E1 BEFB         A   338    	LEA	R1,-261(R14)
+000000E2 3200              A   339    	LD	R2,#0
+000000E4 4503 0100         A   340    	LD	R3,#256
+000000E8 F1 FFFF8A         A   341    	CALL	_memset
+                           A   342    ;  109	
+                           A   343    ;  110				uart_printf("%s", cli_prompt);
+                           A   344    .line 110
+000000EC 098F 0000         A   345    	PUSH.W	#_cli_prompt
+000000F0 098F 003C         A   346    	PUSH.W	#L__13
+000000F4 F1 FFFF84         A   347    	CALL	_uart_printf
+000000F8 8F04              A   348    	ADD	R15,#4
+                           A   349    ;  111			}
+                           A   350    ;  112		}
+                           A   351    .line 112
+000000FA CF9E              A   352    	JP	_2_L_18
+                           A   353    ;  113	}
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   8
+
+
+PC     Object              I  Line    Source cli.src
+                           A   354    .line 113
+000000FC 0001              A   355    	UNLINK	
+000000FE FFFC              A   356    	RET	
+                           A   357    
+                           A   358    
+                           A   359    ;**************************** _cli_loop ***************************
+                           A   360    ;Name                         Addr/Register   Size   Type
+                           A   361    ;_isspace                            IMPORT  -----   function
+                           A   362    ;_isgraph                            IMPORT  -----   function
+                           A   363    ;_memset                             IMPORT  -----   function
+                           A   364    ;_cli_process_command                STATIC  -----   function
+                           A   365    ;_uart_getchar                       IMPORT  -----   function
+                           A   366    ;_cli_prompt                         STATIC    256   variable
+                           A   367    ;_uart_printf                        IMPORT  -----   function
+                           A   368    ;buffer                             R14-261    256   variable
+                           A   369    ;buffer_pos                           R14-5      4   variable
+                           A   370    ;c                                    R14-1      1   variable
+                           A   371    
+                           A   372    
+                           A   373    ; Aggregate Stack Size: -261 (words)
+                           A   374    
+                           A   375    
+                           A   376    .endfunc "cli_loop",113,"_cli_loop"
+                           A   377    ;  114	
+                           A   378    ;  115	int cli_strip_quotes(char **args)
+                           A   379    ;  116	{
+00000100                   A   380    _cli_strip_quotes:
+                           A   381    .define "_cli_strip_quotes"
+                           A   382    .value _cli_strip_quotes
+                           A   383    .class 2
+                           A   384    .type 69
+                           A   385    .type 0
+                           A   386    .endef
+                           A   387    .begfunc "cli_strip_quotes",116,"_cli_strip_quotes"
+00000100 0804              A   388    	LINK	#4
+                           A   389    .line 116
+00000102 57E1              A   390    	LD.W	-2(R14),R1
+                           A   391    .define "args"
+                           A   392    .class 9
+                           A   393    .value -2
+                           A   394    .type 1164
+                           A   395    .type 0
+                           A   396    .endef
+                           A   397    .define "c"
+                           A   398    .class 1
+                           A   399    .value -4
+                           A   400    .type 140
+                           A   401    .type 0
+                           A   402    .endef
+                           A   403    ;  117		char *c;
+                           A   404    ;  118	
+                           A   405    ;  119		c = *args;
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   9
+
+
+PC     Object              I  Line    Source cli.src
+                           A   406    .line 119
+00000104 6FE0              A   407    	LD.SW	R0,-2(R14)
+00000106 1E00              A   408    	LD.SW	R0,(R0)
+00000108 57C0              A   409    	LD.W	-4(R14),R0
+                           A   410    ;  120		if(*c != '"') {
+                           A   411    .line 120
+0000010A 6FC0              A   412    	LD.SW	R0,-4(R14)
+0000010C 1800              A   413    	LD.UB	R0,(R0)
+0000010E 9022              A   414    	CP	R0,#34
+00000110 E6 02             A   415    	JP	EQ,_3_L_22
+                           A   416    ;  121			return 1;
+                           A   417    .line 121
+00000112 3001              A   418    	LD	R0,#1
+00000114 C012              A   419    	JP	_3_L_25
+                           A   420    ;  122		}
+00000116                   A   421    _3_L_22:
+                           A   422    .line 122
+                           A   423    ;  123		++c;
+                           A   424    .line 123
+00000116 ADEE 7FFC         A   425    	INC.W	-4(R14)
+                           A   426    ;  124	
+                           A   427    ;  125		c = strchr(c, '"');
+                           A   428    .line 125
+0000011A 6FC1              A   429    	LD.SW	R1,-4(R14)
+0000011C 3222              A   430    	LD	R2,#34
+0000011E F1 FFFF6F         A   431    	CALL	_strchr
+00000122 57C0              A   432    	LD.W	-4(R14),R0
+                           A   433    ;  126		if(c == NULL) {
+                           A   434    .line 126
+00000124 ADDE 7FFC         A   435    	CPZ.W	-4(R14)
+00000128 EE 02             A   436    	JP	NE,_3_L_24
+                           A   437    ;  127			return 1;
+                           A   438    .line 127
+0000012A 3001              A   439    	LD	R0,#1
+0000012C C006              A   440    	JP	_3_L_25
+                           A   441    ;  128		}
+0000012E                   A   442    _3_L_24:
+                           A   443    .line 128
+                           A   444    ;  129		*c = '\0';
+                           A   445    .line 129
+0000012E 6FC0              A   446    	LD.SW	R0,-4(R14)
+00000130 AC00              A   447    	CLR.B	(R0)
+                           A   448    ;  130	
+                           A   449    ;  131		*args = c;
+                           A   450    .line 131
+00000132 6FE0              A   451    	LD.SW	R0,-2(R14)
+00000134 6FC1              A   452    	LD.SW	R1,-4(R14)
+00000136 0F10              A   453    	LD.W	(R0),R1
+                           A   454    ;  132	
+                           A   455    ;  133		return 0;
+                           A   456    .line 133
+00000138 3000              A   457    	LD	R0,#0
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  10
+
+
+PC     Object              I  Line    Source cli.src
+                           A   458    ;  134	}
+0000013A                   A   459    _3_L_25:
+                           A   460    .line 134
+0000013A 0001              A   461    	UNLINK	
+0000013C FFFC              A   462    	RET	
+                           A   463    
+                           A   464    
+                           A   465    ;**************************** _cli_strip_quotes ***************************
+                           A   466    ;Name                         Addr/Register   Size   Type
+                           A   467    ;_strchr                             IMPORT  -----   function
+                           A   468    ;c                                    R14-4      2   variable
+                           A   469    ;args                                 R14-2      2   parameter
+                           A   470    
+                           A   471    
+                           A   472    ; Aggregate Stack Size: -4 (words)
+                           A   473    
+                           A   474    
+                           A   475    .endfunc "cli_strip_quotes",134,"_cli_strip_quotes"
+                           A   476    ;  135	
+                           A   477    ;  136	int cli_strip_word(char **args) 
+                           A   478    ;  137	{
+0000013E                   A   479    _cli_strip_word:
+                           A   480    .define "_cli_strip_word"
+                           A   481    .value _cli_strip_word
+                           A   482    .class 2
+                           A   483    .type 69
+                           A   484    .type 0
+                           A   485    .endef
+                           A   486    .begfunc "cli_strip_word",137,"_cli_strip_word"
+0000013E 0804              A   487    	LINK	#4
+                           A   488    .line 137
+00000140 57E1              A   489    	LD.W	-2(R14),R1
+                           A   490    .define "args"
+                           A   491    .class 9
+                           A   492    .value -2
+                           A   493    .type 1164
+                           A   494    .type 0
+                           A   495    .endef
+                           A   496    .define "c"
+                           A   497    .class 1
+                           A   498    .value -4
+                           A   499    .type 140
+                           A   500    .type 0
+                           A   501    .endef
+                           A   502    ;  138		char *c;
+                           A   503    ;  139	
+                           A   504    ;  140		c = *args;
+                           A   505    .line 140
+00000142 6FE0              A   506    	LD.SW	R0,-2(R14)
+00000144 1E00              A   507    	LD.SW	R0,(R0)
+00000146 57C0              A   508    	LD.W	-4(R14),R0
+                           A   509    ;  141		while(isalpha(*c)) {
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  11
+
+
+PC     Object              I  Line    Source cli.src
+00000148                   A   510    _4_L_26:
+                           A   511    .line 141
+00000148 6FC0              A   512    	LD.SW	R0,-4(R14)
+0000014A 1801              A   513    	LD.UB	R1,(R0)
+0000014C F1 FFFF58         A   514    	CALL	_isalpha
+00000150 9000              A   515    	CP	R0,#0
+00000152 E6 03             A   516    	JP	EQ,_4_L_29
+                           A   517    ;  142			++c;
+                           A   518    .line 142
+00000154 ADEE 7FFC         A   519    	INC.W	-4(R14)
+                           A   520    ;  143		}
+                           A   521    .line 143
+00000158 CFF7              A   522    	JP	_4_L_26
+0000015A                   A   523    _4_L_29:
+                           A   524    ;  144	
+                           A   525    ;  145		if(c == *args) {
+                           A   526    .line 145
+0000015A 6FE0              A   527    	LD.SW	R0,-2(R14)
+0000015C 6FC1              A   528    	LD.SW	R1,-4(R14)
+0000015E 7D10 C000         A   529    	CP.W	(R0),R1
+00000162 EE 02             A   530    	JP	NE,_4_L_30
+                           A   531    ;  146			return 1;
+                           A   532    .line 146
+00000164 3001              A   533    	LD	R0,#1
+00000166 C006              A   534    	JP	_4_L_31
+                           A   535    ;  147		}
+00000168                   A   536    _4_L_30:
+                           A   537    .line 147
+                           A   538    ;  148		*c = '\0';
+                           A   539    .line 148
+00000168 6FC0              A   540    	LD.SW	R0,-4(R14)
+0000016A AC00              A   541    	CLR.B	(R0)
+                           A   542    ;  149	
+                           A   543    ;  150		*args = c;
+                           A   544    .line 150
+0000016C 6FE0              A   545    	LD.SW	R0,-2(R14)
+0000016E 6FC1              A   546    	LD.SW	R1,-4(R14)
+00000170 0F10              A   547    	LD.W	(R0),R1
+                           A   548    ;  151	
+                           A   549    ;  152		return 0;
+                           A   550    .line 152
+00000172 3000              A   551    	LD	R0,#0
+                           A   552    ;  153	}
+00000174                   A   553    _4_L_31:
+                           A   554    .line 153
+00000174 0001              A   555    	UNLINK	
+00000176 FFFC              A   556    	RET	
+                           A   557    
+                           A   558    
+                           A   559    ;**************************** _cli_strip_word ***************************
+                           A   560    ;Name                         Addr/Register   Size   Type
+                           A   561    ;_isalpha                            IMPORT  -----   function
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  12
+
+
+PC     Object              I  Line    Source cli.src
+                           A   562    ;c                                    R14-4      2   variable
+                           A   563    ;args                                 R14-2      2   parameter
+                           A   564    
+                           A   565    
+                           A   566    ; Aggregate Stack Size: -4 (words)
+                           A   567    
+                           A   568    
+                           A   569    .endfunc "cli_strip_word",153,"_cli_strip_word"
+                           A   570    ;  154	
+                           A   571    ;  155	int cli_strip_hex(char **args)
+                           A   572    ;  156	{
+00000178                   A   573    _cli_strip_hex:
+                           A   574    .define "_cli_strip_hex"
+                           A   575    .value _cli_strip_hex
+                           A   576    .class 2
+                           A   577    .type 69
+                           A   578    .type 0
+                           A   579    .endef
+                           A   580    .begfunc "cli_strip_hex",156,"_cli_strip_hex"
+00000178 0804              A   581    	LINK	#4
+                           A   582    .line 156
+0000017A 57E1              A   583    	LD.W	-2(R14),R1
+                           A   584    .define "args"
+                           A   585    .class 9
+                           A   586    .value -2
+                           A   587    .type 1164
+                           A   588    .type 0
+                           A   589    .endef
+                           A   590    .define "c"
+                           A   591    .class 1
+                           A   592    .value -4
+                           A   593    .type 140
+                           A   594    .type 0
+                           A   595    .endef
+                           A   596    ;  157		char *c;
+                           A   597    ;  158	
+                           A   598    ;  159		c = *args;
+                           A   599    .line 159
+0000017C 6FE0              A   600    	LD.SW	R0,-2(R14)
+0000017E 1E00              A   601    	LD.SW	R0,(R0)
+00000180 57C0              A   602    	LD.W	-4(R14),R0
+                           A   603    ;  160		while(isalpha(*c) || isdigit(*c)) {
+00000182                   A   604    _5_L_33:
+                           A   605    .line 160
+00000182 6FC0              A   606    	LD.SW	R0,-4(R14)
+00000184 1801              A   607    	LD.UB	R1,(R0)
+00000186 F1 FFFF3B         A   608    	CALL	_isalpha
+0000018A 9000              A   609    	CP	R0,#0
+0000018C EE 06             A   610    	JP	NE,_5_L_34
+0000018E 6FC0              A   611    	LD.SW	R0,-4(R14)
+00000190 1801              A   612    	LD.UB	R1,(R0)
+00000192 F1 FFFF35         A   613    	CALL	_isdigit
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  13
+
+
+PC     Object              I  Line    Source cli.src
+00000196 9000              A   614    	CP	R0,#0
+00000198 E6 03             A   615    	JP	EQ,_5_L_36
+0000019A                   A   616    _5_L_34:
+                           A   617    ;  161			++c;
+                           A   618    .line 161
+0000019A ADEE 7FFC         A   619    	INC.W	-4(R14)
+                           A   620    ;  162		}
+                           A   621    .line 162
+0000019E CFF1              A   622    	JP	_5_L_33
+000001A0                   A   623    _5_L_36:
+                           A   624    ;  163	
+                           A   625    ;  164		if(c == *args) {
+                           A   626    .line 164
+000001A0 6FE0              A   627    	LD.SW	R0,-2(R14)
+000001A2 6FC1              A   628    	LD.SW	R1,-4(R14)
+000001A4 7D10 C000         A   629    	CP.W	(R0),R1
+000001A8 EE 02             A   630    	JP	NE,_5_L_37
+                           A   631    ;  165			return 1;
+                           A   632    .line 165
+000001AA 3001              A   633    	LD	R0,#1
+000001AC C006              A   634    	JP	_5_L_38
+                           A   635    ;  166		}
+000001AE                   A   636    _5_L_37:
+                           A   637    .line 166
+                           A   638    ;  167		*c = '\0';
+                           A   639    .line 167
+000001AE 6FC0              A   640    	LD.SW	R0,-4(R14)
+000001B0 AC00              A   641    	CLR.B	(R0)
+                           A   642    ;  168	
+                           A   643    ;  169		*args = c;
+                           A   644    .line 169
+000001B2 6FE0              A   645    	LD.SW	R0,-2(R14)
+000001B4 6FC1              A   646    	LD.SW	R1,-4(R14)
+000001B6 0F10              A   647    	LD.W	(R0),R1
+                           A   648    ;  170	
+                           A   649    ;  171		return 0;
+                           A   650    .line 171
+000001B8 3000              A   651    	LD	R0,#0
+                           A   652    ;  172	}
+000001BA                   A   653    _5_L_38:
+                           A   654    .line 172
+000001BA 0001              A   655    	UNLINK	
+000001BC FFFC              A   656    	RET	
+                           A   657    
+                           A   658    
+                           A   659    ;**************************** _cli_strip_hex ***************************
+                           A   660    ;Name                         Addr/Register   Size   Type
+                           A   661    ;_isdigit                            IMPORT  -----   function
+                           A   662    ;_isalpha                            IMPORT  -----   function
+                           A   663    ;c                                    R14-4      2   variable
+                           A   664    ;args                                 R14-2      2   parameter
+                           A   665    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  14
+
+
+PC     Object              I  Line    Source cli.src
+                           A   666    
+                           A   667    ; Aggregate Stack Size: -4 (words)
+                           A   668    
+                           A   669    
+                           A   670    .endfunc "cli_strip_hex",172,"_cli_strip_hex"
+                           A   671    ;  173	
+                           A   672    ;  174	int cli_strip_decimal_number(char **args)
+                           A   673    ;  175	{
+000001BE                   A   674    _cli_strip_decimal_number:
+                           A   675    .define "_cli_strip_decimal_number"
+                           A   676    .value _cli_strip_decimal_number
+                           A   677    .class 2
+                           A   678    .type 69
+                           A   679    .type 0
+                           A   680    .endef
+                           A   681    .begfunc "cli_strip_decimal_number",175,"_cli_strip_decimal_number"
+000001BE 0804              A   682    	LINK	#4
+                           A   683    .line 175
+000001C0 57E1              A   684    	LD.W	-2(R14),R1
+                           A   685    .define "args"
+                           A   686    .class 9
+                           A   687    .value -2
+                           A   688    .type 1164
+                           A   689    .type 0
+                           A   690    .endef
+                           A   691    .define "c"
+                           A   692    .class 1
+                           A   693    .value -4
+                           A   694    .type 140
+                           A   695    .type 0
+                           A   696    .endef
+                           A   697    ;  176		char *c;
+                           A   698    ;  177	
+                           A   699    ;  178		c = *args;
+                           A   700    .line 178
+000001C2 6FE0              A   701    	LD.SW	R0,-2(R14)
+000001C4 1E00              A   702    	LD.SW	R0,(R0)
+000001C6 57C0              A   703    	LD.W	-4(R14),R0
+                           A   704    ;  179		while(isdigit(*c)) {
+000001C8                   A   705    _6_L_39:
+                           A   706    .line 179
+000001C8 6FC0              A   707    	LD.SW	R0,-4(R14)
+000001CA 1801              A   708    	LD.UB	R1,(R0)
+000001CC F1 FFFF18         A   709    	CALL	_isdigit
+000001D0 9000              A   710    	CP	R0,#0
+000001D2 E6 03             A   711    	JP	EQ,_6_L_41
+                           A   712    ;  180			++c;
+                           A   713    .line 180
+000001D4 ADEE 7FFC         A   714    	INC.W	-4(R14)
+                           A   715    ;  181		}
+                           A   716    .line 181
+000001D8 CFF7              A   717    	JP	_6_L_39
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  15
+
+
+PC     Object              I  Line    Source cli.src
+000001DA                   A   718    _6_L_41:
+                           A   719    ;  182		*c = '\0';
+                           A   720    .line 182
+000001DA 6FC0              A   721    	LD.SW	R0,-4(R14)
+000001DC AC00              A   722    	CLR.B	(R0)
+                           A   723    ;  183	
+                           A   724    ;  184		//is there a number at all
+                           A   725    ;  185		if(*args == c) {
+                           A   726    .line 185
+000001DE 6FE0              A   727    	LD.SW	R0,-2(R14)
+000001E0 6FC1              A   728    	LD.SW	R1,-4(R14)
+000001E2 7D10 C000         A   729    	CP.W	(R0),R1
+000001E6 EE 02             A   730    	JP	NE,_6_L_43
+                           A   731    ;  186			return 1;
+                           A   732    .line 186
+000001E8 3001              A   733    	LD	R0,#1
+000001EA C004              A   734    	JP	_6_L_44
+                           A   735    ;  187		}
+000001EC                   A   736    _6_L_43:
+                           A   737    .line 187
+                           A   738    ;  188		*args = c;
+                           A   739    .line 188
+000001EC 6FE0              A   740    	LD.SW	R0,-2(R14)
+000001EE 6FC1              A   741    	LD.SW	R1,-4(R14)
+000001F0 0F10              A   742    	LD.W	(R0),R1
+                           A   743    ;  189	
+                           A   744    ;  190		return 0;
+                           A   745    .line 190
+000001F2 3000              A   746    	LD	R0,#0
+                           A   747    ;  191	}
+000001F4                   A   748    _6_L_44:
+                           A   749    .line 191
+000001F4 0001              A   750    	UNLINK	
+000001F6 FFFC              A   751    	RET	
+                           A   752    
+                           A   753    
+                           A   754    ;**************************** _cli_strip_decimal_number ***************************
+                           A   755    ;Name                         Addr/Register   Size   Type
+                           A   756    ;_isdigit                            IMPORT  -----   function
+                           A   757    ;c                                    R14-4      2   variable
+                           A   758    ;args                                 R14-2      2   parameter
+                           A   759    
+                           A   760    
+                           A   761    ; Aggregate Stack Size: -4 (words)
+                           A   762    
+                           A   763    
+                           A   764    .endfunc "cli_strip_decimal_number",191,"_cli_strip_decimal_number"
+                           A   765    ;  192	
+                           A   766    ;  193	void cli_strip_spaces(char **args)
+                           A   767    ;  194	{
+000001F8                   A   768    _cli_strip_spaces:
+                           A   769    .define "_cli_strip_spaces"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  16
+
+
+PC     Object              I  Line    Source cli.src
+                           A   770    .value _cli_strip_spaces
+                           A   771    .class 2
+                           A   772    .type 65
+                           A   773    .type 0
+                           A   774    .endef
+                           A   775    .begfunc "cli_strip_spaces",194,"_cli_strip_spaces"
+000001F8 0804              A   776    	LINK	#4
+                           A   777    .line 194
+000001FA 57E1              A   778    	LD.W	-2(R14),R1
+                           A   779    .define "args"
+                           A   780    .class 9
+                           A   781    .value -2
+                           A   782    .type 1164
+                           A   783    .type 0
+                           A   784    .endef
+                           A   785    .define "c"
+                           A   786    .class 1
+                           A   787    .value -4
+                           A   788    .type 140
+                           A   789    .type 0
+                           A   790    .endef
+                           A   791    ;  195		char *c;
+                           A   792    ;  196	
+                           A   793    ;  197		c = *args;
+                           A   794    .line 197
+000001FC 6FE0              A   795    	LD.SW	R0,-2(R14)
+000001FE 1E00              A   796    	LD.SW	R0,(R0)
+00000200 57C0              A   797    	LD.W	-4(R14),R0
+                           A   798    ;  198		while(isspace(*c)) {
+00000202                   A   799    _7_L_45:
+                           A   800    .line 198
+00000202 6FC0              A   801    	LD.SW	R0,-4(R14)
+00000204 1801              A   802    	LD.UB	R1,(R0)
+00000206 F1 FFFEFB         A   803    	CALL	_isspace
+0000020A 9000              A   804    	CP	R0,#0
+0000020C E6 03             A   805    	JP	EQ,_7_L_47
+                           A   806    ;  199			++c;
+                           A   807    .line 199
+0000020E ADEE 7FFC         A   808    	INC.W	-4(R14)
+                           A   809    ;  200		}
+                           A   810    .line 200
+00000212 CFF7              A   811    	JP	_7_L_45
+00000214                   A   812    _7_L_47:
+                           A   813    ;  201	
+                           A   814    ;  202		*args = c;
+                           A   815    .line 202
+00000214 6FE0              A   816    	LD.SW	R0,-2(R14)
+00000216 6FC1              A   817    	LD.SW	R1,-4(R14)
+00000218 0F10              A   818    	LD.W	(R0),R1
+                           A   819    ;  203	}
+                           A   820    .line 203
+0000021A 0001              A   821    	UNLINK	
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  17
+
+
+PC     Object              I  Line    Source cli.src
+0000021C FFFC              A   822    	RET	
+                           A   823    
+                           A   824    
+                           A   825    ;**************************** _cli_strip_spaces ***************************
+                           A   826    ;Name                         Addr/Register   Size   Type
+                           A   827    ;_isspace                            IMPORT  -----   function
+                           A   828    ;c                                    R14-4      2   variable
+                           A   829    ;args                                 R14-2      2   parameter
+                           A   830    
+                           A   831    
+                           A   832    ; Aggregate Stack Size: -4 (words)
+                           A   833    
+                           A   834    
+                           A   835    .endfunc "cli_strip_spaces",203,"_cli_strip_spaces"
+                           A   836    ;  204	
+                           A   837    ;  205	void cli_set_prompt(const char *text)
+                           A   838    ;  206	{
+0000021E                   A   839    _cli_set_prompt:
+                           A   840    .define "_cli_set_prompt"
+                           A   841    .value _cli_set_prompt
+                           A   842    .class 2
+                           A   843    .type 65
+                           A   844    .type 0
+                           A   845    .endef
+                           A   846    .begfunc "cli_set_prompt",206,"_cli_set_prompt"
+0000021E 0806              A   847    	LINK	#6
+                           A   848    .line 206
+00000220 57E1              A   849    	LD.W	-2(R14),R1
+                           A   850    .define "text"
+                           A   851    .class 9
+                           A   852    .value -2
+                           A   853    .type 140
+                           A   854    .type 0
+                           A   855    .endef
+                           A   856    .define "prompt_len"
+                           A   857    .class 1
+                           A   858    .value -6
+                           A   859    .type 15
+                           A   860    .type 0
+                           A   861    .endef
+                           A   862    ;  207		size_t prompt_len;
+                           A   863    ;  208		
+                           A   864    ;  209		prompt_len = strlen(text) + 1;
+                           A   865    .line 209
+00000222 6FE1              A   866    	LD.SW	R1,-2(R14)
+00000224 F1 FFFEEC         A   867    	CALL	_strlen
+00000228 8001              A   868    	ADD	R0,#1
+0000022A 5BA0              A   869    	LD	-6(R14),R0
+                           A   870    ;  210		if(prompt_len >= CLI_BUFFER_SIZE) {
+                           A   871    .line 210
+0000022C 4500 0100         A   872    	LD	R0,#256
+00000230 7D0E FFFA         A   873    	CP	-6(R14),R0
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  18
+
+
+PC     Object              I  Line    Source cli.src
+00000234 E7 01             A   874    	JP	C,_8_L_50
+                           A   875    ;  211			prompt_len = CLI_BUFFER_SIZE;
+                           A   876    .line 211
+00000236 5BA0              A   877    	LD	-6(R14),R0
+                           A   878    ;  212		}
+00000238                   A   879    _8_L_50:
+                           A   880    .line 212
+                           A   881    ;  213		
+                           A   882    ;  214		memcpy(cli_prompt, text, prompt_len);
+                           A   883    .line 214
+00000238 4511 0000         A   884    	LD	R1,#_cli_prompt
+0000023C 6FE2              A   885    	LD.SW	R2,-2(R14)
+0000023E 5FA3              A   886    	LD	R3,-6(R14)
+00000240 F1 FFFEDE         A   887    	CALL	_memcpy
+                           A   888    ;  215		cli_prompt[prompt_len-1] = '\0';
+                           A   889    .line 215
+00000244 5FA0              A   890    	LD	R0,-6(R14)
+00000246 80FF              A   891    	ADD	R0,#-1
+00000248 4511 0000         A   892    	LD	R1,#_cli_prompt
+0000024C A010              A   893    	ADD	R0,R1
+0000024E AC00              A   894    	CLR.B	(R0)
+                           A   895    ;  216	}
+                           A   896    .line 216
+00000250 0001              A   897    	UNLINK	
+00000252 FFFC              A   898    	RET	
+                           A   899    
+                           A   900    
+                           A   901    ;**************************** _cli_set_prompt ***************************
+                           A   902    ;Name                         Addr/Register   Size   Type
+                           A   903    ;_cli_prompt                         STATIC    256   variable
+                           A   904    ;_memcpy                             IMPORT  -----   function
+                           A   905    ;_strlen                             IMPORT  -----   function
+                           A   906    ;prompt_len                           R14-6      4   variable
+                           A   907    ;text                                 R14-2      2   parameter
+                           A   908    
+                           A   909    
+                           A   910    ; Aggregate Stack Size: -6 (words)
+                           A   911    
+                           A   912    
+                           A   913    .endfunc "cli_set_prompt",216,"_cli_set_prompt"
+                           A   914    	SEGMENT ROM_TEXT
+0000003F                   A   915    L__35:
+0000003F 696E666F          A   916    	DB	"info"
+00000043 00                A   917    	DB	0
+00000044                   A   918    L__37:
+00000044 3F                A   919    	DB	"?"
+00000045 00                A   920    	DB	0
+00000046                   A   921    L__39:
+00000046 6563686F          A   922    	DB	"echo"
+0000004A 00                A   923    	DB	0
+0000004B                   A   924    L__41:
+0000004B 64697370 6C6179   A   925    	DB	"display"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  19
+
+
+PC     Object              I  Line    Source cli.src
+00000052 00                A   926    	DB	0
+00000053                   A   927    L__43:
+00000053 736574            A   928    	DB	"set"
+00000056 00                A   929    	DB	0
+00000057                   A   930    L__45:
+00000057 686578            A   931    	DB	"hex"
+0000005A 00                A   932    	DB	0
+0000005B                   A   933    L__47:
+0000005B 73776974 6368     A   934    	DB	"switch"
+00000061 00                A   935    	DB	0
+00000062                   A   936    L__49:
+00000062 706F7274          A   937    	DB	"port"
+00000066 00                A   938    	DB	0
+00000067                   A   939    L__51:
+00000067 74696D65 72       A   940    	DB	"timer"
+0000006C 00                A   941    	DB	0
+0000006D                   A   942    L__53:
+0000006D 75617274 30       A   943    	DB	"uart0"
+00000072 00                A   944    	DB	0
+00000073                   A   945    L__55:
+00000073 693263            A   946    	DB	"i2c"
+00000076 00                A   947    	DB	0
+00000077                   A   948    L__57:
+00000077 737069            A   949    	DB	"spi"
+0000007A 00                A   950    	DB	0
+0000007B                   A   951    L__59:
+0000007B 2D2D436F          A   952    	DB	"--Command:%s, not found. Enter \"?\" to see a list of available commands."
+0000007F 6D6D616E 
+00000083 643A2573 
+00000087 2C206E6F 
+0000008B 7420666F 
+0000008F 756E642E 
+00000093 20456E74 
+00000097 65722022 
+0000009B 3F222074 
+0000009F 6F207365 
+000000A3 65206120 
+000000A7 6C697374 
+000000AB 206F6620 
+000000AF 61766169 
+000000B3 6C61626C 
+000000B7 6520636F 
+000000BB 6D6D616E 64732E 
+000000C2 0A00              A   953    	DB	10,0
+                           A   954    	SEGMENT CODE
+                           A   955    ;  217	
+                           A   956    ;  218	static void cli_process_command(char *command)
+                           A   957    ;  219	{
+00000254                   A   958    _cli_process_command:
+                           A   959    .define "_cli_process_command"
+                           A   960    .value _cli_process_command
+                           A   961    .class 3
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  20
+
+
+PC     Object              I  Line    Source cli.src
+                           A   962    .type 65
+                           A   963    .type 0
+                           A   964    .endef
+                           A   965    .begfunc "cli_process_command",219,"_cli_process_command"
+00000254 0804              A   966    	LINK	#4
+                           A   967    .line 219
+00000256 57E1              A   968    	LD.W	-2(R14),R1
+                           A   969    .define "command"
+                           A   970    .class 9
+                           A   971    .value -2
+                           A   972    .type 140
+                           A   973    .type 0
+                           A   974    .endef
+                           A   975    .define "args"
+                           A   976    .class 1
+                           A   977    .value -4
+                           A   978    .type 140
+                           A   979    .type 0
+                           A   980    .endef
+                           A   981    ;  220		char *args;
+                           A   982    ;  221	
+                           A   983    ;  222		//strip spaces and tabs
+                           A   984    ;  223		cli_strip_spaces(&command);
+                           A   985    .line 223
+00000258 4FE1              A   986    	LEA	R1,-2(R14)
+0000025A DFCE              A   987    	CALL	_cli_strip_spaces
+                           A   988    ;  224	
+                           A   989    ;  225		args = command;
+                           A   990    .line 225
+0000025C 6FE0              A   991    	LD.SW	R0,-2(R14)
+0000025E 57C0              A   992    	LD.W	-4(R14),R0
+                           A   993    ;  226		while(isgraph(*args) && *args != '\t') {	//bug with isgraph, returns true on \t and 
+00000260                   A   994    _9_L_53:
+                           A   995    .line 226
+00000260 6FC0              A   996    	LD.SW	R0,-4(R14)
+00000262 1801              A   997    	LD.UB	R1,(R0)
+00000264 F1 FFFECC         A   998    	CALL	_isgraph
+00000268 9000              A   999    	CP	R0,#0
+0000026A E6 07             A  1000    	JP	EQ,_9_L_80
+0000026C 6FC0              A  1001    	LD.SW	R0,-4(R14)
+0000026E 1800              A  1002    	LD.UB	R0,(R0)
+00000270 9009              A  1003    	CP	R0,#9
+00000272 E6 03             A  1004    	JP	EQ,_9_L_80
+                           A  1005    ;  227			++args;
+                           A  1006    .line 227
+00000274 ADEE 7FFC         A  1007    	INC.W	-4(R14)
+                           A  1008    ;  228		}
+                           A  1009    .line 228
+00000278 CFF3              A  1010    	JP	_9_L_53
+0000027A                   A  1011    _9_L_80:
+                           A  1012    ;  229	
+                           A  1013    ;  230		if(args != command) {
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  21
+
+
+PC     Object              I  Line    Source cli.src
+                           A  1014    .line 230
+0000027A 6FE0              A  1015    	LD.SW	R0,-2(R14)
+0000027C 7D0E DFFC         A  1016    	CP.W	-4(R14),R0
+00000280 F226 0083         A  1017    	JP	EQ,_9_L_81
+                           A  1018    ;  231			*args = '\0';
+                           A  1019    .line 231
+00000284 6FC0              A  1020    	LD.SW	R0,-4(R14)
+00000286 AC00              A  1021    	CLR.B	(R0)
+                           A  1022    ;  232	
+                           A  1023    ;  233			++args;
+                           A  1024    .line 233
+00000288 ADEE 7FFC         A  1025    	INC.W	-4(R14)
+                           A  1026    ;  234			if(strcmp(command, "info") == 0) {
+                           A  1027    .line 234
+0000028C 6FE1              A  1028    	LD.SW	R1,-2(R14)
+0000028E 4502 003F         A  1029    	LD	R2,#L__35
+00000292 F1 FFFEB5         A  1030    	CALL	_strcmp
+00000296 9000              A  1031    	CP	R0,#0
+00000298 EE 02             A  1032    	JP	NE,_9_L_78
+                           A  1033    ;  235				cli_command_info();
+                           A  1034    .line 235
+0000029A D10D              A  1035    	CALL	_cli_command_info
+                           A  1036    ;  236			}
+                           A  1037    ;  237			else if(strcmp(command, "?") == 0) {
+                           A  1038    .line 237
+0000029C C076              A  1039    	JP	_9_L_81
+0000029E                   A  1040    _9_L_78:
+0000029E 6FE1              A  1041    	LD.SW	R1,-2(R14)
+000002A0 4502 0044         A  1042    	LD	R2,#L__37
+000002A4 F1 FFFEAC         A  1043    	CALL	_strcmp
+000002A8 9000              A  1044    	CP	R0,#0
+000002AA EE 02             A  1045    	JP	NE,_9_L_76
+                           A  1046    ;  238				cli_command_question();
+                           A  1047    .line 238
+000002AC D070              A  1048    	CALL	_cli_command_question
+                           A  1049    ;  239			}
+                           A  1050    ;  240			else if(strcmp(command, "echo") == 0) {
+                           A  1051    .line 240
+000002AE C06D              A  1052    	JP	_9_L_81
+000002B0                   A  1053    _9_L_76:
+000002B0 6FE1              A  1054    	LD.SW	R1,-2(R14)
+000002B2 4502 0046         A  1055    	LD	R2,#L__39
+000002B6 F1 FFFEA3         A  1056    	CALL	_strcmp
+000002BA 9000              A  1057    	CP	R0,#0
+000002BC EE 03             A  1058    	JP	NE,_9_L_74
+                           A  1059    ;  241				cli_command_echo(args);
+                           A  1060    .line 241
+000002BE 6FC1              A  1061    	LD.SW	R1,-4(R14)
+000002C0 D0FF              A  1062    	CALL	_cli_command_echo
+                           A  1063    ;  242			}
+                           A  1064    ;  243			else if(strcmp(command, "display") == 0) {
+                           A  1065    .line 243
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  22
+
+
+PC     Object              I  Line    Source cli.src
+000002C2 C063              A  1066    	JP	_9_L_81
+000002C4                   A  1067    _9_L_74:
+000002C4 6FE1              A  1068    	LD.SW	R1,-2(R14)
+000002C6 4502 004B         A  1069    	LD	R2,#L__41
+000002CA F1 FFFE99         A  1070    	CALL	_strcmp
+000002CE 9000              A  1071    	CP	R0,#0
+000002D0 EE 03             A  1072    	JP	NE,_9_L_72
+                           A  1073    ;  244				cli_command_display(args);
+                           A  1074    .line 244
+000002D2 6FC1              A  1075    	LD.SW	R1,-4(R14)
+000002D4 D110              A  1076    	CALL	_cli_command_display
+                           A  1077    ;  245			}
+                           A  1078    ;  246			else if(strcmp(command, "set") == 0) {
+                           A  1079    .line 246
+000002D6 C059              A  1080    	JP	_9_L_81
+000002D8                   A  1081    _9_L_72:
+000002D8 6FE1              A  1082    	LD.SW	R1,-2(R14)
+000002DA 4502 0053         A  1083    	LD	R2,#L__43
+000002DE F1 FFFE8F         A  1084    	CALL	_strcmp
+000002E2 9000              A  1085    	CP	R0,#0
+000002E4 EE 03             A  1086    	JP	NE,_9_L_70
+                           A  1087    ;  247				cli_command_set(args);
+                           A  1088    .line 247
+000002E6 6FC1              A  1089    	LD.SW	R1,-4(R14)
+000002E8 D136              A  1090    	CALL	_cli_command_set
+                           A  1091    ;  248			}
+                           A  1092    ;  249			else if(strcmp(command, "hex") == 0) {
+                           A  1093    .line 249
+000002EA C04F              A  1094    	JP	_9_L_81
+000002EC                   A  1095    _9_L_70:
+000002EC 6FE1              A  1096    	LD.SW	R1,-2(R14)
+000002EE 4502 0057         A  1097    	LD	R2,#L__45
+000002F2 F1 FFFE85         A  1098    	CALL	_strcmp
+000002F6 9000              A  1099    	CP	R0,#0
+000002F8 EE 03             A  1100    	JP	NE,_9_L_68
+                           A  1101    ;  250				cli_command_hex(args);
+                           A  1102    .line 250
+000002FA 6FC1              A  1103    	LD.SW	R1,-4(R14)
+000002FC D113              A  1104    	CALL	_cli_command_hex
+                           A  1105    ;  251			}
+                           A  1106    ;  252			else if(strcmp(command, "switch") == 0) {
+                           A  1107    .line 252
+000002FE C045              A  1108    	JP	_9_L_81
+00000300                   A  1109    _9_L_68:
+00000300 6FE1              A  1110    	LD.SW	R1,-2(R14)
+00000302 4502 005B         A  1111    	LD	R2,#L__47
+00000306 F1 FFFE7B         A  1112    	CALL	_strcmp
+0000030A 9000              A  1113    	CP	R0,#0
+0000030C EE 03             A  1114    	JP	NE,_9_L_66
+                           A  1115    ;  253				cli_command_switch(args);
+                           A  1116    .line 253
+0000030E 6FC1              A  1117    	LD.SW	R1,-4(R14)
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  23
+
+
+PC     Object              I  Line    Source cli.src
+00000310 D155              A  1118    	CALL	_cli_command_switch
+                           A  1119    ;  254			}
+                           A  1120    ;  255			else if(strcmp(command, "port") == 0) {
+                           A  1121    .line 255
+00000312 C03B              A  1122    	JP	_9_L_81
+00000314                   A  1123    _9_L_66:
+00000314 6FE1              A  1124    	LD.SW	R1,-2(R14)
+00000316 4502 0062         A  1125    	LD	R2,#L__49
+0000031A F1 FFFE71         A  1126    	CALL	_strcmp
+0000031E 9000              A  1127    	CP	R0,#0
+00000320 EE 03             A  1128    	JP	NE,_9_L_64
+                           A  1129    ;  256				cli_command_port(args);
+                           A  1130    .line 256
+00000322 6FC1              A  1131    	LD.SW	R1,-4(R14)
+00000324 D184              A  1132    	CALL	_cli_command_port
+                           A  1133    ;  257			}
+                           A  1134    ;  258			else if(strcmp(command, "timer") == 0) {
+                           A  1135    .line 258
+00000326 C031              A  1136    	JP	_9_L_81
+00000328                   A  1137    _9_L_64:
+00000328 6FE1              A  1138    	LD.SW	R1,-2(R14)
+0000032A 4502 0067         A  1139    	LD	R2,#L__51
+0000032E F1 FFFE67         A  1140    	CALL	_strcmp
+00000332 9000              A  1141    	CP	R0,#0
+00000334 EE 03             A  1142    	JP	NE,_9_L_62
+                           A  1143    ;  259				cli_command_timer(args);
+                           A  1144    .line 259
+00000336 6FC1              A  1145    	LD.SW	R1,-4(R14)
+00000338 D18F              A  1146    	CALL	_cli_command_timer
+                           A  1147    ;  260			}
+                           A  1148    ;  261			else if(strcmp(command, "uart0") == 0) {
+                           A  1149    .line 261
+0000033A C027              A  1150    	JP	_9_L_81
+0000033C                   A  1151    _9_L_62:
+0000033C 6FE1              A  1152    	LD.SW	R1,-2(R14)
+0000033E 4502 006D         A  1153    	LD	R2,#L__53
+00000342 F1 FFFE5D         A  1154    	CALL	_strcmp
+00000346 9000              A  1155    	CP	R0,#0
+00000348 EE 03             A  1156    	JP	NE,_9_L_60
+                           A  1157    ;  262				cli_command_uart0(args);
+                           A  1158    .line 262
+0000034A 6FC1              A  1159    	LD.SW	R1,-4(R14)
+0000034C D228              A  1160    	CALL	_cli_command_uart0
+                           A  1161    ;  263			}
+                           A  1162    ;  264			else if(strcmp(command, "i2c") == 0) {
+                           A  1163    .line 264
+0000034E C01D              A  1164    	JP	_9_L_81
+00000350                   A  1165    _9_L_60:
+00000350 6FE1              A  1166    	LD.SW	R1,-2(R14)
+00000352 4502 0073         A  1167    	LD	R2,#L__55
+00000356 F1 FFFE53         A  1168    	CALL	_strcmp
+0000035A 9000              A  1169    	CP	R0,#0
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  24
+
+
+PC     Object              I  Line    Source cli.src
+0000035C EE 04             A  1170    	JP	NE,_9_L_58
+                           A  1171    ;  265				cli_command_memory(command, args);
+                           A  1172    .line 265
+0000035E 6FE1              A  1173    	LD.SW	R1,-2(R14)
+00000360 6FC2              A  1174    	LD.SW	R2,-4(R14)
+00000362 D18F              A  1175    	CALL	_cli_command_memory
+                           A  1176    ;  266			}
+                           A  1177    ;  267			else if(strcmp(command, "spi") == 0) {
+                           A  1178    .line 267
+00000364 C012              A  1179    	JP	_9_L_81
+00000366                   A  1180    _9_L_58:
+00000366 6FE1              A  1181    	LD.SW	R1,-2(R14)
+00000368 4502 0077         A  1182    	LD	R2,#L__57
+0000036C F1 FFFE48         A  1183    	CALL	_strcmp
+00000370 9000              A  1184    	CP	R0,#0
+00000372 EE 04             A  1185    	JP	NE,_9_L_56
+                           A  1186    ;  268				cli_command_memory(command, args);
+                           A  1187    .line 268
+00000374 6FE1              A  1188    	LD.SW	R1,-2(R14)
+00000376 6FC2              A  1189    	LD.SW	R2,-4(R14)
+00000378 D184              A  1190    	CALL	_cli_command_memory
+                           A  1191    ;  269			}
+                           A  1192    ;  270			else {
+                           A  1193    .line 270
+0000037A C007              A  1194    	JP	_9_L_81
+0000037C                   A  1195    _9_L_56:
+                           A  1196    ;  271				uart_printf("--Command:%s, not found. Enter \"?\" to see a list of available co
+                           A  1197    .line 271
+0000037C 6FE0              A  1198    	LD.SW	R0,-2(R14)
+0000037E 160F              A  1199    	PUSH.W	R0
+00000380 098F 007B         A  1200    	PUSH.W	#L__59
+00000384 F1 FFFE3C         A  1201    	CALL	_uart_printf
+00000388 8F04              A  1202    	ADD	R15,#4
+                           A  1203    ;  272			}
+                           A  1204    ;  273		}
+                           A  1205    ;  274	}
+0000038A                   A  1206    _9_L_81:
+                           A  1207    .line 274
+0000038A 0001              A  1208    	UNLINK	
+0000038C FFFC              A  1209    	RET	
+                           A  1210    
+                           A  1211    
+                           A  1212    ;**************************** _cli_process_command ***************************
+                           A  1213    ;Name                         Addr/Register   Size   Type
+                           A  1214    ;_uart_printf                        IMPORT  -----   function
+                           A  1215    ;_cli_command_memory                 STATIC  -----   function
+                           A  1216    ;_cli_command_uart0                  STATIC  -----   function
+                           A  1217    ;_cli_command_timer                  STATIC  -----   function
+                           A  1218    ;_cli_command_port                   STATIC  -----   function
+                           A  1219    ;_cli_command_switch                 STATIC  -----   function
+                           A  1220    ;_cli_command_hex                    STATIC  -----   function
+                           A  1221    ;_cli_command_set                    STATIC  -----   function
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  25
+
+
+PC     Object              I  Line    Source cli.src
+                           A  1222    ;_cli_command_display                STATIC  -----   function
+                           A  1223    ;_cli_command_echo                   STATIC  -----   function
+                           A  1224    ;_cli_command_question               STATIC  -----   function
+                           A  1225    ;_cli_command_info                   STATIC  -----   function
+                           A  1226    ;_strcmp                             IMPORT  -----   function
+                           A  1227    ;_isgraph                            IMPORT  -----   function
+                           A  1228    ;_cli_strip_spaces                   IMPORT  -----   function
+                           A  1229    ;args                                 R14-4      2   variable
+                           A  1230    ;command                              R14-2      2   parameter
+                           A  1231    
+                           A  1232    
+                           A  1233    ; Aggregate Stack Size: -4 (words)
+                           A  1234    
+                           A  1235    
+                           A  1236    .endfunc "cli_process_command",274,"_cli_process_command"
+                           A  1237    	SEGMENT ROM_TEXT
+000000C4                   A  1238    L__61:
+000000C4 0A                A  1239    	DB	10
+000000C5 41766169          A  1240    	DB	"Available Commands:"
+000000C9 6C61626C 
+000000CD 6520436F 
+000000D1 6D6D616E 64733A 
+000000D8 0A0A00            A  1241    	DB	10,10,0
+000000DB                   A  1242    L__62:
+000000DB 6563686F          A  1243    	DB	"echo [\"text\"]"
+000000DF 205B2274 
+000000E3 65787422 5D 
+000000E8 0A00              A  1244    	DB	10,0
+000000EA                   A  1245    L__63:
+000000EA 202D4563          A  1246    	DB	" -Echos text back to the serial port."
+000000EE 686F7320 
+000000F2 74657874 
+000000F6 20626163 
+000000FA 6B20746F 
+000000FE 20746865 
+00000102 20736572 
+00000106 69616C20 
+0000010A 706F7274 2E 
+0000010F 0A00              A  1247    	DB	10,0
+00000111                   A  1248    L__64:
+00000111 64697370          A  1249    	DB	"display [\"text\"]"
+00000115 6C617920 
+00000119 5B227465 
+0000011D 7874225D 
+00000121 0A00              A  1250    	DB	10,0
+00000123                   A  1251    L__65:
+00000123 202D4469          A  1252    	DB	" -Display text on the LEDs."
+00000127 73706C61 
+0000012B 79207465 
+0000012F 7874206F 
+00000133 6E207468 
+00000137 65204C45 44732E 
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  26
+
+
+PC     Object              I  Line    Source cli.src
+0000013E 0A00              A  1253    	DB	10,0
+00000140                   A  1254    L__66:
+00000140 73657420          A  1255    	DB	"set prompt [\"text\"]"
+00000144 70726F6D 
+00000148 7074205B 
+0000014C 22746578 74225D 
+00000153 0A00              A  1256    	DB	10,0
+00000155                   A  1257    L__67:
+00000155 202D5365          A  1258    	DB	" -Set the CLI prompt to text."
+00000159 74207468 
+0000015D 6520434C 
+00000161 49207072 
+00000165 6F6D7074 
+00000169 20746F20 
+0000016D 74657874 2E 
+00000172 0A00              A  1259    	DB	10,0
+00000174                   A  1260    L__68:
+00000174 68657820          A  1261    	DB	"hex [decimal number]"
+00000178 5B646563 
+0000017C 696D616C 
+00000180 206E756D 
+00000184 6265725D 
+00000188 0A00              A  1262    	DB	10,0
+0000018A                   A  1263    L__69:
+0000018A 202D4469          A  1264    	DB	" -Display a decimal number in hex on the LEDs."
+0000018E 73706C61 
+00000192 79206120 
+00000196 64656369 
+0000019A 6D616C20 
+0000019E 6E756D62 
+000001A2 65722069 
+000001A6 6E206865 
+000001AA 78206F6E 
+000001AE 20746865 
+000001B2 204C4544 732E 
+000001B8 0A00              A  1265    	DB	10,0
+000001BA                   A  1266    L__70:
+000001BA 73776974          A  1267    	DB	"switch [0-2] [\"text\"]"
+000001BE 6368205B 
+000001C2 302D325D 
+000001C6 205B2274 
+000001CA 65787422 5D 
+000001CF 0A00              A  1268    	DB	10,0
+000001D1                   A  1269    L__71:
+000001D1 202D4173          A  1270    	DB	" -Assigns the text macro to a button."
+000001D5 7369676E 
+000001D9 73207468 
+000001DD 65207465 
+000001E1 7874206D 
+000001E5 6163726F 
+000001E9 20746F20 
+000001ED 61206275 
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  27
+
+
+PC     Object              I  Line    Source cli.src
+000001F1 74746F6E 2E 
+000001F6 0A00              A  1271    	DB	10,0
+000001F8                   A  1272    L__72:
+000001F8 706F7274          A  1273    	DB	"port [A-K]"
+000001FC 205B412D 4B5D 
+00000202 0A00              A  1274    	DB	10,0
+00000204                   A  1275    L__73:
+00000204 202D4469          A  1276    	DB	" -Display the current state of the port."
+00000208 73706C61 
+0000020C 79207468 
+00000210 65206375 
+00000214 7272656E 
+00000218 74207374 
+0000021C 61746520 
+00000220 6F662074 
+00000224 68652070 
+00000228 6F72742E 
+0000022C 0A00              A  1277    	DB	10,0
+0000022E                   A  1278    L__74:
+0000022E 74696D65          A  1279    	DB	"timer [0-2]"
+00000232 72205B30 2D325D 
+00000239 0A00              A  1280    	DB	10,0
+0000023B                   A  1281    L__75:
+0000023B 202D4469          A  1282    	DB	" -Display the current state of the timer."
+0000023F 73706C61 
+00000243 79207468 
+00000247 65206375 
+0000024B 7272656E 
+0000024F 74207374 
+00000253 61746520 
+00000257 6F662074 
+0000025B 68652074 
+0000025F 696D6572 2E 
+00000264 0A00              A  1283    	DB	10,0
+00000266                   A  1284    L__76:
+00000266 75617274          A  1285    	DB	"uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]"
+0000026A 30205B73 
+0000026E 70656564 
+00000272 205B6261 
+00000276 75647261 
+0000027A 74655D5D 
+0000027E 205B7061 
+00000282 72697479 
+00000286 205B6576 
+0000028A 656E7C6F 
+0000028E 64647C6E 
+00000292 6F6E655D 
+00000296 5D205B62 
+0000029A 69747320 
+0000029E 5B377C38 5D5D 
+000002A4 0A00              A  1286    	DB	10,0
+000002A6                   A  1287    L__77:
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  28
+
+
+PC     Object              I  Line    Source cli.src
+000002A6 202D5365          A  1288    	DB	" -Set the uart0 settings."
+000002AA 74207468 
+000002AE 65207561 
+000002B2 72743020 
+000002B6 73657474 
+000002BA 696E6773 2E 
+000002BF 0A00              A  1289    	DB	10,0
+000002C1                   A  1290    L__78:
+000002C1 7363616E          A  1291    	DB	"scan (NOT AVAILABLE FOR SIZE)"
+000002C5 20284E4F 
+000002C9 54204156 
+000002CD 41494C41 
+000002D1 424C4520 
+000002D5 464F5220 
+000002D9 53495A45 29 
+000002DE 0A00              A  1292    	DB	10,0
+000002E0                   A  1293    L__79:
+000002E0 202D4469          A  1294    	DB	" -Displays scan codes from a PS/2 keyboard. Press a button to quit."
+000002E4 73706C61 
+000002E8 79732073 
+000002EC 63616E20 
+000002F0 636F6465 
+000002F4 73206672 
+000002F8 6F6D2061 
+000002FC 2050532F 
+00000300 32206B65 
+00000304 79626F61 
+00000308 72642E20 
+0000030C 50726573 
+00000310 73206120 
+00000314 62757474 
+00000318 6F6E2074 
+0000031C 6F207175 69742E 
+00000323 0A00              A  1295    	DB	10,0
+00000325                   A  1296    L__80:
+00000325 74797065          A  1297    	DB	"type (NOT AVAILABLE FOR SIZE)"
+00000329 20284E4F 
+0000032D 54204156 
+00000331 41494C41 
+00000335 424C4520 
+00000339 464F5220 
+0000033D 53495A45 29 
+00000342 0A00              A  1298    	DB	10,0
+00000344                   A  1299    L__81:
+00000344 202D4469          A  1300    	DB	" -Displays scan codes from a PS/2 keyboard. Press a button or ESC to quit."
+00000348 73706C61 
+0000034C 79732073 
+00000350 63616E20 
+00000354 636F6465 
+00000358 73206672 
+0000035C 6F6D2061 
+00000360 2050532F 
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  29
+
+
+PC     Object              I  Line    Source cli.src
+00000364 32206B65 
+00000368 79626F61 
+0000036C 72642E20 
+00000370 50726573 
+00000374 73206120 
+00000378 62757474 
+0000037C 6F6E206F 
+00000380 72204553 
+00000384 4320746F 
+00000388 20717569 742E 
+0000038E 0A00              A  1301    	DB	10,0
+00000390                   A  1302    L__82:
+00000390 69326320          A  1303    	DB	"i2c [fill|dump [start address [length]]]"
+00000394 5B66696C 
+00000398 6C7C6475 
+0000039C 6D70205B 
+000003A0 73746172 
+000003A4 74206164 
+000003A8 64726573 
+000003AC 73205B6C 
+000003B0 656E6774 
+000003B4 685D5D5D 
+000003B8 0A00              A  1304    	DB	10,0
+000003BA                   A  1305    L__83:
+000003BA 202D5265          A  1306    	DB	" -Read and write to an i2c memory device."
+000003BE 61642061 
+000003C2 6E642077 
+000003C6 72697465 
+000003CA 20746F20 
+000003CE 616E2069 
+000003D2 3263206D 
+000003D6 656D6F72 
+000003DA 79206465 
+000003DE 76696365 2E 
+000003E3 0A00              A  1307    	DB	10,0
+000003E5                   A  1308    L__84:
+000003E5 73706920          A  1309    	DB	"spi [fill|dump [start address [length]]]"
+000003E9 5B66696C 
+000003ED 6C7C6475 
+000003F1 6D70205B 
+000003F5 73746172 
+000003F9 74206164 
+000003FD 64726573 
+00000401 73205B6C 
+00000405 656E6774 
+00000409 685D5D5D 
+0000040D 0A00              A  1310    	DB	10,0
+0000040F                   A  1311    L__85:
+0000040F 202D5265          A  1312    	DB	" -Read and write to an spi memory device."
+00000413 61642061 
+00000417 6E642077 
+0000041B 72697465 
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  30
+
+
+PC     Object              I  Line    Source cli.src
+0000041F 20746F20 
+00000423 616E2073 
+00000427 7069206D 
+0000042B 656D6F72 
+0000042F 79206465 
+00000433 76696365 2E 
+00000438 0A00              A  1313    	DB	10,0
+0000043A                   A  1314    L__86:
+0000043A 696E666F          A  1315    	DB	"info"
+0000043E 0A00              A  1316    	DB	10,0
+00000440                   A  1317    L__87:
+00000440 202D4469          A  1318    	DB	" -Displays various system information."
+00000444 73706C61 
+00000448 79732076 
+0000044C 6172696F 
+00000450 75732073 
+00000454 79737465 
+00000458 6D20696E 
+0000045C 666F726D 
+00000460 6174696F 6E2E 
+00000466 0A00              A  1319    	DB	10,0
+00000468                   A  1320    L__88:
+00000468 3F                A  1321    	DB	"?"
+00000469 0A00              A  1322    	DB	10,0
+0000046B                   A  1323    L__89:
+0000046B 202D4469          A  1324    	DB	" -Displays a menu of CLI commands."
+0000046F 73706C61 
+00000473 79732061 
+00000477 206D656E 
+0000047B 75206F66 
+0000047F 20434C49 
+00000483 20636F6D 
+00000487 6D616E64 732E 
+0000048D 0A00              A  1325    	DB	10,0
+                           A  1326    	SEGMENT CODE
+                           A  1327    ;  275	
+                           A  1328    ;  276	static void cli_command_question(void)
+                           A  1329    ;  277	{
+0000038E                   A  1330    _cli_command_question:
+                           A  1331    .define "_cli_command_question"
+                           A  1332    .value _cli_command_question
+                           A  1333    .class 3
+                           A  1334    .type 65
+                           A  1335    .type 0
+                           A  1336    .endef
+                           A  1337    .begfunc "cli_command_question",277,"_cli_command_question"
+0000038E 0800              A  1338    	LINK	#0
+                           A  1339    ;  278		uart_printf("\nAvailable Commands:\n\n");
+                           A  1340    .line 278
+00000390 098F 00C4         A  1341    	PUSH.W	#L__61
+00000394 F1 FFFE34         A  1342    	CALL	_uart_printf
+00000398 8F02              A  1343    	ADD	R15,#2
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  31
+
+
+PC     Object              I  Line    Source cli.src
+                           A  1344    ;  279	
+                           A  1345    ;  280		uart_printf("echo [\"text\"]\n");
+                           A  1346    .line 280
+0000039A 098F 00DB         A  1347    	PUSH.W	#L__62
+0000039E F1 FFFE2F         A  1348    	CALL	_uart_printf
+000003A2 8F02              A  1349    	ADD	R15,#2
+                           A  1350    ;  281		uart_printf(" -Echos text back to the serial port.\n");
+                           A  1351    .line 281
+000003A4 098F 00EA         A  1352    	PUSH.W	#L__63
+000003A8 F1 FFFE2A         A  1353    	CALL	_uart_printf
+000003AC 8F02              A  1354    	ADD	R15,#2
+                           A  1355    ;  282	
+                           A  1356    ;  283		uart_printf("display [\"text\"]\n");
+                           A  1357    .line 283
+000003AE 098F 0111         A  1358    	PUSH.W	#L__64
+000003B2 F1 FFFE25         A  1359    	CALL	_uart_printf
+000003B6 8F02              A  1360    	ADD	R15,#2
+                           A  1361    ;  284		uart_printf(" -Display text on the LEDs.\n");
+                           A  1362    .line 284
+000003B8 098F 0123         A  1363    	PUSH.W	#L__65
+000003BC F1 FFFE20         A  1364    	CALL	_uart_printf
+000003C0 8F02              A  1365    	ADD	R15,#2
+                           A  1366    ;  285	
+                           A  1367    ;  286		uart_printf("set prompt [\"text\"]\n");
+                           A  1368    .line 286
+000003C2 098F 0140         A  1369    	PUSH.W	#L__66
+000003C6 F1 FFFE1B         A  1370    	CALL	_uart_printf
+000003CA 8F02              A  1371    	ADD	R15,#2
+                           A  1372    ;  287		uart_printf(" -Set the CLI prompt to text.\n");
+                           A  1373    .line 287
+000003CC 098F 0155         A  1374    	PUSH.W	#L__67
+000003D0 F1 FFFE16         A  1375    	CALL	_uart_printf
+000003D4 8F02              A  1376    	ADD	R15,#2
+                           A  1377    ;  288	
+                           A  1378    ;  289		uart_printf("hex [decimal number]\n");
+                           A  1379    .line 289
+000003D6 098F 0174         A  1380    	PUSH.W	#L__68
+000003DA F1 FFFE11         A  1381    	CALL	_uart_printf
+000003DE 8F02              A  1382    	ADD	R15,#2
+                           A  1383    ;  290		uart_printf(" -Display a decimal number in hex on the LEDs.\n");
+                           A  1384    .line 290
+000003E0 098F 018A         A  1385    	PUSH.W	#L__69
+000003E4 F1 FFFE0C         A  1386    	CALL	_uart_printf
+000003E8 8F02              A  1387    	ADD	R15,#2
+                           A  1388    ;  291	
+                           A  1389    ;  292		uart_printf("switch [0-2] [\"text\"]\n");
+                           A  1390    .line 292
+000003EA 098F 01BA         A  1391    	PUSH.W	#L__70
+000003EE F1 FFFE07         A  1392    	CALL	_uart_printf
+000003F2 8F02              A  1393    	ADD	R15,#2
+                           A  1394    ;  293		uart_printf(" -Assigns the text macro to a button.\n");
+                           A  1395    .line 293
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  32
+
+
+PC     Object              I  Line    Source cli.src
+000003F4 098F 01D1         A  1396    	PUSH.W	#L__71
+000003F8 F1 FFFE02         A  1397    	CALL	_uart_printf
+000003FC 8F02              A  1398    	ADD	R15,#2
+                           A  1399    ;  294	
+                           A  1400    ;  295		uart_printf("port [A-K]\n");
+                           A  1401    .line 295
+000003FE 098F 01F8         A  1402    	PUSH.W	#L__72
+00000402 F1 FFFDFD         A  1403    	CALL	_uart_printf
+00000406 8F02              A  1404    	ADD	R15,#2
+                           A  1405    ;  296		uart_printf(" -Display the current state of the port.\n");
+                           A  1406    .line 296
+00000408 098F 0204         A  1407    	PUSH.W	#L__73
+0000040C F1 FFFDF8         A  1408    	CALL	_uart_printf
+00000410 8F02              A  1409    	ADD	R15,#2
+                           A  1410    ;  297	
+                           A  1411    ;  298		uart_printf("timer [0-2]\n");
+                           A  1412    .line 298
+00000412 098F 022E         A  1413    	PUSH.W	#L__74
+00000416 F1 FFFDF3         A  1414    	CALL	_uart_printf
+0000041A 8F02              A  1415    	ADD	R15,#2
+                           A  1416    ;  299		uart_printf(" -Display the current state of the timer.\n");
+                           A  1417    .line 299
+0000041C 098F 023B         A  1418    	PUSH.W	#L__75
+00000420 F1 FFFDEE         A  1419    	CALL	_uart_printf
+00000424 8F02              A  1420    	ADD	R15,#2
+                           A  1421    ;  300	
+                           A  1422    ;  301		uart_printf("uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]\n");
+                           A  1423    .line 301
+00000426 098F 0266         A  1424    	PUSH.W	#L__76
+0000042A F1 FFFDE9         A  1425    	CALL	_uart_printf
+0000042E 8F02              A  1426    	ADD	R15,#2
+                           A  1427    ;  302		uart_printf(" -Set the uart0 settings.\n");
+                           A  1428    .line 302
+00000430 098F 02A6         A  1429    	PUSH.W	#L__77
+00000434 F1 FFFDE4         A  1430    	CALL	_uart_printf
+00000438 8F02              A  1431    	ADD	R15,#2
+                           A  1432    ;  303	
+                           A  1433    ;  304		uart_printf("scan (NOT AVAILABLE FOR SIZE)\n");
+                           A  1434    .line 304
+0000043A 098F 02C1         A  1435    	PUSH.W	#L__78
+0000043E F1 FFFDDF         A  1436    	CALL	_uart_printf
+00000442 8F02              A  1437    	ADD	R15,#2
+                           A  1438    ;  305		uart_printf(" -Displays scan codes from a PS/2 keyboard. Press a button to quit.\n");
+                           A  1439    .line 305
+00000444 098F 02E0         A  1440    	PUSH.W	#L__79
+00000448 F1 FFFDDA         A  1441    	CALL	_uart_printf
+0000044C 8F02              A  1442    	ADD	R15,#2
+                           A  1443    ;  306	
+                           A  1444    ;  307		uart_printf("type (NOT AVAILABLE FOR SIZE)\n");
+                           A  1445    .line 307
+0000044E 098F 0325         A  1446    	PUSH.W	#L__80
+00000452 F1 FFFDD5         A  1447    	CALL	_uart_printf
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  33
+
+
+PC     Object              I  Line    Source cli.src
+00000456 8F02              A  1448    	ADD	R15,#2
+                           A  1449    ;  308		uart_printf(" -Displays scan codes from a PS/2 keyboard. Press a button or ESC to quit.
+                           A  1450    .line 308
+00000458 098F 0344         A  1451    	PUSH.W	#L__81
+0000045C F1 FFFDD0         A  1452    	CALL	_uart_printf
+00000460 8F02              A  1453    	ADD	R15,#2
+                           A  1454    ;  309	
+                           A  1455    ;  310		uart_printf("i2c [fill|dump [start address [length]]]\n");
+                           A  1456    .line 310
+00000462 098F 0390         A  1457    	PUSH.W	#L__82
+00000466 F1 FFFDCB         A  1458    	CALL	_uart_printf
+0000046A 8F02              A  1459    	ADD	R15,#2
+                           A  1460    ;  311		uart_printf(" -Read and write to an i2c memory device.\n");
+                           A  1461    .line 311
+0000046C 098F 03BA         A  1462    	PUSH.W	#L__83
+00000470 F1 FFFDC6         A  1463    	CALL	_uart_printf
+00000474 8F02              A  1464    	ADD	R15,#2
+                           A  1465    ;  312	
+                           A  1466    ;  313		uart_printf("spi [fill|dump [start address [length]]]\n");
+                           A  1467    .line 313
+00000476 098F 03E5         A  1468    	PUSH.W	#L__84
+0000047A F1 FFFDC1         A  1469    	CALL	_uart_printf
+0000047E 8F02              A  1470    	ADD	R15,#2
+                           A  1471    ;  314		uart_printf(" -Read and write to an spi memory device.\n");
+                           A  1472    .line 314
+00000480 098F 040F         A  1473    	PUSH.W	#L__85
+00000484 F1 FFFDBC         A  1474    	CALL	_uart_printf
+00000488 8F02              A  1475    	ADD	R15,#2
+                           A  1476    ;  315	
+                           A  1477    ;  316		uart_printf("info\n");
+                           A  1478    .line 316
+0000048A 098F 043A         A  1479    	PUSH.W	#L__86
+0000048E F1 FFFDB7         A  1480    	CALL	_uart_printf
+00000492 8F02              A  1481    	ADD	R15,#2
+                           A  1482    ;  317		uart_printf(" -Displays various system information.\n");
+                           A  1483    .line 317
+00000494 098F 0440         A  1484    	PUSH.W	#L__87
+00000498 F1 FFFDB2         A  1485    	CALL	_uart_printf
+0000049C 8F02              A  1486    	ADD	R15,#2
+                           A  1487    ;  318	
+                           A  1488    ;  319		uart_printf("?\n");
+                           A  1489    .line 319
+0000049E 098F 0468         A  1490    	PUSH.W	#L__88
+000004A2 F1 FFFDAD         A  1491    	CALL	_uart_printf
+000004A6 8F02              A  1492    	ADD	R15,#2
+                           A  1493    ;  320		uart_printf(" -Displays a menu of CLI commands.\n");
+                           A  1494    .line 320
+000004A8 098F 046B         A  1495    	PUSH.W	#L__89
+000004AC F1 FFFDA8         A  1496    	CALL	_uart_printf
+000004B0 8F02              A  1497    	ADD	R15,#2
+                           A  1498    ;  321	}
+                           A  1499    .line 321
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  34
+
+
+PC     Object              I  Line    Source cli.src
+000004B2 0001              A  1500    	UNLINK	
+000004B4 FFFC              A  1501    	RET	
+                           A  1502    
+                           A  1503    
+                           A  1504    ;**************************** _cli_command_question ***************************
+                           A  1505    ;Name                         Addr/Register   Size   Type
+                           A  1506    ;_uart_printf                        IMPORT  -----   function
+                           A  1507    
+                           A  1508    
+                           A  1509    ; Aggregate Stack Size: 0 (words)
+                           A  1510    
+                           A  1511    
+                           A  1512    .endfunc "cli_command_question",321,"_cli_command_question"
+                           A  1513    ;  322	
+                           A  1514    ;  323	static void cli_command_info(void)
+                           A  1515    ;  324	{
+000004B6                   A  1516    _cli_command_info:
+                           A  1517    .define "_cli_command_info"
+                           A  1518    .value _cli_command_info
+                           A  1519    .class 3
+                           A  1520    .type 65
+                           A  1521    .type 0
+                           A  1522    .endef
+                           A  1523    .begfunc "cli_command_info",324,"_cli_command_info"
+000004B6 0800              A  1524    	LINK	#0
+                           A  1525    ;  325		info_display();
+                           A  1526    .line 325
+000004B8 F1 FFFDA2         A  1527    	CALL	_info_display
+                           A  1528    ;  326	}
+                           A  1529    .line 326
+000004BC 0001              A  1530    	UNLINK	
+000004BE FFFC              A  1531    	RET	
+                           A  1532    
+                           A  1533    
+                           A  1534    ;**************************** _cli_command_info ***************************
+                           A  1535    ;Name                         Addr/Register   Size   Type
+                           A  1536    ;_info_display                       IMPORT  -----   function
+                           A  1537    
+                           A  1538    
+                           A  1539    ; Aggregate Stack Size: 0 (words)
+                           A  1540    
+                           A  1541    
+                           A  1542    .endfunc "cli_command_info",326,"_cli_command_info"
+                           A  1543    	SEGMENT ROM_TEXT
+0000048F                   A  1544    L__93:
+0000048F 496E636F          A  1545    	DB	"Incorrect format, echo [\"text\"]"
+00000493 72726563 
+00000497 7420666F 
+0000049B 726D6174 
+0000049F 2C206563 
+000004A3 686F205B 
+000004A7 22746578 74225D 
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  35
+
+
+PC     Object              I  Line    Source cli.src
+000004AE 0A00              A  1546    	DB	10,0
+000004B0                   A  1547    L__94:
+000004B0 2573              A  1548    	DB	"%s"
+000004B2 0A00              A  1549    	DB	10,0
+                           A  1550    	SEGMENT CODE
+                           A  1551    ;  327	
+                           A  1552    ;  328	static void cli_command_echo(char *args)
+                           A  1553    ;  329	{
+000004C0                   A  1554    _cli_command_echo:
+                           A  1555    .define "_cli_command_echo"
+                           A  1556    .value _cli_command_echo
+                           A  1557    .class 3
+                           A  1558    .type 65
+                           A  1559    .type 0
+                           A  1560    .endef
+                           A  1561    .begfunc "cli_command_echo",329,"_cli_command_echo"
+000004C0 0804              A  1562    	LINK	#4
+                           A  1563    .line 329
+000004C2 57E1              A  1564    	LD.W	-2(R14),R1
+                           A  1565    .define "args"
+                           A  1566    .class 9
+                           A  1567    .value -2
+                           A  1568    .type 140
+                           A  1569    .type 0
+                           A  1570    .endef
+                           A  1571    .define "token"
+                           A  1572    .class 1
+                           A  1573    .value -4
+                           A  1574    .type 140
+                           A  1575    .type 0
+                           A  1576    .endef
+                           A  1577    ;  330		char *token;
+                           A  1578    ;  331	
+                           A  1579    ;  332		cli_strip_spaces(&args);
+                           A  1580    .line 332
+000004C4 4FE1              A  1581    	LEA	R1,-2(R14)
+000004C6 DE98              A  1582    	CALL	_cli_strip_spaces
+                           A  1583    ;  333	
+                           A  1584    ;  334		token = args;
+                           A  1585    .line 334
+000004C8 6FE0              A  1586    	LD.SW	R0,-2(R14)
+000004CA 57C0              A  1587    	LD.W	-4(R14),R0
+                           A  1588    ;  335		if(cli_strip_quotes(&args)) {
+                           A  1589    .line 335
+000004CC 4FE1              A  1590    	LEA	R1,-2(R14)
+000004CE DE18              A  1591    	CALL	_cli_strip_quotes
+000004D0 9000              A  1592    	CP	R0,#0
+000004D2 E6 06             A  1593    	JP	EQ,_12_L_85
+                           A  1594    ;  336			uart_printf("Incorrect format, echo [\"text\"]\n");
+                           A  1595    .line 336
+000004D4 098F 048F         A  1596    	PUSH.W	#L__93
+000004D8 F1 FFFD92         A  1597    	CALL	_uart_printf
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  36
+
+
+PC     Object              I  Line    Source cli.src
+000004DC 8F02              A  1598    	ADD	R15,#2
+                           A  1599    ;  337			return;
+                           A  1600    .line 337
+000004DE C009              A  1601    	JP	_12_L_86
+                           A  1602    ;  338		}
+000004E0                   A  1603    _12_L_85:
+                           A  1604    .line 338
+                           A  1605    ;  339	
+                           A  1606    ;  340		uart_printf("%s\n", ++token);
+                           A  1607    .line 340
+000004E0 ADEE 7FFC         A  1608    	INC.W	-4(R14)
+000004E4 6FC0              A  1609    	LD.SW	R0,-4(R14)
+000004E6 160F              A  1610    	PUSH.W	R0
+000004E8 098F 04B0         A  1611    	PUSH.W	#L__94
+000004EC F1 FFFD88         A  1612    	CALL	_uart_printf
+000004F0 8F04              A  1613    	ADD	R15,#4
+                           A  1614    ;  341	}
+000004F2                   A  1615    _12_L_86:
+                           A  1616    .line 341
+000004F2 0001              A  1617    	UNLINK	
+000004F4 FFFC              A  1618    	RET	
+                           A  1619    
+                           A  1620    
+                           A  1621    ;**************************** _cli_command_echo ***************************
+                           A  1622    ;Name                         Addr/Register   Size   Type
+                           A  1623    ;_uart_printf                        IMPORT  -----   function
+                           A  1624    ;_cli_strip_quotes                   IMPORT  -----   function
+                           A  1625    ;_cli_strip_spaces                   IMPORT  -----   function
+                           A  1626    ;token                                R14-4      2   variable
+                           A  1627    ;args                                 R14-2      2   parameter
+                           A  1628    
+                           A  1629    
+                           A  1630    ; Aggregate Stack Size: -4 (words)
+                           A  1631    
+                           A  1632    
+                           A  1633    .endfunc "cli_command_echo",341,"_cli_command_echo"
+                           A  1634    	SEGMENT ROM_TEXT
+000004B4                   A  1635    L__97:
+000004B4 496E636F          A  1636    	DB	"Incorrect format, display [\"text\"]"
+000004B8 72726563 
+000004BC 7420666F 
+000004C0 726D6174 
+000004C4 2C206469 
+000004C8 73706C61 
+000004CC 79205B22 
+000004D0 74657874 225D 
+000004D6 0A00              A  1637    	DB	10,0
+                           A  1638    	SEGMENT CODE
+                           A  1639    ;  342	
+                           A  1640    ;  343	static void cli_command_display(char *args)
+                           A  1641    ;  344	{
+000004F6                   A  1642    _cli_command_display:
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  37
+
+
+PC     Object              I  Line    Source cli.src
+                           A  1643    .define "_cli_command_display"
+                           A  1644    .value _cli_command_display
+                           A  1645    .class 3
+                           A  1646    .type 65
+                           A  1647    .type 0
+                           A  1648    .endef
+                           A  1649    .begfunc "cli_command_display",344,"_cli_command_display"
+000004F6 0804              A  1650    	LINK	#4
+                           A  1651    .line 344
+000004F8 57E1              A  1652    	LD.W	-2(R14),R1
+                           A  1653    .define "args"
+                           A  1654    .class 9
+                           A  1655    .value -2
+                           A  1656    .type 140
+                           A  1657    .type 0
+                           A  1658    .endef
+                           A  1659    .define "token"
+                           A  1660    .class 1
+                           A  1661    .value -4
+                           A  1662    .type 140
+                           A  1663    .type 0
+                           A  1664    .endef
+                           A  1665    ;  345		char *token;
+                           A  1666    ;  346	
+                           A  1667    ;  347		cli_strip_spaces(&args);
+                           A  1668    .line 347
+000004FA 4FE1              A  1669    	LEA	R1,-2(R14)
+000004FC DE7D              A  1670    	CALL	_cli_strip_spaces
+                           A  1671    ;  348	
+                           A  1672    ;  349		token = args;
+                           A  1673    .line 349
+000004FE 6FE0              A  1674    	LD.SW	R0,-2(R14)
+00000500 57C0              A  1675    	LD.W	-4(R14),R0
+                           A  1676    ;  350		if(cli_strip_quotes(&args)) {
+                           A  1677    .line 350
+00000502 4FE1              A  1678    	LEA	R1,-2(R14)
+00000504 DDFD              A  1679    	CALL	_cli_strip_quotes
+00000506 9000              A  1680    	CP	R0,#0
+00000508 E6 06             A  1681    	JP	EQ,_13_L_88
+                           A  1682    ;  351			uart_printf("Incorrect format, display [\"text\"]\n");
+                           A  1683    .line 351
+0000050A 098F 04B4         A  1684    	PUSH.W	#L__97
+0000050E F1 FFFD77         A  1685    	CALL	_uart_printf
+00000512 8F02              A  1686    	ADD	R15,#2
+                           A  1687    ;  352			return;
+                           A  1688    .line 352
+00000514 C005              A  1689    	JP	_13_L_89
+                           A  1690    ;  353		}
+00000516                   A  1691    _13_L_88:
+                           A  1692    .line 353
+                           A  1693    ;  354	
+                           A  1694    ;  355		led_display_text(++token);
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  38
+
+
+PC     Object              I  Line    Source cli.src
+                           A  1695    .line 355
+00000516 ADEE 7FFC         A  1696    	INC.W	-4(R14)
+0000051A 6FC1              A  1697    	LD.SW	R1,-4(R14)
+0000051C F1 FFFD70         A  1698    	CALL	_led_display_text
+                           A  1699    ;  356	}
+00000520                   A  1700    _13_L_89:
+                           A  1701    .line 356
+00000520 0001              A  1702    	UNLINK	
+00000522 FFFC              A  1703    	RET	
+                           A  1704    
+                           A  1705    
+                           A  1706    ;**************************** _cli_command_display ***************************
+                           A  1707    ;Name                         Addr/Register   Size   Type
+                           A  1708    ;_led_display_text                   IMPORT  -----   function
+                           A  1709    ;_uart_printf                        IMPORT  -----   function
+                           A  1710    ;_cli_strip_quotes                   IMPORT  -----   function
+                           A  1711    ;_cli_strip_spaces                   IMPORT  -----   function
+                           A  1712    ;token                                R14-4      2   variable
+                           A  1713    ;args                                 R14-2      2   parameter
+                           A  1714    
+                           A  1715    
+                           A  1716    ; Aggregate Stack Size: -4 (words)
+                           A  1717    
+                           A  1718    
+                           A  1719    .endfunc "cli_command_display",356,"_cli_command_display"
+                           A  1720    	SEGMENT ROM_TEXT
+000004D8                   A  1721    L__100:
+000004D8 3120496E          A  1722    	DB	"1 Incorrect format, hex [decimal number]"
+000004DC 636F7272 
+000004E0 65637420 
+000004E4 666F726D 
+000004E8 61742C20 
+000004EC 68657820 
+000004F0 5B646563 
+000004F4 696D616C 
+000004F8 206E756D 
+000004FC 6265725D 
+00000500 0A00              A  1723    	DB	10,0
+                           A  1724    	SEGMENT CODE
+                           A  1725    ;  357	
+                           A  1726    ;  358	static void cli_command_hex(char *args)
+                           A  1727    ;  359	{
+00000524                   A  1728    _cli_command_hex:
+                           A  1729    .define "_cli_command_hex"
+                           A  1730    .value _cli_command_hex
+                           A  1731    .class 3
+                           A  1732    .type 65
+                           A  1733    .type 0
+                           A  1734    .endef
+                           A  1735    .begfunc "cli_command_hex",359,"_cli_command_hex"
+00000524 0808              A  1736    	LINK	#8
+                           A  1737    .line 359
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  39
+
+
+PC     Object              I  Line    Source cli.src
+00000526 57E1              A  1738    	LD.W	-2(R14),R1
+                           A  1739    .define "args"
+                           A  1740    .class 9
+                           A  1741    .value -2
+                           A  1742    .type 140
+                           A  1743    .type 0
+                           A  1744    .endef
+                           A  1745    .define "token"
+                           A  1746    .class 1
+                           A  1747    .value -4
+                           A  1748    .type 140
+                           A  1749    .type 0
+                           A  1750    .endef
+                           A  1751    .define "value"
+                           A  1752    .class 1
+                           A  1753    .value -8
+                           A  1754    .type 5
+                           A  1755    .type 0
+                           A  1756    .endef
+                           A  1757    ;  360		char *token;
+                           A  1758    ;  361		int value;
+                           A  1759    ;  362	
+                           A  1760    ;  363		cli_strip_spaces(&args);
+                           A  1761    .line 363
+00000528 4FE1              A  1762    	LEA	R1,-2(R14)
+0000052A DE66              A  1763    	CALL	_cli_strip_spaces
+                           A  1764    ;  364	
+                           A  1765    ;  365		token = args;
+                           A  1766    .line 365
+0000052C 6FE0              A  1767    	LD.SW	R0,-2(R14)
+0000052E 57C0              A  1768    	LD.W	-4(R14),R0
+                           A  1769    ;  366		if(cli_strip_decimal_number(&args)) {
+                           A  1770    .line 366
+00000530 4FE1              A  1771    	LEA	R1,-2(R14)
+00000532 DE45              A  1772    	CALL	_cli_strip_decimal_number
+00000534 9000              A  1773    	CP	R0,#0
+00000536 E6 06             A  1774    	JP	EQ,_14_L_91
+                           A  1775    ;  367			uart_printf("1 Incorrect format, hex [decimal number]\n");
+                           A  1776    .line 367
+00000538 098F 04D8         A  1777    	PUSH.W	#L__100
+0000053C F1 FFFD60         A  1778    	CALL	_uart_printf
+00000540 8F02              A  1779    	ADD	R15,#2
+                           A  1780    ;  368			return;
+                           A  1781    .line 368
+00000542 C007              A  1782    	JP	_14_L_92
+                           A  1783    ;  369		}
+00000544                   A  1784    _14_L_91:
+                           A  1785    .line 369
+                           A  1786    ;  370	
+                           A  1787    ;  371		value = atoi(token);
+                           A  1788    .line 371
+00000544 6FC1              A  1789    	LD.SW	R1,-4(R14)
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  40
+
+
+PC     Object              I  Line    Source cli.src
+00000546 F1 FFFD5B         A  1790    	CALL	_atoi
+0000054A 5B80              A  1791    	LD	-8(R14),R0
+                           A  1792    ;  372		led_display_int_hex(value);
+                           A  1793    .line 372
+0000054C 5F81              A  1794    	LD	R1,-8(R14)
+0000054E F1 FFFD57         A  1795    	CALL	_led_display_int_hex
+                           A  1796    ;  373	}
+00000552                   A  1797    _14_L_92:
+                           A  1798    .line 373
+00000552 0001              A  1799    	UNLINK	
+00000554 FFFC              A  1800    	RET	
+                           A  1801    
+                           A  1802    
+                           A  1803    ;**************************** _cli_command_hex ***************************
+                           A  1804    ;Name                         Addr/Register   Size   Type
+                           A  1805    ;_led_display_int_hex                IMPORT  -----   function
+                           A  1806    ;_atoi                               IMPORT  -----   function
+                           A  1807    ;_uart_printf                        IMPORT  -----   function
+                           A  1808    ;_cli_strip_decimal_number           IMPORT  -----   function
+                           A  1809    ;_cli_strip_spaces                   IMPORT  -----   function
+                           A  1810    ;value                                R14-8      4   variable
+                           A  1811    ;token                                R14-4      2   variable
+                           A  1812    ;args                                 R14-2      2   parameter
+                           A  1813    
+                           A  1814    
+                           A  1815    ; Aggregate Stack Size: -8 (words)
+                           A  1816    
+                           A  1817    
+                           A  1818    .endfunc "cli_command_hex",373,"_cli_command_hex"
+                           A  1819    	SEGMENT ROM_TEXT
+00000502                   A  1820    L__103:
+00000502 3120496E          A  1821    	DB	"1 Incorrect format, set prompt [\"text\"]"
+00000506 636F7272 
+0000050A 65637420 
+0000050E 666F726D 
+00000512 61742C20 
+00000516 73657420 
+0000051A 70726F6D 
+0000051E 7074205B 
+00000522 22746578 74225D 
+00000529 0A00              A  1822    	DB	10,0
+0000052B                   A  1823    L__104:
+0000052B 70726F6D 7074     A  1824    	DB	"prompt"
+00000531 00                A  1825    	DB	0
+00000532                   A  1826    L__107:
+00000532 3220496E          A  1827    	DB	"2 Incorrect format, set prompt [\"text\"]"
+00000536 636F7272 
+0000053A 65637420 
+0000053E 666F726D 
+00000542 61742C20 
+00000546 73657420 
+0000054A 70726F6D 
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  41
+
+
+PC     Object              I  Line    Source cli.src
+0000054E 7074205B 
+00000552 22746578 74225D 
+00000559 0A00              A  1828    	DB	10,0
+0000055B                   A  1829    L__108:
+0000055B 3320496E          A  1830    	DB	"3 Incorrect format, set prompt [\"text\"]"
+0000055F 636F7272 
+00000563 65637420 
+00000567 666F726D 
+0000056B 61742C20 
+0000056F 73657420 
+00000573 70726F6D 
+00000577 7074205B 
+0000057B 22746578 74225D 
+00000582 0A00              A  1831    	DB	10,0
+                           A  1832    	SEGMENT CODE
+                           A  1833    ;  374	
+                           A  1834    ;  375	static void cli_command_set(char *args)
+                           A  1835    ;  376	{
+00000556                   A  1836    _cli_command_set:
+                           A  1837    .define "_cli_command_set"
+                           A  1838    .value _cli_command_set
+                           A  1839    .class 3
+                           A  1840    .type 65
+                           A  1841    .type 0
+                           A  1842    .endef
+                           A  1843    .begfunc "cli_command_set",376,"_cli_command_set"
+00000556 0804              A  1844    	LINK	#4
+                           A  1845    .line 376
+00000558 57E1              A  1846    	LD.W	-2(R14),R1
+                           A  1847    .define "args"
+                           A  1848    .class 9
+                           A  1849    .value -2
+                           A  1850    .type 140
+                           A  1851    .type 0
+                           A  1852    .endef
+                           A  1853    .define "token"
+                           A  1854    .class 1
+                           A  1855    .value -4
+                           A  1856    .type 140
+                           A  1857    .type 0
+                           A  1858    .endef
+                           A  1859    ;  377		char *token;
+                           A  1860    ;  378	
+                           A  1861    ;  379		cli_strip_spaces(&args);
+                           A  1862    .line 379
+0000055A 4FE1              A  1863    	LEA	R1,-2(R14)
+0000055C DE4D              A  1864    	CALL	_cli_strip_spaces
+                           A  1865    ;  380	
+                           A  1866    ;  381		token = args;
+                           A  1867    .line 381
+0000055E 6FE0              A  1868    	LD.SW	R0,-2(R14)
+00000560 57C0              A  1869    	LD.W	-4(R14),R0
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  42
+
+
+PC     Object              I  Line    Source cli.src
+                           A  1870    ;  382		if(cli_strip_word(&args)) {
+                           A  1871    .line 382
+00000562 4FE1              A  1872    	LEA	R1,-2(R14)
+00000564 DDEC              A  1873    	CALL	_cli_strip_word
+00000566 9000              A  1874    	CP	R0,#0
+00000568 E6 06             A  1875    	JP	EQ,_15_L_98
+                           A  1876    ;  383			uart_printf("1 Incorrect format, set prompt [\"text\"]\n");
+                           A  1877    .line 383
+0000056A 098F 0502         A  1878    	PUSH.W	#L__103
+0000056E F1 FFFD47         A  1879    	CALL	_uart_printf
+00000572 8F02              A  1880    	ADD	R15,#2
+                           A  1881    ;  384			return;
+                           A  1882    .line 384
+00000574 C021              A  1883    	JP	_15_L_99
+                           A  1884    ;  385		}
+00000576                   A  1885    _15_L_98:
+                           A  1886    .line 385
+                           A  1887    ;  386	
+                           A  1888    ;  387		if(strcmp(token, "prompt") == 0) {
+                           A  1889    .line 387
+00000576 6FC1              A  1890    	LD.SW	R1,-4(R14)
+00000578 4502 052B         A  1891    	LD	R2,#L__104
+0000057C F1 FFFD40         A  1892    	CALL	_strcmp
+00000580 9000              A  1893    	CP	R0,#0
+00000582 EE 15             A  1894    	JP	NE,_15_L_97
+                           A  1895    ;  388			++args;
+                           A  1896    .line 388
+00000584 ADEE 7FFE         A  1897    	INC.W	-2(R14)
+                           A  1898    ;  389			cli_strip_spaces(&args);
+                           A  1899    .line 389
+00000588 4FE1              A  1900    	LEA	R1,-2(R14)
+0000058A DE36              A  1901    	CALL	_cli_strip_spaces
+                           A  1902    ;  390	
+                           A  1903    ;  391			token = args;
+                           A  1904    .line 391
+0000058C 6FE0              A  1905    	LD.SW	R0,-2(R14)
+0000058E 57C0              A  1906    	LD.W	-4(R14),R0
+                           A  1907    ;  392			if(cli_strip_quotes(&args)) {
+                           A  1908    .line 392
+00000590 4FE1              A  1909    	LEA	R1,-2(R14)
+00000592 DDB6              A  1910    	CALL	_cli_strip_quotes
+00000594 9000              A  1911    	CP	R0,#0
+00000596 E6 06             A  1912    	JP	EQ,_15_L_95
+                           A  1913    ;  393				uart_printf("2 Incorrect format, set prompt [\"text\"]\n");
+                           A  1914    .line 393
+00000598 098F 0532         A  1915    	PUSH.W	#L__107
+0000059C F1 FFFD30         A  1916    	CALL	_uart_printf
+000005A0 8F02              A  1917    	ADD	R15,#2
+                           A  1918    ;  394				return;
+                           A  1919    .line 394
+000005A2 C00A              A  1920    	JP	_15_L_99
+                           A  1921    ;  395			}
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  43
+
+
+PC     Object              I  Line    Source cli.src
+000005A4                   A  1922    _15_L_95:
+                           A  1923    .line 395
+                           A  1924    ;  396	
+                           A  1925    ;  397			++token;
+                           A  1926    .line 397
+000005A4 ADEE 7FFC         A  1927    	INC.W	-4(R14)
+                           A  1928    ;  398			cli_set_prompt(token);
+                           A  1929    .line 398
+000005A8 6FC1              A  1930    	LD.SW	R1,-4(R14)
+000005AA DE39              A  1931    	CALL	_cli_set_prompt
+                           A  1932    ;  399		}
+                           A  1933    ;  400		else {
+                           A  1934    .line 400
+000005AC C005              A  1935    	JP	_15_L_99
+000005AE                   A  1936    _15_L_97:
+                           A  1937    ;  401			uart_printf("3 Incorrect format, set prompt [\"text\"]\n");
+                           A  1938    .line 401
+000005AE 098F 055B         A  1939    	PUSH.W	#L__108
+000005B2 F1 FFFD25         A  1940    	CALL	_uart_printf
+000005B6 8F02              A  1941    	ADD	R15,#2
+                           A  1942    ;  402			return;
+                           A  1943    ;  403		}
+                           A  1944    ;  404	}
+000005B8                   A  1945    _15_L_99:
+                           A  1946    .line 404
+000005B8 0001              A  1947    	UNLINK	
+000005BA FFFC              A  1948    	RET	
+                           A  1949    
+                           A  1950    
+                           A  1951    ;**************************** _cli_command_set ***************************
+                           A  1952    ;Name                         Addr/Register   Size   Type
+                           A  1953    ;_cli_set_prompt                     IMPORT  -----   function
+                           A  1954    ;_cli_strip_quotes                   IMPORT  -----   function
+                           A  1955    ;_strcmp                             IMPORT  -----   function
+                           A  1956    ;_uart_printf                        IMPORT  -----   function
+                           A  1957    ;_cli_strip_word                     IMPORT  -----   function
+                           A  1958    ;_cli_strip_spaces                   IMPORT  -----   function
+                           A  1959    ;token                                R14-4      2   variable
+                           A  1960    ;args                                 R14-2      2   parameter
+                           A  1961    
+                           A  1962    
+                           A  1963    ; Aggregate Stack Size: -4 (words)
+                           A  1964    
+                           A  1965    
+                           A  1966    .endfunc "cli_command_set",404,"_cli_command_set"
+                           A  1967    	SEGMENT ROM_TEXT
+00000584                   A  1968    L__111:
+00000584 3120496E          A  1969    	DB	"1 Incorrect format, switch [n] [\"text\"]"
+00000588 636F7272 
+0000058C 65637420 
+00000590 666F726D 
+00000594 61742C20 
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  44
+
+
+PC     Object              I  Line    Source cli.src
+00000598 73776974 
+0000059C 6368205B 
+000005A0 6E5D205B 
+000005A4 22746578 74225D 
+000005AB 0A00              A  1970    	DB	10,0
+000005AD                   A  1971    L__114:
+000005AD 3220496E          A  1972    	DB	"2 Incorrect format, switch [n] [\"text\"]"
+000005B1 636F7272 
+000005B5 65637420 
+000005B9 666F726D 
+000005BD 61742C20 
+000005C1 73776974 
+000005C5 6368205B 
+000005C9 6E5D205B 
+000005CD 22746578 74225D 
+000005D4 0A00              A  1973    	DB	10,0
+000005D6                   A  1974    L__116:
+000005D6 3320496E          A  1975    	DB	"3 Incorrect format, switch [n] [\"text\"]"
+000005DA 636F7272 
+000005DE 65637420 
+000005E2 666F726D 
+000005E6 61742C20 
+000005EA 73776974 
+000005EE 6368205B 
+000005F2 6E5D205B 
+000005F6 22746578 74225D 
+000005FD 0A00              A  1976    	DB	10,0
+                           A  1977    	SEGMENT CODE
+                           A  1978    ;  405	
+                           A  1979    ;  406	static void cli_command_switch(char *args)
+                           A  1980    ;  407	{
+000005BC                   A  1981    _cli_command_switch:
+                           A  1982    .define "_cli_command_switch"
+                           A  1983    .value _cli_command_switch
+                           A  1984    .class 3
+                           A  1985    .type 65
+                           A  1986    .type 0
+                           A  1987    .endef
+                           A  1988    .begfunc "cli_command_switch",407,"_cli_command_switch"
+000005BC 0808              A  1989    	LINK	#8
+                           A  1990    .line 407
+000005BE 57E1              A  1991    	LD.W	-2(R14),R1
+                           A  1992    .define "args"
+                           A  1993    .class 9
+                           A  1994    .value -2
+                           A  1995    .type 140
+                           A  1996    .type 0
+                           A  1997    .endef
+                           A  1998    .define "token"
+                           A  1999    .class 1
+                           A  2000    .value -4
+                           A  2001    .type 140
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  45
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2002    .type 0
+                           A  2003    .endef
+                           A  2004    .define "value"
+                           A  2005    .class 1
+                           A  2006    .value -8
+                           A  2007    .type 5
+                           A  2008    .type 0
+                           A  2009    .endef
+                           A  2010    ;  408		char *token;
+                           A  2011    ;  409		int value;
+                           A  2012    ;  410	
+                           A  2013    ;  411		cli_strip_spaces(&args);
+                           A  2014    .line 411
+000005C0 4FE1              A  2015    	LEA	R1,-2(R14)
+000005C2 DE1A              A  2016    	CALL	_cli_strip_spaces
+                           A  2017    ;  412	
+                           A  2018    ;  413		token = args;
+                           A  2019    .line 413
+000005C4 6FE0              A  2020    	LD.SW	R0,-2(R14)
+000005C6 57C0              A  2021    	LD.W	-4(R14),R0
+                           A  2022    ;  414		if(cli_strip_decimal_number(&args)) {
+                           A  2023    .line 414
+000005C8 4FE1              A  2024    	LEA	R1,-2(R14)
+000005CA DDF9              A  2025    	CALL	_cli_strip_decimal_number
+000005CC 9000              A  2026    	CP	R0,#0
+000005CE E6 06             A  2027    	JP	EQ,_16_L_101
+                           A  2028    ;  415			uart_printf("1 Incorrect format, switch [n] [\"text\"]\n");
+                           A  2029    .line 415
+000005D0 098F 0584         A  2030    	PUSH.W	#L__111
+000005D4 F1 FFFD14         A  2031    	CALL	_uart_printf
+000005D8 8F02              A  2032    	ADD	R15,#2
+                           A  2033    ;  416			return;
+                           A  2034    .line 416
+000005DA C027              A  2035    	JP	_16_L_107
+                           A  2036    ;  417		}
+000005DC                   A  2037    _16_L_101:
+                           A  2038    .line 417
+                           A  2039    ;  418		value = atoi(token);
+                           A  2040    .line 418
+000005DC 6FC1              A  2041    	LD.SW	R1,-4(R14)
+000005DE F1 FFFD0F         A  2042    	CALL	_atoi
+000005E2 5B80              A  2043    	LD	-8(R14),R0
+                           A  2044    ;  419	
+                           A  2045    ;  420		if(value < 0 || value >= MACRO_MAX) {
+                           A  2046    .line 420
+000005E4 ADDE BFF8         A  2047    	CPZ	-8(R14)
+000005E8 E1 04             A  2048    	JP	LT,_16_L_103
+000005EA 3003              A  2049    	LD	R0,#3
+000005EC 7D0E FFF8         A  2050    	CP	-8(R14),R0
+000005F0 E1 06             A  2051    	JP	LT,_16_L_104
+000005F2                   A  2052    _16_L_103:
+                           A  2053    ;  421			uart_printf("2 Incorrect format, switch [n] [\"text\"]\n");
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  46
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2054    .line 421
+000005F2 098F 05AD         A  2055    	PUSH.W	#L__114
+000005F6 F1 FFFD03         A  2056    	CALL	_uart_printf
+000005FA 8F02              A  2057    	ADD	R15,#2
+                           A  2058    ;  422			return;
+                           A  2059    .line 422
+000005FC C016              A  2060    	JP	_16_L_107
+                           A  2061    ;  423		}
+000005FE                   A  2062    _16_L_104:
+                           A  2063    .line 423
+                           A  2064    ;  424	
+                           A  2065    ;  425		++args;
+                           A  2066    .line 425
+000005FE ADEE 7FFE         A  2067    	INC.W	-2(R14)
+                           A  2068    ;  426		cli_strip_spaces(&args);
+                           A  2069    .line 426
+00000602 4FE1              A  2070    	LEA	R1,-2(R14)
+00000604 DDF9              A  2071    	CALL	_cli_strip_spaces
+                           A  2072    ;  427	
+                           A  2073    ;  428		token = args;
+                           A  2074    .line 428
+00000606 6FE0              A  2075    	LD.SW	R0,-2(R14)
+00000608 57C0              A  2076    	LD.W	-4(R14),R0
+                           A  2077    ;  429		if(cli_strip_quotes(&args)) {
+                           A  2078    .line 429
+0000060A 4FE1              A  2079    	LEA	R1,-2(R14)
+0000060C DD79              A  2080    	CALL	_cli_strip_quotes
+0000060E 9000              A  2081    	CP	R0,#0
+00000610 E6 06             A  2082    	JP	EQ,_16_L_106
+                           A  2083    ;  430			uart_printf("3 Incorrect format, switch [n] [\"text\"]\n");
+                           A  2084    .line 430
+00000612 098F 05D6         A  2085    	PUSH.W	#L__116
+00000616 F1 FFFCF3         A  2086    	CALL	_uart_printf
+0000061A 8F02              A  2087    	ADD	R15,#2
+                           A  2088    ;  431			return;
+                           A  2089    .line 431
+0000061C C006              A  2090    	JP	_16_L_107
+                           A  2091    ;  432		}
+0000061E                   A  2092    _16_L_106:
+                           A  2093    .line 432
+                           A  2094    ;  433	
+                           A  2095    ;  434		macro_set(value, ++token);
+                           A  2096    .line 434
+0000061E ADEE 7FFC         A  2097    	INC.W	-4(R14)
+00000622 5F81              A  2098    	LD	R1,-8(R14)
+00000624 6FC2              A  2099    	LD.SW	R2,-4(R14)
+00000626 F1 FFFCEB         A  2100    	CALL	_macro_set
+                           A  2101    ;  435	}
+0000062A                   A  2102    _16_L_107:
+                           A  2103    .line 435
+0000062A 0001              A  2104    	UNLINK	
+0000062C FFFC              A  2105    	RET	
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  47
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2106    
+                           A  2107    
+                           A  2108    ;**************************** _cli_command_switch ***************************
+                           A  2109    ;Name                         Addr/Register   Size   Type
+                           A  2110    ;_macro_set                          IMPORT  -----   function
+                           A  2111    ;_cli_strip_quotes                   IMPORT  -----   function
+                           A  2112    ;_atoi                               IMPORT  -----   function
+                           A  2113    ;_uart_printf                        IMPORT  -----   function
+                           A  2114    ;_cli_strip_decimal_number           IMPORT  -----   function
+                           A  2115    ;_cli_strip_spaces                   IMPORT  -----   function
+                           A  2116    ;value                                R14-8      4   variable
+                           A  2117    ;token                                R14-4      2   variable
+                           A  2118    ;args                                 R14-2      2   parameter
+                           A  2119    
+                           A  2120    
+                           A  2121    ; Aggregate Stack Size: -8 (words)
+                           A  2122    
+                           A  2123    
+                           A  2124    .endfunc "cli_command_switch",435,"_cli_command_switch"
+                           A  2125    	SEGMENT ROM_TEXT
+000005FF                   A  2126    L__119:
+000005FF 496E636F          A  2127    	DB	"Incorrect format, port [A-K]"
+00000603 72726563 
+00000607 7420666F 
+0000060B 726D6174 
+0000060F 2C20706F 
+00000613 7274205B 
+00000617 412D4B5D 
+0000061B 0A00              A  2128    	DB	10,0
+                           A  2129    	SEGMENT CODE
+                           A  2130    ;  436	
+                           A  2131    ;  437	static void cli_command_port(char *args)
+                           A  2132    ;  438	{
+0000062E                   A  2133    _cli_command_port:
+                           A  2134    .define "_cli_command_port"
+                           A  2135    .value _cli_command_port
+                           A  2136    .class 3
+                           A  2137    .type 65
+                           A  2138    .type 0
+                           A  2139    .endef
+                           A  2140    .begfunc "cli_command_port",438,"_cli_command_port"
+0000062E 0804              A  2141    	LINK	#4
+                           A  2142    .line 438
+00000630 57E1              A  2143    	LD.W	-2(R14),R1
+                           A  2144    .define "args"
+                           A  2145    .class 9
+                           A  2146    .value -2
+                           A  2147    .type 140
+                           A  2148    .type 0
+                           A  2149    .endef
+                           A  2150    .define "token"
+                           A  2151    .class 1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  48
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2152    .value -4
+                           A  2153    .type 140
+                           A  2154    .type 0
+                           A  2155    .endef
+                           A  2156    ;  439		char *token;
+                           A  2157    ;  440	
+                           A  2158    ;  441		cli_strip_spaces(&args);
+                           A  2159    .line 441
+00000632 4FE1              A  2160    	LEA	R1,-2(R14)
+00000634 DDE1              A  2161    	CALL	_cli_strip_spaces
+                           A  2162    ;  442	
+                           A  2163    ;  443		token = args;
+                           A  2164    .line 443
+00000636 6FE0              A  2165    	LD.SW	R0,-2(R14)
+00000638 57C0              A  2166    	LD.W	-4(R14),R0
+                           A  2167    ;  444		if(cli_strip_word(&args)) {
+                           A  2168    .line 444
+0000063A 4FE1              A  2169    	LEA	R1,-2(R14)
+0000063C DD80              A  2170    	CALL	_cli_strip_word
+0000063E 9000              A  2171    	CP	R0,#0
+00000640 E6 06             A  2172    	JP	EQ,_17_L_109
+                           A  2173    ;  445			uart_printf("Incorrect format, port [A-K]\n");
+                           A  2174    .line 445
+00000642 098F 05FF         A  2175    	PUSH.W	#L__119
+00000646 F1 FFFCDB         A  2176    	CALL	_uart_printf
+0000064A 8F02              A  2177    	ADD	R15,#2
+                           A  2178    ;  446			return;
+                           A  2179    .line 446
+0000064C C003              A  2180    	JP	_17_L_110
+                           A  2181    ;  447		}
+0000064E                   A  2182    _17_L_109:
+                           A  2183    .line 447
+                           A  2184    ;  448	
+                           A  2185    ;  449		ports_print_config(token);
+                           A  2186    .line 449
+0000064E 6FC1              A  2187    	LD.SW	R1,-4(R14)
+00000650 F1 FFFCD6         A  2188    	CALL	_ports_print_config
+                           A  2189    ;  450	}
+00000654                   A  2190    _17_L_110:
+                           A  2191    .line 450
+00000654 0001              A  2192    	UNLINK	
+00000656 FFFC              A  2193    	RET	
+                           A  2194    
+                           A  2195    
+                           A  2196    ;**************************** _cli_command_port ***************************
+                           A  2197    ;Name                         Addr/Register   Size   Type
+                           A  2198    ;_ports_print_config                 IMPORT  -----   function
+                           A  2199    ;_uart_printf                        IMPORT  -----   function
+                           A  2200    ;_cli_strip_word                     IMPORT  -----   function
+                           A  2201    ;_cli_strip_spaces                   IMPORT  -----   function
+                           A  2202    ;token                                R14-4      2   variable
+                           A  2203    ;args                                 R14-2      2   parameter
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  49
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2204    
+                           A  2205    
+                           A  2206    ; Aggregate Stack Size: -4 (words)
+                           A  2207    
+                           A  2208    
+                           A  2209    .endfunc "cli_command_port",450,"_cli_command_port"
+                           A  2210    	SEGMENT ROM_TEXT
+0000061D                   A  2211    L__122:
+0000061D 496E636F          A  2212    	DB	"Incorrect format, timer [0-2]"
+00000621 72726563 
+00000625 7420666F 
+00000629 726D6174 
+0000062D 2C207469 
+00000631 6D657220 
+00000635 5B302D32 5D 
+0000063A 0A00              A  2213    	DB	10,0
+                           A  2214    	SEGMENT CODE
+                           A  2215    ;  451	
+                           A  2216    ;  452	static void cli_command_timer(char *args)
+                           A  2217    ;  453	{
+00000658                   A  2218    _cli_command_timer:
+                           A  2219    .define "_cli_command_timer"
+                           A  2220    .value _cli_command_timer
+                           A  2221    .class 3
+                           A  2222    .type 65
+                           A  2223    .type 0
+                           A  2224    .endef
+                           A  2225    .begfunc "cli_command_timer",453,"_cli_command_timer"
+00000658 0804              A  2226    	LINK	#4
+                           A  2227    .line 453
+0000065A 57E1              A  2228    	LD.W	-2(R14),R1
+                           A  2229    .define "args"
+                           A  2230    .class 9
+                           A  2231    .value -2
+                           A  2232    .type 140
+                           A  2233    .type 0
+                           A  2234    .endef
+                           A  2235    .define "token"
+                           A  2236    .class 1
+                           A  2237    .value -4
+                           A  2238    .type 140
+                           A  2239    .type 0
+                           A  2240    .endef
+                           A  2241    ;  454		char *token;
+                           A  2242    ;  455	
+                           A  2243    ;  456		cli_strip_spaces(&args);
+                           A  2244    .line 456
+0000065C 4FE1              A  2245    	LEA	R1,-2(R14)
+0000065E DDCC              A  2246    	CALL	_cli_strip_spaces
+                           A  2247    ;  457	
+                           A  2248    ;  458		token = args;
+                           A  2249    .line 458
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  50
+
+
+PC     Object              I  Line    Source cli.src
+00000660 6FE0              A  2250    	LD.SW	R0,-2(R14)
+00000662 57C0              A  2251    	LD.W	-4(R14),R0
+                           A  2252    ;  459		if(cli_strip_decimal_number(&args)) {
+                           A  2253    .line 459
+00000664 4FE1              A  2254    	LEA	R1,-2(R14)
+00000666 DDAB              A  2255    	CALL	_cli_strip_decimal_number
+00000668 9000              A  2256    	CP	R0,#0
+0000066A E6 06             A  2257    	JP	EQ,_18_L_112
+                           A  2258    ;  460			uart_printf("Incorrect format, timer [0-2]\n");
+                           A  2259    .line 460
+0000066C 098F 061D         A  2260    	PUSH.W	#L__122
+00000670 F1 FFFCC6         A  2261    	CALL	_uart_printf
+00000674 8F02              A  2262    	ADD	R15,#2
+                           A  2263    ;  461			return;
+                           A  2264    .line 461
+00000676 C003              A  2265    	JP	_18_L_113
+                           A  2266    ;  462		}
+00000678                   A  2267    _18_L_112:
+                           A  2268    .line 462
+                           A  2269    ;  463	
+                           A  2270    ;  464		timers_print_config(token);
+                           A  2271    .line 464
+00000678 6FC1              A  2272    	LD.SW	R1,-4(R14)
+0000067A F1 FFFCC1         A  2273    	CALL	_timers_print_config
+                           A  2274    ;  465	}
+0000067E                   A  2275    _18_L_113:
+                           A  2276    .line 465
+0000067E 0001              A  2277    	UNLINK	
+00000680 FFFC              A  2278    	RET	
+                           A  2279    
+                           A  2280    
+                           A  2281    ;**************************** _cli_command_timer ***************************
+                           A  2282    ;Name                         Addr/Register   Size   Type
+                           A  2283    ;_timers_print_config                IMPORT  -----   function
+                           A  2284    ;_uart_printf                        IMPORT  -----   function
+                           A  2285    ;_cli_strip_decimal_number           IMPORT  -----   function
+                           A  2286    ;_cli_strip_spaces                   IMPORT  -----   function
+                           A  2287    ;token                                R14-4      2   variable
+                           A  2288    ;args                                 R14-2      2   parameter
+                           A  2289    
+                           A  2290    
+                           A  2291    ; Aggregate Stack Size: -4 (words)
+                           A  2292    
+                           A  2293    
+                           A  2294    .endfunc "cli_command_timer",465,"_cli_command_timer"
+                           A  2295    	SEGMENT ROM_TEXT
+0000063C                   A  2296    L__125:
+0000063C 3120496E          A  2297    	DB	"1 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]"
+00000640 636F7272 
+00000644 65637420 
+00000648 666F726D 
+0000064C 61742C20 
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  51
+
+
+PC     Object              I  Line    Source cli.src
+00000650 5B693263 
+00000654 7C737069 
+00000658 5D205B66 
+0000065C 696C6C7C 
+00000660 64756D70 
+00000664 205B7374 
+00000668 61727420 
+0000066C 61646472 
+00000670 65737320 
+00000674 5B6C656E 
+00000678 6774685D 5D5D 
+0000067E 0A00              A  2298    	DB	10,0
+00000680                   A  2299    L__127:
+00000680 3220496E          A  2300    	DB	"2 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]"
+00000684 636F7272 
+00000688 65637420 
+0000068C 666F726D 
+00000690 61742C20 
+00000694 5B693263 
+00000698 7C737069 
+0000069C 5D205B66 
+000006A0 696C6C7C 
+000006A4 64756D70 
+000006A8 205B7374 
+000006AC 61727420 
+000006B0 61646472 
+000006B4 65737320 
+000006B8 5B6C656E 
+000006BC 6774685D 5D5D 
+000006C2 0A00              A  2301    	DB	10,0
+000006C4                   A  2302    L__129:
+000006C4 3320496E          A  2303    	DB	"3 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]"
+000006C8 636F7272 
+000006CC 65637420 
+000006D0 666F726D 
+000006D4 61742C20 
+000006D8 5B693263 
+000006DC 7C737069 
+000006E0 5D205B66 
+000006E4 696C6C7C 
+000006E8 64756D70 
+000006EC 205B7374 
+000006F0 61727420 
+000006F4 61646472 
+000006F8 65737320 
+000006FC 5B6C656E 
+00000700 6774685D 5D5D 
+00000706 0A00              A  2304    	DB	10,0
+00000708                   A  2305    L__130:
+00000708 693263            A  2306    	DB	"i2c"
+0000070B 00                A  2307    	DB	0
+0000070C                   A  2308    L__132:
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  52
+
+
+PC     Object              I  Line    Source cli.src
+0000070C 66696C6C          A  2309    	DB	"fill"
+00000710 00                A  2310    	DB	0
+00000711                   A  2311    L__134:
+00000711 64756D70          A  2312    	DB	"dump"
+00000715 00                A  2313    	DB	0
+00000716                   A  2314    L__136:
+00000716 3420496E          A  2315    	DB	"4 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]"
+0000071A 636F7272 
+0000071E 65637420 
+00000722 666F726D 
+00000726 61742C20 
+0000072A 5B693263 
+0000072E 7C737069 
+00000732 5D205B66 
+00000736 696C6C7C 
+0000073A 64756D70 
+0000073E 205B7374 
+00000742 61727420 
+00000746 61646472 
+0000074A 65737320 
+0000074E 5B6C656E 
+00000752 6774685D 5D5D 
+00000758 0A00              A  2316    	DB	10,0
+0000075A                   A  2317    L__137:
+0000075A 737069            A  2318    	DB	"spi"
+0000075D 00                A  2319    	DB	0
+0000075E                   A  2320    L__139:
+0000075E 66696C6C          A  2321    	DB	"fill"
+00000762 00                A  2322    	DB	0
+00000763                   A  2323    L__141:
+00000763 64756D70          A  2324    	DB	"dump"
+00000767 00                A  2325    	DB	0
+00000768                   A  2326    L__143:
+00000768 3520496E          A  2327    	DB	"5 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]"
+0000076C 636F7272 
+00000770 65637420 
+00000774 666F726D 
+00000778 61742C20 
+0000077C 5B693263 
+00000780 7C737069 
+00000784 5D205B66 
+00000788 696C6C7C 
+0000078C 64756D70 
+00000790 205B7374 
+00000794 61727420 
+00000798 61646472 
+0000079C 65737320 
+000007A0 5B6C656E 
+000007A4 6774685D 5D5D 
+000007AA 0A00              A  2328    	DB	10,0
+000007AC                   A  2329    L__144:
+000007AC 3620496E          A  2330    	DB	"6 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  53
+
+
+PC     Object              I  Line    Source cli.src
+000007B0 636F7272 
+000007B4 65637420 
+000007B8 666F726D 
+000007BC 61742C20 
+000007C0 5B693263 
+000007C4 7C737069 
+000007C8 5D205B66 
+000007CC 696C6C7C 
+000007D0 64756D70 
+000007D4 205B7374 
+000007D8 61727420 
+000007DC 61646472 
+000007E0 65737320 
+000007E4 5B6C656E 
+000007E8 6774685D 5D5D 
+000007EE 0A00              A  2331    	DB	10,0
+                           A  2332    	SEGMENT CODE
+                           A  2333    ;  466	
+                           A  2334    ;  467	static void cli_command_memory(const char *command, char *args)
+                           A  2335    ;  468	{
+00000682                   A  2336    _cli_command_memory:
+                           A  2337    .define "_cli_command_memory"
+                           A  2338    .value _cli_command_memory
+                           A  2339    .class 3
+                           A  2340    .type 65
+                           A  2341    .type 0
+                           A  2342    .endef
+                           A  2343    .begfunc "cli_command_memory",468,"_cli_command_memory"
+00000682 0810              A  2344    	LINK	#16
+                           A  2345    .line 468
+00000684 57E1              A  2346    	LD.W	-2(R14),R1
+                           A  2347    .define "command"
+                           A  2348    .class 9
+                           A  2349    .value -2
+                           A  2350    .type 140
+                           A  2351    .type 0
+                           A  2352    .endef
+00000686 57C2              A  2353    	LD.W	-4(R14),R2
+                           A  2354    .define "args"
+                           A  2355    .class 9
+                           A  2356    .value -4
+                           A  2357    .type 140
+                           A  2358    .type 0
+                           A  2359    .endef
+                           A  2360    .define "action"
+                           A  2361    .class 1
+                           A  2362    .value -6
+                           A  2363    .type 140
+                           A  2364    .type 0
+                           A  2365    .endef
+                           A  2366    .define "token"
+                           A  2367    .class 1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  54
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2368    .value -8
+                           A  2369    .type 140
+                           A  2370    .type 0
+                           A  2371    .endef
+                           A  2372    .define "length"
+                           A  2373    .class 1
+                           A  2374    .value -12
+                           A  2375    .type 5
+                           A  2376    .type 0
+                           A  2377    .endef
+                           A  2378    .define "address"
+                           A  2379    .class 1
+                           A  2380    .value -16
+                           A  2381    .type 5
+                           A  2382    .type 0
+                           A  2383    .endef
+                           A  2384    ;  469		char *action;
+                           A  2385    ;  470		char *token;
+                           A  2386    ;  471		int length;
+                           A  2387    ;  472		long int address;
+                           A  2388    ;  473	
+                           A  2389    ;  474		cli_strip_spaces(&args);
+                           A  2390    .line 474
+00000688 4FC1              A  2391    	LEA	R1,-4(R14)
+0000068A DDB6              A  2392    	CALL	_cli_strip_spaces
+                           A  2393    ;  475	
+                           A  2394    ;  476		token = args;
+                           A  2395    .line 476
+0000068C 6FC0              A  2396    	LD.SW	R0,-4(R14)
+0000068E 5780              A  2397    	LD.W	-8(R14),R0
+                           A  2398    ;  477		if(cli_strip_word(&args)) {
+                           A  2399    .line 477
+00000690 4FC1              A  2400    	LEA	R1,-4(R14)
+00000692 DD55              A  2401    	CALL	_cli_strip_word
+00000694 9000              A  2402    	CP	R0,#0
+00000696 E6 06             A  2403    	JP	EQ,_19_L_115
+                           A  2404    ;  478			uart_printf("1 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]\n")
+                           A  2405    .line 478
+00000698 098F 063C         A  2406    	PUSH.W	#L__125
+0000069C F1 FFFCB0         A  2407    	CALL	_uart_printf
+000006A0 8F02              A  2408    	ADD	R15,#2
+                           A  2409    ;  479			return;
+                           A  2410    .line 479
+000006A2 C07B              A  2411    	JP	_19_L_132
+                           A  2412    ;  480		}
+000006A4                   A  2413    _19_L_115:
+                           A  2414    .line 480
+                           A  2415    ;  481		action = token;
+                           A  2416    .line 481
+000006A4 6F80              A  2417    	LD.SW	R0,-8(R14)
+000006A6 57A0              A  2418    	LD.W	-6(R14),R0
+                           A  2419    ;  482	
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  55
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2420    ;  483		++args;
+                           A  2421    .line 483
+000006A8 ADEE 7FFC         A  2422    	INC.W	-4(R14)
+                           A  2423    ;  484		cli_strip_spaces(&args);
+                           A  2424    .line 484
+000006AC 4FC1              A  2425    	LEA	R1,-4(R14)
+000006AE DDA4              A  2426    	CALL	_cli_strip_spaces
+                           A  2427    ;  485	
+                           A  2428    ;  486		token = args;
+                           A  2429    .line 486
+000006B0 6FC0              A  2430    	LD.SW	R0,-4(R14)
+000006B2 5780              A  2431    	LD.W	-8(R14),R0
+                           A  2432    ;  487		if(cli_strip_hex(&args)) {
+                           A  2433    .line 487
+000006B4 4FC1              A  2434    	LEA	R1,-4(R14)
+000006B6 DD60              A  2435    	CALL	_cli_strip_hex
+000006B8 9000              A  2436    	CP	R0,#0
+000006BA E6 06             A  2437    	JP	EQ,_19_L_117
+                           A  2438    ;  488			uart_printf("2 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]\n")
+                           A  2439    .line 488
+000006BC 098F 0680         A  2440    	PUSH.W	#L__127
+000006C0 F1 FFFC9E         A  2441    	CALL	_uart_printf
+000006C4 8F02              A  2442    	ADD	R15,#2
+                           A  2443    ;  489			return;
+                           A  2444    .line 489
+000006C6 C069              A  2445    	JP	_19_L_132
+                           A  2446    ;  490		}
+000006C8                   A  2447    _19_L_117:
+                           A  2448    .line 490
+                           A  2449    ;  491		address = strtol(token, NULL, 16);
+                           A  2450    .line 491
+000006C8 6F81              A  2451    	LD.SW	R1,-8(R14)
+000006CA 3200              A  2452    	LD	R2,#0
+000006CC 3310              A  2453    	LD	R3,#16
+000006CE F1 FFFC97         A  2454    	CALL	_strtol
+000006D2 5B00              A  2455    	LD	-16(R14),R0
+                           A  2456    ;  492		
+                           A  2457    ;  493		++args;
+                           A  2458    .line 493
+000006D4 ADEE 7FFC         A  2459    	INC.W	-4(R14)
+                           A  2460    ;  494		cli_strip_spaces(&args);
+                           A  2461    .line 494
+000006D8 4FC1              A  2462    	LEA	R1,-4(R14)
+000006DA DD8E              A  2463    	CALL	_cli_strip_spaces
+                           A  2464    ;  495	
+                           A  2465    ;  496		token = args;
+                           A  2466    .line 496
+000006DC 6FC0              A  2467    	LD.SW	R0,-4(R14)
+000006DE 5780              A  2468    	LD.W	-8(R14),R0
+                           A  2469    ;  497		if(cli_strip_decimal_number(&args)) {
+                           A  2470    .line 497
+000006E0 4FC1              A  2471    	LEA	R1,-4(R14)
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  56
+
+
+PC     Object              I  Line    Source cli.src
+000006E2 DD6D              A  2472    	CALL	_cli_strip_decimal_number
+000006E4 9000              A  2473    	CP	R0,#0
+000006E6 E6 06             A  2474    	JP	EQ,_19_L_119
+                           A  2475    ;  498			uart_printf("3 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]\n")
+                           A  2476    .line 498
+000006E8 098F 06C4         A  2477    	PUSH.W	#L__129
+000006EC F1 FFFC88         A  2478    	CALL	_uart_printf
+000006F0 8F02              A  2479    	ADD	R15,#2
+                           A  2480    ;  499			return;
+                           A  2481    .line 499
+000006F2 C053              A  2482    	JP	_19_L_132
+                           A  2483    ;  500		}
+000006F4                   A  2484    _19_L_119:
+                           A  2485    .line 500
+                           A  2486    ;  501		length = atoi(token);
+                           A  2487    .line 501
+000006F4 6F81              A  2488    	LD.SW	R1,-8(R14)
+000006F6 F1 FFFC83         A  2489    	CALL	_atoi
+000006FA 5B40              A  2490    	LD	-12(R14),R0
+                           A  2491    ;  502	
+                           A  2492    ;  503		if(strcmp(command, "i2c") == 0) {
+                           A  2493    .line 503
+000006FC 6FE1              A  2494    	LD.SW	R1,-2(R14)
+000006FE 4502 0708         A  2495    	LD	R2,#L__130
+00000702 F1 FFFC7D         A  2496    	CALL	_strcmp
+00000706 9000              A  2497    	CP	R0,#0
+00000708 EE 1E             A  2498    	JP	NE,_19_L_131
+                           A  2499    ;  504			if(strcmp(action, "fill") == 0) {
+                           A  2500    .line 504
+0000070A 6FA1              A  2501    	LD.SW	R1,-6(R14)
+0000070C 4502 070C         A  2502    	LD	R2,#L__132
+00000710 F1 FFFC76         A  2503    	CALL	_strcmp
+00000714 9000              A  2504    	CP	R0,#0
+00000716 EE 05             A  2505    	JP	NE,_19_L_123
+                           A  2506    ;  505				_24lc16b_write_bytes_addr(address, length);
+                           A  2507    .line 505
+00000718 5F01              A  2508    	LD	R1,-16(R14)
+0000071A 5F42              A  2509    	LD	R2,-12(R14)
+0000071C F1 FFFC70         A  2510    	CALL	__24lc16b_write_bytes_addr
+                           A  2511    ;  506			}
+                           A  2512    ;  507			else if(strcmp(action, "dump") == 0) {
+                           A  2513    .line 507
+00000720 C03C              A  2514    	JP	_19_L_132
+00000722                   A  2515    _19_L_123:
+00000722 6FA1              A  2516    	LD.SW	R1,-6(R14)
+00000724 4502 0711         A  2517    	LD	R2,#L__134
+00000728 F1 FFFC6A         A  2518    	CALL	_strcmp
+0000072C 9000              A  2519    	CP	R0,#0
+0000072E EE 05             A  2520    	JP	NE,_19_L_121
+                           A  2521    ;  508				_24lc16b_read_bytes_hex_dump(address, length);
+                           A  2522    .line 508
+00000730 5F01              A  2523    	LD	R1,-16(R14)
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  57
+
+
+PC     Object              I  Line    Source cli.src
+00000732 5F42              A  2524    	LD	R2,-12(R14)
+00000734 F1 FFFC64         A  2525    	CALL	__24lc16b_read_bytes_hex_dump
+                           A  2526    ;  509			}
+                           A  2527    ;  510			else {
+                           A  2528    .line 510
+00000738 C030              A  2529    	JP	_19_L_132
+0000073A                   A  2530    _19_L_121:
+                           A  2531    ;  511				uart_printf("4 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]
+                           A  2532    .line 511
+0000073A 098F 0716         A  2533    	PUSH.W	#L__136
+0000073E F1 FFFC5F         A  2534    	CALL	_uart_printf
+00000742 8F02              A  2535    	ADD	R15,#2
+                           A  2536    ;  512			}
+                           A  2537    ;  513		}
+                           A  2538    ;  514		else if(strcmp(command, "spi") == 0) {
+                           A  2539    .line 514
+00000744 C02A              A  2540    	JP	_19_L_132
+00000746                   A  2541    _19_L_131:
+00000746 6FE1              A  2542    	LD.SW	R1,-2(R14)
+00000748 4502 075A         A  2543    	LD	R2,#L__137
+0000074C F1 FFFC58         A  2544    	CALL	_strcmp
+00000750 9000              A  2545    	CP	R0,#0
+00000752 EE 1E             A  2546    	JP	NE,_19_L_129
+                           A  2547    ;  515			if(strcmp(action, "fill") == 0) {
+                           A  2548    .line 515
+00000754 6FA1              A  2549    	LD.SW	R1,-6(R14)
+00000756 4502 075E         A  2550    	LD	R2,#L__139
+0000075A F1 FFFC51         A  2551    	CALL	_strcmp
+0000075E 9000              A  2552    	CP	R0,#0
+00000760 EE 05             A  2553    	JP	NE,_19_L_127
+                           A  2554    ;  516				_25lc040a_write_bytes_addr(address, length);
+                           A  2555    .line 516
+00000762 5F01              A  2556    	LD	R1,-16(R14)
+00000764 5F42              A  2557    	LD	R2,-12(R14)
+00000766 F1 FFFC4B         A  2558    	CALL	__25lc040a_write_bytes_addr
+                           A  2559    ;  517			}
+                           A  2560    ;  518			else if(strcmp(action, "dump") == 0) {
+                           A  2561    .line 518
+0000076A C017              A  2562    	JP	_19_L_132
+0000076C                   A  2563    _19_L_127:
+0000076C 6FA1              A  2564    	LD.SW	R1,-6(R14)
+0000076E 4502 0763         A  2565    	LD	R2,#L__141
+00000772 F1 FFFC45         A  2566    	CALL	_strcmp
+00000776 9000              A  2567    	CP	R0,#0
+00000778 EE 05             A  2568    	JP	NE,_19_L_125
+                           A  2569    ;  519				_25lc040a_read_bytes_hex_dump(address, length);
+                           A  2570    .line 519
+0000077A 5F01              A  2571    	LD	R1,-16(R14)
+0000077C 5F42              A  2572    	LD	R2,-12(R14)
+0000077E F1 FFFC3F         A  2573    	CALL	__25lc040a_read_bytes_hex_dump
+                           A  2574    ;  520			}
+                           A  2575    ;  521			else {
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  58
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2576    .line 521
+00000782 C00B              A  2577    	JP	_19_L_132
+00000784                   A  2578    _19_L_125:
+                           A  2579    ;  522				uart_printf("5 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]
+                           A  2580    .line 522
+00000784 098F 0768         A  2581    	PUSH.W	#L__143
+00000788 F1 FFFC3A         A  2582    	CALL	_uart_printf
+0000078C 8F02              A  2583    	ADD	R15,#2
+                           A  2584    ;  523			}
+                           A  2585    ;  524		}
+                           A  2586    ;  525		else {
+                           A  2587    .line 525
+0000078E C005              A  2588    	JP	_19_L_132
+00000790                   A  2589    _19_L_129:
+                           A  2590    ;  526			uart_printf("6 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]\n")
+                           A  2591    .line 526
+00000790 098F 07AC         A  2592    	PUSH.W	#L__144
+00000794 F1 FFFC34         A  2593    	CALL	_uart_printf
+00000798 8F02              A  2594    	ADD	R15,#2
+                           A  2595    ;  527		}
+                           A  2596    ;  528	}
+0000079A                   A  2597    _19_L_132:
+                           A  2598    .line 528
+0000079A 0001              A  2599    	UNLINK	
+0000079C FFFC              A  2600    	RET	
+                           A  2601    
+                           A  2602    
+                           A  2603    ;**************************** _cli_command_memory ***************************
+                           A  2604    ;Name                         Addr/Register   Size   Type
+                           A  2605    ;__25lc040a_read_bytes_hex_dump      IMPORT  -----   function
+                           A  2606    ;__25lc040a_write_bytes_addr         IMPORT  -----   function
+                           A  2607    ;__24lc16b_read_bytes_hex_dump       IMPORT  -----   function
+                           A  2608    ;__24lc16b_write_bytes_addr          IMPORT  -----   function
+                           A  2609    ;_strcmp                             IMPORT  -----   function
+                           A  2610    ;_atoi                               IMPORT  -----   function
+                           A  2611    ;_cli_strip_decimal_number           IMPORT  -----   function
+                           A  2612    ;_strtol                             IMPORT  -----   function
+                           A  2613    ;_uart_printf                        IMPORT  -----   function
+                           A  2614    ;_cli_strip_word                     IMPORT  -----   function
+                           A  2615    ;_cli_strip_spaces                   IMPORT  -----   function
+                           A  2616    ;address                             R14-16      4   variable
+                           A  2617    ;length                              R14-12      4   variable
+                           A  2618    ;token                                R14-8      2   variable
+                           A  2619    ;action                               R14-6      2   variable
+                           A  2620    ;args                                 R14-4      2   parameter
+                           A  2621    ;command                              R14-2      2   parameter
+                           A  2622    
+                           A  2623    
+                           A  2624    ; Aggregate Stack Size: -16 (words)
+                           A  2625    
+                           A  2626    
+                           A  2627    .endfunc "cli_command_memory",528,"_cli_command_memory"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  59
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2628    	SEGMENT ROM_TEXT
+000007F0                   A  2629    L__147:
+000007F0 3120496E          A  2630    	DB	"1 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]"
+000007F4 636F7272 
+000007F8 65637420 
+000007FC 666F726D 
+00000800 61742C20 
+00000804 75617274 
+00000808 30205B73 
+0000080C 70656564 
+00000810 205B6261 
+00000814 75647261 
+00000818 74655D5D 
+0000081C 205B7061 
+00000820 72697479 
+00000824 205B6576 
+00000828 656E7C6F 
+0000082C 64647C6E 
+00000830 6F6E655D 
+00000834 5D205B62 
+00000838 69747320 
+0000083C 5B377C38 5D5D 
+00000842 0A00              A  2631    	DB	10,0
+00000844                   A  2632    L__148:
+00000844 73706565 64       A  2633    	DB	"speed"
+00000849 00                A  2634    	DB	0
+0000084A                   A  2635    L__151:
+0000084A 3220496E          A  2636    	DB	"2 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]"
+0000084E 636F7272 
+00000852 65637420 
+00000856 666F726D 
+0000085A 61742C20 
+0000085E 75617274 
+00000862 30205B73 
+00000866 70656564 
+0000086A 205B6261 
+0000086E 75647261 
+00000872 74655D5D 
+00000876 205B7061 
+0000087A 72697479 
+0000087E 205B6576 
+00000882 656E7C6F 
+00000886 64647C6E 
+0000088A 6F6E655D 
+0000088E 5D205B62 
+00000892 69747320 
+00000896 5B377C38 5D5D 
+0000089C 0A00              A  2637    	DB	10,0
+0000089E                   A  2638    L__152:
+0000089E 70617269 7479     A  2639    	DB	"parity"
+000008A4 00                A  2640    	DB	0
+000008A5                   A  2641    L__155:
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  60
+
+
+PC     Object              I  Line    Source cli.src
+000008A5 3320496E          A  2642    	DB	"3 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]"
+000008A9 636F7272 
+000008AD 65637420 
+000008B1 666F726D 
+000008B5 61742C20 
+000008B9 75617274 
+000008BD 30205B73 
+000008C1 70656564 
+000008C5 205B6261 
+000008C9 75647261 
+000008CD 74655D5D 
+000008D1 205B7061 
+000008D5 72697479 
+000008D9 205B6576 
+000008DD 656E7C6F 
+000008E1 64647C6E 
+000008E5 6F6E655D 
+000008E9 5D205B62 
+000008ED 69747320 
+000008F1 5B377C38 5D5D 
+000008F7 0A00              A  2643    	DB	10,0
+000008F9                   A  2644    L__156:
+000008F9 62697473          A  2645    	DB	"bits"
+000008FD 00                A  2646    	DB	0
+000008FE                   A  2647    L__159:
+000008FE 3420496E          A  2648    	DB	"4 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] [bits [7|8]]"
+00000902 636F7272 
+00000906 65637420 
+0000090A 666F726D 
+0000090E 61742C20 
+00000912 75617274 
+00000916 30205B73 
+0000091A 70656564 
+0000091E 205B6261 
+00000922 75647261 
+00000926 74655D5D 
+0000092A 205B7061 
+0000092E 72697479 
+00000932 205B6576 
+00000936 656E7C6F 
+0000093A 64647C6E 
+0000093E 6F6E655D 
+00000942 5D205B62 
+00000946 69747320 
+0000094A 5B377C38 5D5D 
+00000950 0A00              A  2649    	DB	10,0
+                           A  2650    	SEGMENT CODE
+                           A  2651    ;  529	
+                           A  2652    ;  530	static void cli_command_uart0(char *args)
+                           A  2653    ;  531	{
+0000079E                   A  2654    _cli_command_uart0:
+                           A  2655    .define "_cli_command_uart0"
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  61
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2656    .value _cli_command_uart0
+                           A  2657    .class 3
+                           A  2658    .type 65
+                           A  2659    .type 0
+                           A  2660    .endef
+                           A  2661    .begfunc "cli_command_uart0",531,"_cli_command_uart0"
+0000079E 0808              A  2662    	LINK	#8
+                           A  2663    .line 531
+000007A0 57E1              A  2664    	LD.W	-2(R14),R1
+                           A  2665    .define "args"
+                           A  2666    .class 9
+                           A  2667    .value -2
+                           A  2668    .type 140
+                           A  2669    .type 0
+                           A  2670    .endef
+                           A  2671    .define "token"
+                           A  2672    .class 1
+                           A  2673    .value -4
+                           A  2674    .type 140
+                           A  2675    .type 0
+                           A  2676    .endef
+                           A  2677    .define "value"
+                           A  2678    .class 1
+                           A  2679    .value -8
+                           A  2680    .type 5
+                           A  2681    .type 0
+                           A  2682    .endef
+                           A  2683    ;  532		char *token;
+                           A  2684    ;  533		int value;
+                           A  2685    ;  534	
+                           A  2686    ;  535		cli_strip_spaces(&args);
+                           A  2687    .line 535
+000007A2 4FE1              A  2688    	LEA	R1,-2(R14)
+000007A4 DD29              A  2689    	CALL	_cli_strip_spaces
+                           A  2690    ;  536	
+                           A  2691    ;  537		token = args;
+                           A  2692    .line 537
+000007A6 6FE0              A  2693    	LD.SW	R0,-2(R14)
+000007A8 57C0              A  2694    	LD.W	-4(R14),R0
+                           A  2695    ;  538		if(cli_strip_word(&args)) {
+                           A  2696    .line 538
+000007AA 4FE1              A  2697    	LEA	R1,-2(R14)
+000007AC DCC8              A  2698    	CALL	_cli_strip_word
+000007AE 9000              A  2699    	CP	R0,#0
+000007B0 E6 06             A  2700    	JP	EQ,_20_L_137
+                           A  2701    ;  539			uart_printf("1 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|none]] 
+                           A  2702    .line 539
+000007B2 098F 07F0         A  2703    	PUSH.W	#L__147
+000007B6 F1 FFFC23         A  2704    	CALL	_uart_printf
+000007BA 8F02              A  2705    	ADD	R15,#2
+                           A  2706    ;  540			return;
+                           A  2707    .line 540
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  62
+
+
+PC     Object              I  Line    Source cli.src
+000007BC C062              A  2708    	JP	_20_L_146
+                           A  2709    ;  541		}
+000007BE                   A  2710    _20_L_137:
+                           A  2711    .line 541
+                           A  2712    ;  542	
+                           A  2713    ;  543		if(strcmp(token, "speed") == 0) {
+                           A  2714    .line 543
+000007BE 6FC1              A  2715    	LD.SW	R1,-4(R14)
+000007C0 4502 0844         A  2716    	LD	R2,#L__148
+000007C4 F1 FFFC1C         A  2717    	CALL	_strcmp
+000007C8 9000              A  2718    	CP	R0,#0
+000007CA EE 1F             A  2719    	JP	NE,_20_L_141
+                           A  2720    ;  544			++args;
+                           A  2721    .line 544
+000007CC ADEE 7FFE         A  2722    	INC.W	-2(R14)
+                           A  2723    ;  545			
+                           A  2724    ;  546			cli_strip_spaces(&args);		
+                           A  2725    .line 546
+000007D0 4FE1              A  2726    	LEA	R1,-2(R14)
+000007D2 DD12              A  2727    	CALL	_cli_strip_spaces
+                           A  2728    ;  547		
+                           A  2729    ;  548			token = args;
+                           A  2730    .line 548
+000007D4 6FE0              A  2731    	LD.SW	R0,-2(R14)
+000007D6 57C0              A  2732    	LD.W	-4(R14),R0
+                           A  2733    ;  549			if(cli_strip_decimal_number(&args)) {
+                           A  2734    .line 549
+000007D8 4FE1              A  2735    	LEA	R1,-2(R14)
+000007DA DCF1              A  2736    	CALL	_cli_strip_decimal_number
+000007DC 9000              A  2737    	CP	R0,#0
+000007DE E6 06             A  2738    	JP	EQ,_20_L_135
+                           A  2739    ;  550				uart_printf("2 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|non
+                           A  2740    .line 550
+000007E0 098F 084A         A  2741    	PUSH.W	#L__151
+000007E4 F1 FFFC0C         A  2742    	CALL	_uart_printf
+000007E8 8F02              A  2743    	ADD	R15,#2
+                           A  2744    ;  551				return;
+                           A  2745    .line 551
+000007EA C04B              A  2746    	JP	_20_L_146
+                           A  2747    ;  552			}
+000007EC                   A  2748    _20_L_135:
+                           A  2749    .line 552
+                           A  2750    ;  553			value = atoi(token);
+                           A  2751    .line 553
+000007EC 6FC1              A  2752    	LD.SW	R1,-4(R14)
+000007EE F1 FFFC07         A  2753    	CALL	_atoi
+000007F2 5B80              A  2754    	LD	-8(R14),R0
+                           A  2755    ;  554	
+                           A  2756    ;  555			uart_set_baudrate(value);
+                           A  2757    .line 555
+000007F4 5F81              A  2758    	LD	R1,-8(R14)
+000007F6 F1 FFFC03         A  2759    	CALL	_uart_set_baudrate
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  63
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2760    ;  556	
+                           A  2761    ;  557			++args;
+                           A  2762    .line 557
+000007FA ADEE 7FFE         A  2763    	INC.W	-2(R14)
+                           A  2764    ;  558			cli_strip_spaces(&args);
+                           A  2765    .line 558
+000007FE 4FE1              A  2766    	LEA	R1,-2(R14)
+00000800 DCFB              A  2767    	CALL	_cli_strip_spaces
+                           A  2768    ;  559	
+                           A  2769    ;  560			token = args;
+                           A  2770    .line 560
+00000802 6FE0              A  2771    	LD.SW	R0,-2(R14)
+00000804 57C0              A  2772    	LD.W	-4(R14),R0
+                           A  2773    ;  561			cli_strip_word(&args);
+                           A  2774    .line 561
+00000806 4FE1              A  2775    	LEA	R1,-2(R14)
+00000808 DC9A              A  2776    	CALL	_cli_strip_word
+                           A  2777    ;  562		}
+0000080A                   A  2778    _20_L_141:
+                           A  2779    .line 562
+                           A  2780    ;  563		if(strcmp(token, "parity") == 0) {
+                           A  2781    .line 563
+0000080A 6FC1              A  2782    	LD.SW	R1,-4(R14)
+0000080C 4502 089E         A  2783    	LD	R2,#L__152
+00000810 F1 FFFBF6         A  2784    	CALL	_strcmp
+00000814 9000              A  2785    	CP	R0,#0
+00000816 EE 1B             A  2786    	JP	NE,_20_L_145
+                           A  2787    ;  564			++args;
+                           A  2788    .line 564
+00000818 ADEE 7FFE         A  2789    	INC.W	-2(R14)
+                           A  2790    ;  565	
+                           A  2791    ;  566			cli_strip_spaces(&args);
+                           A  2792    .line 566
+0000081C 4FE1              A  2793    	LEA	R1,-2(R14)
+0000081E DCEC              A  2794    	CALL	_cli_strip_spaces
+                           A  2795    ;  567	
+                           A  2796    ;  568			token = args;
+                           A  2797    .line 568
+00000820 6FE0              A  2798    	LD.SW	R0,-2(R14)
+00000822 57C0              A  2799    	LD.W	-4(R14),R0
+                           A  2800    ;  569			if(cli_strip_word(&args)) {
+                           A  2801    .line 569
+00000824 4FE1              A  2802    	LEA	R1,-2(R14)
+00000826 DC8B              A  2803    	CALL	_cli_strip_word
+00000828 9000              A  2804    	CP	R0,#0
+0000082A E6 06             A  2805    	JP	EQ,_20_L_139
+                           A  2806    ;  570				uart_printf("3 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|non
+                           A  2807    .line 570
+0000082C 098F 08A5         A  2808    	PUSH.W	#L__155
+00000830 F1 FFFBE6         A  2809    	CALL	_uart_printf
+00000834 8F02              A  2810    	ADD	R15,#2
+                           A  2811    ;  571				return;
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  64
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2812    .line 571
+00000836 C025              A  2813    	JP	_20_L_146
+                           A  2814    ;  572			}
+00000838                   A  2815    _20_L_139:
+                           A  2816    .line 572
+                           A  2817    ;  573	
+                           A  2818    ;  574			uart_set_parity(token);
+                           A  2819    .line 574
+00000838 6FC1              A  2820    	LD.SW	R1,-4(R14)
+0000083A F1 FFFBE1         A  2821    	CALL	_uart_set_parity
+                           A  2822    ;  575	
+                           A  2823    ;  576			++args;
+                           A  2824    .line 576
+0000083E ADEE 7FFE         A  2825    	INC.W	-2(R14)
+                           A  2826    ;  577			cli_strip_spaces(&args);
+                           A  2827    .line 577
+00000842 4FE1              A  2828    	LEA	R1,-2(R14)
+00000844 DCD9              A  2829    	CALL	_cli_strip_spaces
+                           A  2830    ;  578	
+                           A  2831    ;  579			token = args;
+                           A  2832    .line 579
+00000846 6FE0              A  2833    	LD.SW	R0,-2(R14)
+00000848 57C0              A  2834    	LD.W	-4(R14),R0
+                           A  2835    ;  580			cli_strip_word(&args);
+                           A  2836    .line 580
+0000084A 4FE1              A  2837    	LEA	R1,-2(R14)
+0000084C DC78              A  2838    	CALL	_cli_strip_word
+                           A  2839    ;  581		}
+0000084E                   A  2840    _20_L_145:
+                           A  2841    .line 581
+                           A  2842    ;  582		if(strcmp(token, "bits") == 0) {
+                           A  2843    .line 582
+0000084E 6FC1              A  2844    	LD.SW	R1,-4(R14)
+00000850 4502 08F9         A  2845    	LD	R2,#L__156
+00000854 F1 FFFBD4         A  2846    	CALL	_strcmp
+00000858 9000              A  2847    	CP	R0,#0
+0000085A EE 13             A  2848    	JP	NE,_20_L_146
+                           A  2849    ;  583			++args;
+                           A  2850    .line 583
+0000085C ADEE 7FFE         A  2851    	INC.W	-2(R14)
+                           A  2852    ;  584	
+                           A  2853    ;  585			cli_strip_spaces(&args);
+                           A  2854    .line 585
+00000860 4FE1              A  2855    	LEA	R1,-2(R14)
+00000862 DCCA              A  2856    	CALL	_cli_strip_spaces
+                           A  2857    ;  586	
+                           A  2858    ;  587			token = args;
+                           A  2859    .line 587
+00000864 6FE0              A  2860    	LD.SW	R0,-2(R14)
+00000866 57C0              A  2861    	LD.W	-4(R14),R0
+                           A  2862    ;  588			if(cli_strip_decimal_number(&args)) {
+                           A  2863    .line 588
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  65
+
+
+PC     Object              I  Line    Source cli.src
+00000868 4FE1              A  2864    	LEA	R1,-2(R14)
+0000086A DCA9              A  2865    	CALL	_cli_strip_decimal_number
+0000086C 9000              A  2866    	CP	R0,#0
+0000086E E6 06             A  2867    	JP	EQ,_20_L_143
+                           A  2868    ;  589				uart_printf("4 Incorrect format, uart0 [speed [baudrate]] [parity [even|odd|non
+                           A  2869    .line 589
+00000870 098F 08FE         A  2870    	PUSH.W	#L__159
+00000874 F1 FFFBC4         A  2871    	CALL	_uart_printf
+00000878 8F02              A  2872    	ADD	R15,#2
+                           A  2873    ;  590				return;
+                           A  2874    .line 590
+0000087A C003              A  2875    	JP	_20_L_146
+                           A  2876    ;  591			}
+0000087C                   A  2877    _20_L_143:
+                           A  2878    .line 591
+                           A  2879    ;  592	
+                           A  2880    ;  593			uart_set_bits(token);
+                           A  2881    .line 593
+0000087C 6FC1              A  2882    	LD.SW	R1,-4(R14)
+0000087E F1 FFFBBF         A  2883    	CALL	_uart_set_bits
+                           A  2884    ;  594		}
+00000882                   A  2885    _20_L_146:
+                           A  2886    .line 595
+00000882 0001              A  2887    	UNLINK	
+00000884 FFFC              A  2888    	RET	
+                           A  2889    
+                           A  2890    
+                           A  2891    ;**************************** _cli_command_uart0 ***************************
+                           A  2892    ;Name                         Addr/Register   Size   Type
+                           A  2893    ;_uart_set_bits                      IMPORT  -----   function
+                           A  2894    ;_uart_set_parity                    IMPORT  -----   function
+                           A  2895    ;_uart_set_baudrate                  IMPORT  -----   function
+                           A  2896    ;_atoi                               IMPORT  -----   function
+                           A  2897    ;_cli_strip_decimal_number           IMPORT  -----   function
+                           A  2898    ;_strcmp                             IMPORT  -----   function
+                           A  2899    ;_uart_printf                        IMPORT  -----   function
+                           A  2900    ;_cli_strip_word                     IMPORT  -----   function
+                           A  2901    ;_cli_strip_spaces                   IMPORT  -----   function
+                           A  2902    ;value                                R14-8      4   variable
+                           A  2903    ;token                                R14-4      2   variable
+                           A  2904    ;args                                 R14-2      2   parameter
+                           A  2905    
+                           A  2906    
+                           A  2907    ; Aggregate Stack Size: -8 (words)
+                           A  2908    
+                           A  2909    
+                           A  2910    .endfunc "cli_command_uart0",595,"_cli_command_uart0"
+                           A  2911    	XREF _isspace:EROM
+                           A  2912    	XREF _isgraph:EROM
+                           A  2913    	XREF _isdigit:EROM
+                           A  2914    	XREF _isalpha:EROM
+                           A  2915    	XREF _memset:EROM
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  66
+
+
+PC     Object              I  Line    Source cli.src
+                           A  2916    	XREF _memcpy:EROM
+                           A  2917    	XREF _strlen:EROM
+                           A  2918    	XREF _strchr:EROM
+                           A  2919    	XREF _strcmp:EROM
+                           A  2920    	XREF _strtol:EROM
+                           A  2921    	XREF _atoi:EROM
+                           A  2922    	XREF _timers_print_config:EROM
+                           A  2923    	XREF _ports_print_config:EROM
+                           A  2924    	XREF _macro_set:EROM
+                           A  2925    	XREF _info_display:EROM
+                           A  2926    	XREF _init_info:EROM
+                           A  2927    	XREF _uart_set_bits:EROM
+                           A  2928    	XREF _uart_set_parity:EROM
+                           A  2929    	XREF _uart_set_baudrate:EROM
+                           A  2930    	XREF _uart_printf:EROM
+                           A  2931    	XREF _uart_getchar:EROM
+                           A  2932    	XREF _init_uart:EROM
+                           A  2933    	XREF _led_display_int_hex:EROM
+                           A  2934    	XREF _led_display_text:EROM
+                           A  2935    	XREF _init_leds:EROM
+                           A  2936    	XREF __24lc16b_read_bytes_hex_dump:EROM
+                           A  2937    	XREF __24lc16b_write_bytes_addr:EROM
+                           A  2938    	XREF _init_24lc16b:EROM
+                           A  2939    	XREF __25lc040a_read_bytes_hex_dump:EROM
+                           A  2940    	XREF __25lc040a_write_bytes_addr:EROM
+                           A  2941    	XREF _init_25lc040a:EROM
+                           A  2942    	XDEF _cli_set_prompt
+                           A  2943    	XDEF _cli_strip_spaces
+                           A  2944    	XDEF _cli_strip_decimal_number
+                           A  2945    	XDEF _cli_strip_hex
+                           A  2946    	XDEF _cli_strip_word
+                           A  2947    	XDEF _cli_strip_quotes
+                           A  2948    	XDEF _cli_loop
+                           A  2949    	XDEF _init_cli
+                           A  2950    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 2951

@@ -1,0 +1,412 @@
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   1
+
+
+PC     Object              I  Line    Source 
+                           A     1    ; ZiLOG ZNEO ANSI C Compiler Release 1.11
+                           A     2    ; -nolocalcse -optsize -model=S -nomodsect -noregvar
+                           A     3    ; -reduceopt -debug -peephole -const=ROM -alias -fastcall
+                           A     4    	FILE	"..\MACRO.C"
+                           A     5    .debug "C"
+                           A     6    	SEGMENT NEAR_BSS
+00000000                   A     7    _macros:
+00000000                   A     8    	DS	6
+                           A     9    .define "macros"
+                           A    10    .alias "_macros"
+                           A    11    .class 147
+                           A    12    .value _macros
+                           A    13    .dim 3
+                           A    14    .type 1132
+                           A    15    .type 0
+                           A    16    .endef
+                           A    17    	SEGMENT CODE
+                           A    18    .begrec "NONAME0",8
+                           A    19    .define "quot"
+                           A    20    .value 0
+                           A    21    .class 8
+                           A    22    .type 5
+                           A    23    .type 0
+                           A    24    .endef
+                           A    25    .define "rem"
+                           A    26    .value 4
+                           A    27    .class 8
+                           A    28    .type 5
+                           A    29    .type 0
+                           A    30    .endef
+                           A    31    .endrec "NONAME0"
+                           A    32    .begrec "NONAME1",8
+                           A    33    .define "quot"
+                           A    34    .value 0
+                           A    35    .class 8
+                           A    36    .type 5
+                           A    37    .type 0
+                           A    38    .endef
+                           A    39    .define "rem"
+                           A    40    .value 4
+                           A    41    .class 8
+                           A    42    .type 5
+                           A    43    .type 0
+                           A    44    .endef
+                           A    45    .endrec "NONAME1"
+                           A    46    ;    1	#include "macro.h"
+                           A    47    ;    2	#include "uart.h"
+                           A    48    ;    3	
+                           A    49    ;    4	#include <stdlib.h>
+                           A    50    ;    5	#include <string.h>
+                           A    51    ;    6	
+                           A    52    ;    7	#define MACRO_SIZE_MAX 128
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   2
+
+
+PC     Object              I  Line    Source macro.src
+                           A    53    ;    8	
+                           A    54    ;    9	static char * macros[MACRO_MAX];
+                           A    55    ;   10	
+                           A    56    ;   11	void init_macro(void)
+                           A    57    ;   12	{
+00000000                   A    58    _init_macro:
+                           A    59    .define "_init_macro"
+                           A    60    .value _init_macro
+                           A    61    .class 2
+                           A    62    .type 65
+                           A    63    .type 0
+                           A    64    .endef
+                           A    65    .begfunc "init_macro",12,"_init_macro"
+00000000 0800              A    66    	LINK	#0
+                           A    67    ;   13		memset(macros, 0, MACRO_MAX);
+                           A    68    .line 13
+00000002 4511 0000         A    69    	LD	R1,#_macros
+00000006 3200              A    70    	LD	R2,#0
+00000008 3303              A    71    	LD	R3,#3
+0000000A F1 FFFFF9         A    72    	CALL	_memset
+                           A    73    ;   14	}
+                           A    74    .line 14
+0000000E 0001              A    75    	UNLINK	
+00000010 FFFC              A    76    	RET	
+                           A    77    
+                           A    78    
+                           A    79    ;**************************** _init_macro ***************************
+                           A    80    ;Name                         Addr/Register   Size   Type
+                           A    81    ;_macros                             STATIC      6   variable
+                           A    82    ;_memset                             IMPORT  -----   function
+                           A    83    
+                           A    84    
+                           A    85    ; Aggregate Stack Size: 0 (words)
+                           A    86    
+                           A    87    
+                           A    88    .endfunc "init_macro",14,"_init_macro"
+                           A    89    ;   15	
+                           A    90    ;   16	/*
+                           A    91    ;   17		Set a specified macro.
+                           A    92    ;   18	 */
+                           A    93    ;   19	void macro_set(int n, const char *macro)
+                           A    94    ;   20	{
+00000012                   A    95    _macro_set:
+                           A    96    .define "_macro_set"
+                           A    97    .value _macro_set
+                           A    98    .class 2
+                           A    99    .type 65
+                           A   100    .type 0
+                           A   101    .endef
+                           A   102    .begfunc "macro_set",20,"_macro_set"
+00000012 080A              A   103    	LINK	#10
+                           A   104    .line 20
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   3
+
+
+PC     Object              I  Line    Source macro.src
+00000014 5BC1              A   105    	LD	-4(R14),R1
+                           A   106    .define "n"
+                           A   107    .class 9
+                           A   108    .value -4
+                           A   109    .type 5
+                           A   110    .type 0
+                           A   111    .endef
+00000016 57A2              A   112    	LD.W	-6(R14),R2
+                           A   113    .define "macro"
+                           A   114    .class 9
+                           A   115    .value -6
+                           A   116    .type 140
+                           A   117    .type 0
+                           A   118    .endef
+                           A   119    .define "macro_len"
+                           A   120    .class 1
+                           A   121    .value -10
+                           A   122    .type 15
+                           A   123    .type 0
+                           A   124    .endef
+                           A   125    ;   21		size_t macro_len;
+                           A   126    ;   22	
+                           A   127    ;   23		if(n < 0 || n >= MACRO_MAX) {
+                           A   128    .line 23
+00000018 ADDE BFFC         A   129    	CPZ	-4(R14)
+0000001C E1 45             A   130    	JP	LT,_2_L_8
+0000001E 3003              A   131    	LD	R0,#3
+00000020 7D0E FFFC         A   132    	CP	-4(R14),R0
+00000024 E9 41             A   133    	JP	GE,_2_L_8
+                           A   134    ;   24			return;
+                           A   135    .line 24
+                           A   136    ;   25		}
+                           A   137    .line 25
+                           A   138    ;   26	
+                           A   139    ;   27		//clear the old macro
+                           A   140    ;   28		free(macros[n]);
+                           A   141    .line 28
+00000026 5FC0              A   142    	LD	R0,-4(R14)
+00000028 BC10              A   143    	SLL	R0,#1
+0000002A 4511 0000         A   144    	LD	R1,#_macros
+0000002E A010              A   145    	ADD	R0,R1
+00000030 1E01              A   146    	LD.SW	R1,(R0)
+00000032 F1 FFFFE5         A   147    	CALL	_free
+                           A   148    ;   29	
+                           A   149    ;   30		macro_len = strlen(macro) + 2;
+                           A   150    .line 30
+00000036 6FA1              A   151    	LD.SW	R1,-6(R14)
+00000038 F1 FFFFE2         A   152    	CALL	_strlen
+0000003C 8002              A   153    	ADD	R0,#2
+0000003E 5B60              A   154    	LD	-10(R14),R0
+                           A   155    ;   31		if(macro_len > MACRO_SIZE_MAX) {
+                           A   156    .line 31
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   4
+
+
+PC     Object              I  Line    Source macro.src
+00000040 4500 0080         A   157    	LD	R0,#128
+00000044 7D0E FFF6         A   158    	CP	-10(R14),R0
+00000048 E3 01             A   159    	JP	ULE,_2_L_5
+                           A   160    ;   32			macro_len = MACRO_SIZE_MAX;
+                           A   161    .line 32
+0000004A 5B60              A   162    	LD	-10(R14),R0
+                           A   163    ;   33		}
+0000004C                   A   164    _2_L_5:
+                           A   165    .line 33
+                           A   166    ;   34	
+                           A   167    ;   35		macros[n] = malloc(sizeof(*macros[n]) * macro_len);
+                           A   168    .line 35
+0000004C 5F61              A   169    	LD	R1,-10(R14)
+0000004E F1 FFFFD7         A   170    	CALL	_malloc
+00000052 5FC1              A   171    	LD	R1,-4(R14)
+00000054 BC11              A   172    	SLL	R1,#1
+00000056 4512 0000         A   173    	LD	R2,#_macros
+0000005A A021              A   174    	ADD	R1,R2
+0000005C 0F01              A   175    	LD.W	(R1),R0
+                           A   176    ;   36		if(!macros[n]) {
+                           A   177    .line 36
+0000005E 5FC0              A   178    	LD	R0,-4(R14)
+00000060 BC10              A   179    	SLL	R0,#1
+00000062 4511 0000         A   180    	LD	R1,#_macros
+00000066 A010              A   181    	ADD	R0,R1
+00000068 AC50              A   182    	CPZ.W	(R0)
+0000006A E6 1E             A   183    	JP	EQ,_2_L_8
+                           A   184    ;   37			return;
+                           A   185    .line 37
+                           A   186    ;   38		}
+                           A   187    .line 38
+                           A   188    ;   39	
+                           A   189    ;   40		memcpy(macros[n], macro, macro_len - 2);
+                           A   190    .line 40
+0000006C 5F63              A   191    	LD	R3,-10(R14)
+0000006E 83FE              A   192    	ADD	R3,#-2
+00000070 5FC0              A   193    	LD	R0,-4(R14)
+00000072 BC10              A   194    	SLL	R0,#1
+00000074 A010              A   195    	ADD	R0,R1
+00000076 1E01              A   196    	LD.SW	R1,(R0)
+00000078 6FA2              A   197    	LD.SW	R2,-6(R14)
+0000007A F1 FFFFC1         A   198    	CALL	_memcpy
+                           A   199    ;   41		macros[n][macro_len-2] = '\n';
+                           A   200    .line 41
+0000007E 5FC0              A   201    	LD	R0,-4(R14)
+00000080 BC10              A   202    	SLL	R0,#1
+00000082 4511 0000         A   203    	LD	R1,#_macros
+00000086 A001              A   204    	ADD	R1,R0
+00000088 5F60              A   205    	LD	R0,-10(R14)
+0000008A 80FE              A   206    	ADD	R0,#-2
+0000008C 7810 6000         A   207    	ADD.SW	R0,(R1)
+00000090 09C0 000A         A   208    	LD.B	(R0),#10
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   5
+
+
+PC     Object              I  Line    Source macro.src
+                           A   209    ;   42		macros[n][macro_len-1] = '\0';
+                           A   210    .line 42
+00000094 5FC0              A   211    	LD	R0,-4(R14)
+00000096 BC10              A   212    	SLL	R0,#1
+00000098 4511 0000         A   213    	LD	R1,#_macros
+0000009C A001              A   214    	ADD	R1,R0
+0000009E 5F60              A   215    	LD	R0,-10(R14)
+000000A0 80FF              A   216    	ADD	R0,#-1
+000000A2 7810 6000         A   217    	ADD.SW	R0,(R1)
+000000A6 AC00              A   218    	CLR.B	(R0)
+                           A   219    ;   43	}
+000000A8                   A   220    _2_L_8:
+                           A   221    .line 43
+000000A8 0001              A   222    	UNLINK	
+000000AA FFFC              A   223    	RET	
+                           A   224    
+                           A   225    
+                           A   226    ;**************************** _macro_set ***************************
+                           A   227    ;Name                         Addr/Register   Size   Type
+                           A   228    ;_memcpy                             IMPORT  -----   function
+                           A   229    ;_malloc                             IMPORT  -----   function
+                           A   230    ;_strlen                             IMPORT  -----   function
+                           A   231    ;_macros                             STATIC      6   variable
+                           A   232    ;_free                               IMPORT  -----   function
+                           A   233    ;macro_len                           R14-10      4   variable
+                           A   234    ;macro                                R14-6      2   parameter
+                           A   235    ;n                                    R14-4      4   parameter
+                           A   236    
+                           A   237    
+                           A   238    ; Aggregate Stack Size: -10 (words)
+                           A   239    
+                           A   240    
+                           A   241    .endfunc "macro_set",43,"_macro_set"
+                           A   242    ;   44	
+                           A   243    ;   45	/*
+                           A   244    ;   46		Execute a specified macro.
+                           A   245    ;   47	 */
+                           A   246    ;   48	void macro_execute(int n)
+                           A   247    ;   49	{
+000000AC                   A   248    _macro_execute:
+                           A   249    .define "_macro_execute"
+                           A   250    .value _macro_execute
+                           A   251    .class 2
+                           A   252    .type 65
+                           A   253    .type 0
+                           A   254    .endef
+                           A   255    .begfunc "macro_execute",49,"_macro_execute"
+000000AC 080E              A   256    	LINK	#14
+                           A   257    .line 49
+000000AE 5BC1              A   258    	LD	-4(R14),R1
+                           A   259    .define "n"
+                           A   260    .class 9
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   6
+
+
+PC     Object              I  Line    Source macro.src
+                           A   261    .value -4
+                           A   262    .type 5
+                           A   263    .type 0
+                           A   264    .endef
+                           A   265    .define "c"
+                           A   266    .class 1
+                           A   267    .value -6
+                           A   268    .type 140
+                           A   269    .type 0
+                           A   270    .endef
+                           A   271    .define "i"
+                           A   272    .class 1
+                           A   273    .value -10
+                           A   274    .type 5
+                           A   275    .type 0
+                           A   276    .endef
+                           A   277    .define "macro_len"
+                           A   278    .class 1
+                           A   279    .value -14
+                           A   280    .type 15
+                           A   281    .type 0
+                           A   282    .endef
+                           A   283    ;   50		char *c;
+                           A   284    ;   51	
+                           A   285    ;   52		size_t macro_len;
+                           A   286    ;   53		int i;
+                           A   287    ;   54	
+                           A   288    ;   55		if(n < 0 || n >= MACRO_MAX || macros[n] == NULL) {
+                           A   289    .line 55
+000000B0 ADDE BFFC         A   290    	CPZ	-4(R14)
+000000B4 E1 27             A   291    	JP	LT,_3_L_17
+000000B6 3003              A   292    	LD	R0,#3
+000000B8 7D0E FFFC         A   293    	CP	-4(R14),R0
+000000BC E9 23             A   294    	JP	GE,_3_L_17
+000000BE 5FC0              A   295    	LD	R0,-4(R14)
+000000C0 BC10              A   296    	SLL	R0,#1
+000000C2 4511 0000         A   297    	LD	R1,#_macros
+000000C6 A010              A   298    	ADD	R0,R1
+000000C8 AC50              A   299    	CPZ.W	(R0)
+000000CA EE 01             A   300    	JP	NE,_3_L_12
+                           A   301    ;   56			return;
+                           A   302    .line 56
+000000CC C01B              A   303    	JP	_3_L_17
+                           A   304    ;   57		}
+000000CE                   A   305    _3_L_12:
+                           A   306    .line 57
+                           A   307    ;   58		
+                           A   308    ;   59		c = macros[n];
+                           A   309    .line 59
+000000CE 5FC0              A   310    	LD	R0,-4(R14)
+000000D0 BC10              A   311    	SLL	R0,#1
+000000D2 A010              A   312    	ADD	R0,R1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   7
+
+
+PC     Object              I  Line    Source macro.src
+000000D4 1E00              A   313    	LD.SW	R0,(R0)
+000000D6 57A0              A   314    	LD.W	-6(R14),R0
+                           A   315    ;   60		macro_len = strlen(c);
+                           A   316    .line 60
+000000D8 6FA1              A   317    	LD.SW	R1,-6(R14)
+000000DA F1 FFFF91         A   318    	CALL	_strlen
+000000DE 5B20              A   319    	LD	-14(R14),R0
+000000E0 C005              A   320    	JP	_3_L_13
+                           A   321    ;   61	
+                           A   322    ;   62		for(i = 0; i < macro_len; ++i) {
+000000E2                   A   323    _3_L_14:
+                           A   324    .line 62
+000000E2 5F20              A   325    	LD	R0,-14(R14)
+000000E4 7D0E FFF6         A   326    	CP	-10(R14),R0
+000000E8 E7 04             A   327    	JP	C,_3_L_16
+000000EA C00C              A   328    	JP	_3_L_17
+000000EC                   A   329    _3_L_13:
+000000EC ADCE BFF6         A   330    	CLR	-10(R14)
+000000F0 CFF8              A   331    	JP	_3_L_14
+000000F2                   A   332    _3_L_16:
+                           A   333    ;   63			uart_dummy_receive(*c);
+                           A   334    .line 63
+000000F2 6FA0              A   335    	LD.SW	R0,-6(R14)
+000000F4 1C01              A   336    	LD.SB	R1,(R0)
+000000F6 F1 FFFF83         A   337    	CALL	_uart_dummy_receive
+                           A   338    ;   64			++c;
+                           A   339    .line 64
+000000FA ADEE 7FFA         A   340    	INC.W	-6(R14)
+                           A   341    ;   65		}
+                           A   342    .line 65
+000000FE ADEE BFF6         A   343    	INC	-10(R14)
+00000102 CFEF              A   344    	JP	_3_L_14
+00000104                   A   345    _3_L_17:
+                           A   346    .line 66
+00000104 0001              A   347    	UNLINK	
+00000106 FFFC              A   348    	RET	
+                           A   349    
+                           A   350    
+                           A   351    ;**************************** _macro_execute ***************************
+                           A   352    ;Name                         Addr/Register   Size   Type
+                           A   353    ;_uart_dummy_receive                 IMPORT  -----   function
+                           A   354    ;_strlen                             IMPORT  -----   function
+                           A   355    ;_macros                             STATIC      6   variable
+                           A   356    ;macro_len                           R14-14      4   variable
+                           A   357    ;i                                   R14-10      4   variable
+                           A   358    ;c                                    R14-6      2   variable
+                           A   359    ;n                                    R14-4      4   parameter
+                           A   360    
+                           A   361    
+                           A   362    ; Aggregate Stack Size: -14 (words)
+                           A   363    
+                           A   364    
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   8
+
+
+PC     Object              I  Line    Source macro.src
+                           A   365    .endfunc "macro_execute",66,"_macro_execute"
+                           A   366    	XREF _memset:EROM
+                           A   367    	XREF _memcpy:EROM
+                           A   368    	XREF _strlen:EROM
+                           A   369    	XREF _malloc:EROM
+                           A   370    	XREF _free:EROM
+                           A   371    	XREF _uart_dummy_receive:EROM
+                           A   372    	XDEF _macro_execute
+                           A   373    	XDEF _macro_set
+                           A   374    	XDEF _init_macro
+                           A   375    	END
+
+
+Errors: 0
+Warnings: 0
+Lines Assembled: 376
