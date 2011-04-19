@@ -1,4 +1,4 @@
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   1
 
 
 PC     Object              I  Line    Source 
@@ -54,7 +54,7 @@ PC     Object              I  Line    Source
 00000006 7350 E061         A    50    	OR.B	57441:RAM,R0
                            A    51    ;   21	}
                            A    52    .line 21
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   2
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   2
 
 
 PC     Object              I  Line    Source info.src
@@ -72,8 +72,8 @@ PC     Object              I  Line    Source info.src
                            A    64    .endfunc "init_info",21,"_init_info"
                            A    65    	SEGMENT NEAR_TEXT
 00000000                   A    66    L__4:
-00000000 32313A35          A    67    	DB	"21:55:20"
-00000004 353A3230 
+00000000 32323A34          A    67    	DB	"22:45:37"
+00000004 353A3337 
 00000008 00                A    68    	DB	0
 00000009                   A    69    L__5:
 00000009 4D617220          A    70    	DB	"Mar 29 2011"
@@ -110,7 +110,7 @@ PC     Object              I  Line    Source info.src
 00000055 696C6520 
 00000059 44617465 
 0000005D 3A202573 
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   3
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   3
 
 
 PC     Object              I  Line    Source info.src
@@ -166,7 +166,7 @@ PC     Object              I  Line    Source info.src
                            A   133    .line 33
 0000004A F1 FFFFD9         A   134    	CALL	_osc_print_config
                            A   135    ;   34	}
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   4
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   4
 
 
 PC     Object              I  Line    Source info.src

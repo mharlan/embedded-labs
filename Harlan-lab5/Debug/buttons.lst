@@ -1,4 +1,4 @@
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   1
 
 
 PC     Object              I  Line    Source 
@@ -54,7 +54,7 @@ PC     Object              I  Line    Source
                            A    50    .type 0
                            A    51    .endef
 00000011                   A    52    _current:
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   2
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   2
 
 
 PC     Object              I  Line    Source buttons.src
@@ -110,7 +110,7 @@ PC     Object              I  Line    Source buttons.src
                            A   102    ;   24	static volatile unsigned char current;
                            A   103    ;   25	static volatile unsigned char previous;
                            A   104    ;   26	static volatile unsigned short button_state;
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   3
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   3
 
 
 PC     Object              I  Line    Source buttons.src
@@ -166,7 +166,7 @@ PC     Object              I  Line    Source buttons.src
                            A   154    ;   46	
                            A   155    ;   47		button_twice_timer = 0;
                            A   156    .line 47
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   4
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   4
 
 
 PC     Object              I  Line    Source buttons.src
@@ -222,7 +222,7 @@ PC     Object              I  Line    Source buttons.src
 0000004A 0340 000C         A   206    	LD	R0,_button_twice_cutoff:RAM
 0000004E 7570 0008         A   207    	CP	_button_twice_timer:RAM,R0
 00000052 E1 07             A   208    	JP	LT,_2_L_3
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   5
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   5
 
 
 PC     Object              I  Line    Source buttons.src
@@ -278,7 +278,7 @@ PC     Object              I  Line    Source buttons.src
 000000A2 7550 0011         A   258    	CP.B	_current:RAM,R0
 000000A6 EE 17             A   259    	JP	NE,_2_L_11
                            A   260    ;   74				if(current != BUTTON_NONE) {
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   6
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   6
 
 
 PC     Object              I  Line    Source buttons.src
@@ -334,7 +334,7 @@ PC     Object              I  Line    Source buttons.src
                            A   310    ;_button_twice_cutoff                STATIC      4   variable
                            A   311    ;_button_twice_timer                 STATIC      4   variable
                            A   312    ;_timer_interval_int                 IMPORT  -----   function
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   7
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   7
 
 
 PC     Object              I  Line    Source buttons.src
@@ -390,7 +390,7 @@ PC     Object              I  Line    Source buttons.src
                            A   362    ;  100	
                            A   363    ;  101				macro_execute(MACRO0);
                            A   364    .line 101
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   8
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   8
 
 
 PC     Object              I  Line    Source buttons.src
@@ -446,7 +446,7 @@ PC     Object              I  Line    Source buttons.src
 0000014C ADA9 0008         A   414    	CPZ	_button_twice_timer:RAM
 00000150 E6 0A             A   415    	JP	EQ,_3_L_20
 00000152 7550 0010         A   416    	CP.B	_last_button:RAM,R0
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:   9
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   9
 
 
 PC     Object              I  Line    Source buttons.src
@@ -502,7 +502,7 @@ PC     Object              I  Line    Source buttons.src
                            A   466    ; Aggregate Stack Size: 0 (words)
                            A   467    
                            A   468    
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:19     page:  10
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  10
 
 
 PC     Object              I  Line    Source buttons.src

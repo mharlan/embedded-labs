@@ -1,4 +1,4 @@
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   1
 
 
 PC     Object              I  Line    Source 
@@ -54,7 +54,7 @@ PC     Object              I  Line    Source
                            A    50    ;    1	
                            A    51    ;    2	#include "25lc040a.h"
                            A    52    ;    3	#include "24lc16b.h"
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   2
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   2
 
 
 PC     Object              I  Line    Source cli.src
@@ -110,7 +110,7 @@ PC     Object              I  Line    Source cli.src
                            A   102    .class 2
                            A   103    .type 65
                            A   104    .type 0
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   3
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   3
 
 
 PC     Object              I  Line    Source cli.src
@@ -166,7 +166,7 @@ PC     Object              I  Line    Source cli.src
 00000006 2573              A   154    	DB	"%s"
 00000008 00                A   155    	DB	0
 00000009                   A   156    L__12:
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   4
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   4
 
 
 PC     Object              I  Line    Source cli.src
@@ -222,7 +222,7 @@ PC     Object              I  Line    Source cli.src
 00000020 0800              A   195    	LINK	#0
 00000022 AA1F 0105         A   196    	SUB	R15,#261
                            A   197    ;   61		char buffer[CLI_BUFFER_SIZE];
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   5
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   5
 
 
 PC     Object              I  Line    Source cli.src
@@ -278,7 +278,7 @@ PC     Object              I  Line    Source cli.src
 00000062                   A   247    _2_L_4:
                            A   248    .line 80
                            A   249    ;   81	
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   6
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   6
 
 
 PC     Object              I  Line    Source cli.src
@@ -334,7 +334,7 @@ PC     Object              I  Line    Source cli.src
                            A   299    .line 93
 000000B2 ADDE BFFB         A   300    	CPZ	-5(R14)
 000000B6 E6 07             A   301    	JP	EQ,_2_L_17
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   7
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   7
 
 
 PC     Object              I  Line    Source cli.src
@@ -390,7 +390,7 @@ PC     Object              I  Line    Source cli.src
                            A   351    .line 112
 000000FA CF9E              A   352    	JP	_2_L_18
                            A   353    ;  113	}
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   8
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   8
 
 
 PC     Object              I  Line    Source cli.src
@@ -446,7 +446,7 @@ PC     Object              I  Line    Source cli.src
                            A   403    ;  117		char *c;
                            A   404    ;  118	
                            A   405    ;  119		c = *args;
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   9
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   9
 
 
 PC     Object              I  Line    Source cli.src
@@ -502,7 +502,7 @@ PC     Object              I  Line    Source cli.src
                            A   455    ;  133		return 0;
                            A   456    .line 133
 00000138 3000              A   457    	LD	R0,#0
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  10
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  10
 
 
 PC     Object              I  Line    Source cli.src
@@ -558,7 +558,7 @@ PC     Object              I  Line    Source cli.src
 00000144 1E00              A   507    	LD.SW	R0,(R0)
 00000146 57C0              A   508    	LD.W	-4(R14),R0
                            A   509    ;  141		while(isalpha(*c)) {
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  11
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  11
 
 
 PC     Object              I  Line    Source cli.src
@@ -614,7 +614,7 @@ PC     Object              I  Line    Source cli.src
                            A   559    ;**************************** _cli_strip_word ***************************
                            A   560    ;Name                         Addr/Register   Size   Type
                            A   561    ;_isalpha                            IMPORT  -----   function
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  12
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  12
 
 
 PC     Object              I  Line    Source cli.src
@@ -670,7 +670,7 @@ PC     Object              I  Line    Source cli.src
 0000018E 6FC0              A   611    	LD.SW	R0,-4(R14)
 00000190 1801              A   612    	LD.UB	R1,(R0)
 00000192 F1 FFFF35         A   613    	CALL	_isdigit
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  13
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  13
 
 
 PC     Object              I  Line    Source cli.src
@@ -726,7 +726,7 @@ PC     Object              I  Line    Source cli.src
                            A   663    ;c                                    R14-4      2   variable
                            A   664    ;args                                 R14-2      2   parameter
                            A   665    
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  14
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  14
 
 
 PC     Object              I  Line    Source cli.src
@@ -782,7 +782,7 @@ PC     Object              I  Line    Source cli.src
                            A   715    ;  181		}
                            A   716    .line 181
 000001D8 CFF7              A   717    	JP	_6_L_39
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  15
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  15
 
 
 PC     Object              I  Line    Source cli.src
@@ -838,7 +838,7 @@ PC     Object              I  Line    Source cli.src
                            A   767    ;  194	{
 000001F8                   A   768    _cli_strip_spaces:
                            A   769    .define "_cli_strip_spaces"
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  16
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  16
 
 
 PC     Object              I  Line    Source cli.src
@@ -894,7 +894,7 @@ PC     Object              I  Line    Source cli.src
                            A   819    ;  203	}
                            A   820    .line 203
 0000021A 0001              A   821    	UNLINK	
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  17
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  17
 
 
 PC     Object              I  Line    Source cli.src
@@ -950,7 +950,7 @@ PC     Object              I  Line    Source cli.src
                            A   871    .line 210
 0000022C 4500 0100         A   872    	LD	R0,#256
 00000230 7D0E FFFA         A   873    	CP	-6(R14),R0
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  18
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  18
 
 
 PC     Object              I  Line    Source cli.src
@@ -1006,7 +1006,7 @@ PC     Object              I  Line    Source cli.src
 0000004A 00                A   923    	DB	0
 0000004B                   A   924    L__41:
 0000004B 64697370 6C6179   A   925    	DB	"display"
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  19
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  19
 
 
 PC     Object              I  Line    Source cli.src
@@ -1062,7 +1062,7 @@ PC     Object              I  Line    Source cli.src
                            A   959    .define "_cli_process_command"
                            A   960    .value _cli_process_command
                            A   961    .class 3
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  20
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  20
 
 
 PC     Object              I  Line    Source cli.src
@@ -1118,7 +1118,7 @@ PC     Object              I  Line    Source cli.src
 0000027A                   A  1011    _9_L_80:
                            A  1012    ;  229	
                            A  1013    ;  230		if(args != command) {
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  21
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  21
 
 
 PC     Object              I  Line    Source cli.src
@@ -1174,7 +1174,7 @@ PC     Object              I  Line    Source cli.src
                            A  1063    ;  242			}
                            A  1064    ;  243			else if(strcmp(command, "display") == 0) {
                            A  1065    .line 243
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  22
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  22
 
 
 PC     Object              I  Line    Source cli.src
@@ -1230,7 +1230,7 @@ PC     Object              I  Line    Source cli.src
                            A  1115    ;  253				cli_command_switch(args);
                            A  1116    .line 253
 0000030E 6FC1              A  1117    	LD.SW	R1,-4(R14)
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  23
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  23
 
 
 PC     Object              I  Line    Source cli.src
@@ -1286,7 +1286,7 @@ PC     Object              I  Line    Source cli.src
 00000352 4502 0073         A  1167    	LD	R2,#L__55
 00000356 F1 FFFE53         A  1168    	CALL	_strcmp
 0000035A 9000              A  1169    	CP	R0,#0
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  24
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  24
 
 
 PC     Object              I  Line    Source cli.src
@@ -1342,7 +1342,7 @@ PC     Object              I  Line    Source cli.src
                            A  1219    ;_cli_command_switch                 STATIC  -----   function
                            A  1220    ;_cli_command_hex                    STATIC  -----   function
                            A  1221    ;_cli_command_set                    STATIC  -----   function
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  25
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  25
 
 
 PC     Object              I  Line    Source cli.src
@@ -1398,7 +1398,7 @@ PC     Object              I  Line    Source cli.src
 0000012F 7874206F 
 00000133 6E207468 
 00000137 65204C45 44732E 
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  26
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  26
 
 
 PC     Object              I  Line    Source cli.src
@@ -1454,7 +1454,7 @@ PC     Object              I  Line    Source cli.src
 000001E5 6163726F 
 000001E9 20746F20 
 000001ED 61206275 
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  27
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  27
 
 
 PC     Object              I  Line    Source cli.src
@@ -1510,7 +1510,7 @@ PC     Object              I  Line    Source cli.src
 0000029E 5B377C38 5D5D 
 000002A4 0A00              A  1286    	DB	10,0
 000002A6                   A  1287    L__77:
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  28
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  28
 
 
 PC     Object              I  Line    Source cli.src
@@ -1566,7 +1566,7 @@ PC     Object              I  Line    Source cli.src
 00000358 73206672 
 0000035C 6F6D2061 
 00000360 2050532F 
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  29
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  29
 
 
 PC     Object              I  Line    Source cli.src
@@ -1622,7 +1622,7 @@ PC     Object              I  Line    Source cli.src
 00000413 61642061 
 00000417 6E642077 
 0000041B 72697465 
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  30
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  30
 
 
 PC     Object              I  Line    Source cli.src
@@ -1678,7 +1678,7 @@ PC     Object              I  Line    Source cli.src
 00000390 098F 00C4         A  1341    	PUSH.W	#L__61
 00000394 F1 FFFE34         A  1342    	CALL	_uart_printf
 00000398 8F02              A  1343    	ADD	R15,#2
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  31
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  31
 
 
 PC     Object              I  Line    Source cli.src
@@ -1734,7 +1734,7 @@ PC     Object              I  Line    Source cli.src
 000003F2 8F02              A  1393    	ADD	R15,#2
                            A  1394    ;  293		uart_printf(" -Assigns the text macro to a button.\n");
                            A  1395    .line 293
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  32
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  32
 
 
 PC     Object              I  Line    Source cli.src
@@ -1790,7 +1790,7 @@ PC     Object              I  Line    Source cli.src
                            A  1445    .line 307
 0000044E 098F 0325         A  1446    	PUSH.W	#L__80
 00000452 F1 FFFDD5         A  1447    	CALL	_uart_printf
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  33
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  33
 
 
 PC     Object              I  Line    Source cli.src
@@ -1846,7 +1846,7 @@ PC     Object              I  Line    Source cli.src
 000004B0 8F02              A  1497    	ADD	R15,#2
                            A  1498    ;  321	}
                            A  1499    .line 321
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  34
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  34
 
 
 PC     Object              I  Line    Source cli.src
@@ -1902,7 +1902,7 @@ PC     Object              I  Line    Source cli.src
 0000049F 2C206563 
 000004A3 686F205B 
 000004A7 22746578 74225D 
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  35
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  35
 
 
 PC     Object              I  Line    Source cli.src
@@ -1958,7 +1958,7 @@ PC     Object              I  Line    Source cli.src
                            A  1595    .line 336
 000004D4 098F 048F         A  1596    	PUSH.W	#L__93
 000004D8 F1 FFFD92         A  1597    	CALL	_uart_printf
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  36
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  36
 
 
 PC     Object              I  Line    Source cli.src
@@ -2014,7 +2014,7 @@ PC     Object              I  Line    Source cli.src
                            A  1640    ;  343	static void cli_command_display(char *args)
                            A  1641    ;  344	{
 000004F6                   A  1642    _cli_command_display:
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  37
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  37
 
 
 PC     Object              I  Line    Source cli.src
@@ -2070,7 +2070,7 @@ PC     Object              I  Line    Source cli.src
                            A  1692    .line 353
                            A  1693    ;  354	
                            A  1694    ;  355		led_display_text(++token);
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  38
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  38
 
 
 PC     Object              I  Line    Source cli.src
@@ -2126,7 +2126,7 @@ PC     Object              I  Line    Source cli.src
                            A  1735    .begfunc "cli_command_hex",359,"_cli_command_hex"
 00000524 0808              A  1736    	LINK	#8
                            A  1737    .line 359
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  39
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  39
 
 
 PC     Object              I  Line    Source cli.src
@@ -2182,7 +2182,7 @@ PC     Object              I  Line    Source cli.src
                            A  1787    ;  371		value = atoi(token);
                            A  1788    .line 371
 00000544 6FC1              A  1789    	LD.SW	R1,-4(R14)
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  40
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  40
 
 
 PC     Object              I  Line    Source cli.src
@@ -2238,7 +2238,7 @@ PC     Object              I  Line    Source cli.src
 00000542 61742C20 
 00000546 73657420 
 0000054A 70726F6D 
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  41
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  41
 
 
 PC     Object              I  Line    Source cli.src
@@ -2294,7 +2294,7 @@ PC     Object              I  Line    Source cli.src
                            A  1867    .line 381
 0000055E 6FE0              A  1868    	LD.SW	R0,-2(R14)
 00000560 57C0              A  1869    	LD.W	-4(R14),R0
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  42
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  42
 
 
 PC     Object              I  Line    Source cli.src
@@ -2350,7 +2350,7 @@ PC     Object              I  Line    Source cli.src
                            A  1919    .line 394
 000005A2 C00A              A  1920    	JP	_15_L_99
                            A  1921    ;  395			}
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  43
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  43
 
 
 PC     Object              I  Line    Source cli.src
@@ -2406,7 +2406,7 @@ PC     Object              I  Line    Source cli.src
 0000058C 65637420 
 00000590 666F726D 
 00000594 61742C20 
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  44
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  44
 
 
 PC     Object              I  Line    Source cli.src
@@ -2462,7 +2462,7 @@ PC     Object              I  Line    Source cli.src
                            A  1999    .class 1
                            A  2000    .value -4
                            A  2001    .type 140
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  45
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  45
 
 
 PC     Object              I  Line    Source cli.src
@@ -2518,7 +2518,7 @@ PC     Object              I  Line    Source cli.src
 000005F0 E1 06             A  2051    	JP	LT,_16_L_104
 000005F2                   A  2052    _16_L_103:
                            A  2053    ;  421			uart_printf("2 Incorrect format, switch [n] [\"text\"]\n");
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  46
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  46
 
 
 PC     Object              I  Line    Source cli.src
@@ -2574,7 +2574,7 @@ PC     Object              I  Line    Source cli.src
                            A  2103    .line 435
 0000062A 0001              A  2104    	UNLINK	
 0000062C FFFC              A  2105    	RET	
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  47
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  47
 
 
 PC     Object              I  Line    Source cli.src
@@ -2630,7 +2630,7 @@ PC     Object              I  Line    Source cli.src
                            A  2149    .endef
                            A  2150    .define "token"
                            A  2151    .class 1
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  48
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  48
 
 
 PC     Object              I  Line    Source cli.src
@@ -2686,7 +2686,7 @@ PC     Object              I  Line    Source cli.src
                            A  2201    ;_cli_strip_spaces                   IMPORT  -----   function
                            A  2202    ;token                                R14-4      2   variable
                            A  2203    ;args                                 R14-2      2   parameter
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  49
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  49
 
 
 PC     Object              I  Line    Source cli.src
@@ -2742,7 +2742,7 @@ PC     Object              I  Line    Source cli.src
                            A  2247    ;  457	
                            A  2248    ;  458		token = args;
                            A  2249    .line 458
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  50
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  50
 
 
 PC     Object              I  Line    Source cli.src
@@ -2798,7 +2798,7 @@ PC     Object              I  Line    Source cli.src
 00000644 65637420 
 00000648 666F726D 
 0000064C 61742C20 
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  51
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  51
 
 
 PC     Object              I  Line    Source cli.src
@@ -2854,7 +2854,7 @@ PC     Object              I  Line    Source cli.src
 00000708 693263            A  2306    	DB	"i2c"
 0000070B 00                A  2307    	DB	0
 0000070C                   A  2308    L__132:
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  52
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  52
 
 
 PC     Object              I  Line    Source cli.src
@@ -2910,7 +2910,7 @@ PC     Object              I  Line    Source cli.src
 000007AA 0A00              A  2328    	DB	10,0
 000007AC                   A  2329    L__144:
 000007AC 3620496E          A  2330    	DB	"6 Incorrect format, [i2c|spi] [fill|dump [start address [length]]]"
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  53
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  53
 
 
 PC     Object              I  Line    Source cli.src
@@ -2966,7 +2966,7 @@ PC     Object              I  Line    Source cli.src
                            A  2365    .endef
                            A  2366    .define "token"
                            A  2367    .class 1
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  54
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  54
 
 
 PC     Object              I  Line    Source cli.src
@@ -3022,7 +3022,7 @@ PC     Object              I  Line    Source cli.src
 000006A4 6F80              A  2417    	LD.SW	R0,-8(R14)
 000006A6 57A0              A  2418    	LD.W	-6(R14),R0
                            A  2419    ;  482	
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  55
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  55
 
 
 PC     Object              I  Line    Source cli.src
@@ -3078,7 +3078,7 @@ PC     Object              I  Line    Source cli.src
                            A  2469    ;  497		if(cli_strip_decimal_number(&args)) {
                            A  2470    .line 497
 000006E0 4FC1              A  2471    	LEA	R1,-4(R14)
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  56
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  56
 
 
 PC     Object              I  Line    Source cli.src
@@ -3134,7 +3134,7 @@ PC     Object              I  Line    Source cli.src
                            A  2521    ;  508				_24lc16b_read_bytes_hex_dump(address, length);
                            A  2522    .line 508
 00000730 5F01              A  2523    	LD	R1,-16(R14)
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  57
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  57
 
 
 PC     Object              I  Line    Source cli.src
@@ -3190,7 +3190,7 @@ PC     Object              I  Line    Source cli.src
 0000077E F1 FFFC3F         A  2573    	CALL	__25lc040a_read_bytes_hex_dump
                            A  2574    ;  520			}
                            A  2575    ;  521			else {
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  58
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  58
 
 
 PC     Object              I  Line    Source cli.src
@@ -3246,7 +3246,7 @@ PC     Object              I  Line    Source cli.src
                            A  2625    
                            A  2626    
                            A  2627    .endfunc "cli_command_memory",528,"_cli_command_memory"
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  59
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  59
 
 
 PC     Object              I  Line    Source cli.src
@@ -3302,7 +3302,7 @@ PC     Object              I  Line    Source cli.src
 0000089E 70617269 7479     A  2639    	DB	"parity"
 000008A4 00                A  2640    	DB	0
 000008A5                   A  2641    L__155:
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  60
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  60
 
 
 PC     Object              I  Line    Source cli.src
@@ -3358,7 +3358,7 @@ PC     Object              I  Line    Source cli.src
                            A  2653    ;  531	{
 0000079E                   A  2654    _cli_command_uart0:
                            A  2655    .define "_cli_command_uart0"
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  61
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  61
 
 
 PC     Object              I  Line    Source cli.src
@@ -3414,7 +3414,7 @@ PC     Object              I  Line    Source cli.src
 000007BA 8F02              A  2705    	ADD	R15,#2
                            A  2706    ;  540			return;
                            A  2707    .line 540
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  62
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  62
 
 
 PC     Object              I  Line    Source cli.src
@@ -3470,7 +3470,7 @@ PC     Object              I  Line    Source cli.src
                            A  2757    .line 555
 000007F4 5F81              A  2758    	LD	R1,-8(R14)
 000007F6 F1 FFFC03         A  2759    	CALL	_uart_set_baudrate
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  63
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  63
 
 
 PC     Object              I  Line    Source cli.src
@@ -3526,7 +3526,7 @@ PC     Object              I  Line    Source cli.src
 00000830 F1 FFFBE6         A  2809    	CALL	_uart_printf
 00000834 8F02              A  2810    	ADD	R15,#2
                            A  2811    ;  571				return;
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  64
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  64
 
 
 PC     Object              I  Line    Source cli.src
@@ -3582,7 +3582,7 @@ PC     Object              I  Line    Source cli.src
 00000866 57C0              A  2861    	LD.W	-4(R14),R0
                            A  2862    ;  588			if(cli_strip_decimal_number(&args)) {
                            A  2863    .line 588
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  65
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  65
 
 
 PC     Object              I  Line    Source cli.src
@@ -3638,7 +3638,7 @@ PC     Object              I  Line    Source cli.src
                            A  2913    	XREF _isdigit:EROM
                            A  2914    	XREF _isalpha:EROM
                            A  2915    	XREF _memset:EROM
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:  66
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:  66
 
 
 PC     Object              I  Line    Source cli.src

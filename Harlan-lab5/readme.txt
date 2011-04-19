@@ -1,24 +1,37 @@
-1. What technique did you use for watching the data and clock lines (polling or interrupts)? Why did you choose that?
+1. What is the full part number for each device?
 
-I used interrupts with buffering. I chose to do this so that I can use this code for more interesting things in the
-future.
+SPI Memory - 25LC040A-I/P
+I2C Memory - 24LC16B-I/P
 
-2. Did you use the oscilloscopes in the class room to help debug your lab setup?
+2. Give me a simple schematic (ASCII art is good) showing how you connected each 
+memory to the Z16. Label all pins with signal name an pin numbers.
 
-No I didn't need to.
+                    24LC16B
+                  ____________
+  Not Connected-->|A3     Vcc|<----Vcc
+  Not Connected-->|A3      WP|<----Vss
+  Not Connected-->|A3     SCL|<----PA6
+          Vss---->|vss    SDA|<----PA7
+		  
+		  
+                     25LC040A
+                   ____________
+           PC2---->|/CS    Vcc|<----Vcc
+           PC5---->|SO   /HOLD|<----Vss
+           Vcc---->|/WP    SCK|<----PC3
+           Vss---->|vss     SI|<----PC4
+										
+3. Did you have any problems finding the datasheets or getting the necessary information?
 
-3. What difficulties did you have keeping track of when to sample the data line?
+No. The memory manufacture, Microchip, has them posted on their website and on
+www.datasheetcatalog.com
 
-I didn't have any difficulties because I used interrupts on the negative clock edge.
+4. What techniques did you use to help you debug your programs?
 
-4. What did you try that didn't work?
+I used the Smart Debugger in combination with print statements to the serial port.
 
-I didn't have any problems.
+5. Did you need any pull up resistors? Why?
 
-5. If you have problems integrating the LED display library you can exclude that IF YOU 
-NEED TO. Describe the problems you had and what you tried to do to fix things. Make 
-sure you include stubs for the LED library so the CLI will continue to work (just not 
-display scrolling messages).
+No, the I2C ports on the microcontroller have their own internal pull-up resistors that are enabled
+when the I2C alternate functions are set. SPI does not require pull-up resistors as used.
 
-My LED library worked fine.
- 

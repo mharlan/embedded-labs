@@ -32,8 +32,6 @@ void _25lc040a_write_bytes_addr(long int addr, int length)
 		ctrl = (addr & ADDR_MSB) >> 5;
 		ctrl |= WRITE;
 
-		uart_printf("---ctrl:0x%.2X\n", ctrl);
-
 		spi_enable();
 		spi_transfer(ctrl);
 		spi_write((unsigned char)addr, (unsigned char)i);

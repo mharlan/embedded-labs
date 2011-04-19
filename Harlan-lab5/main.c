@@ -2,20 +2,22 @@
 	Author: Matthew Harlan
 	Email:  mharlan@gwmail.gwu.edu
 	Class:  CSCI-4415
-	Date: 	March 22nd, 2011
-	Lab:    4
+	Date: 	March 29th, 2011
+	Lab:    5
 	
-	Description: This program extends the command line interface with PS/2 keyboard functionality.
+	Description: This program extends the command line interface with i2c and SPI functionality. Keyboard 
+	and speaker functionality has been removed for space reasons from this release.
 
 	Other files: buttons.c buttons.h cli.c cli.h info.c info.h LED.c LED.h LED_ascii.h
 	macro.c macro.h oscillator.c oscillator.h ports.c ports.h timer.c timer.h uart.c uart.h
-	notes.h speaker.h speaker.c ps2_port.c ps2_port.h scancodes.h keyboard.c keyboard.h
+	i2c.h i2c.c spi.h spi.c 24lc16b.h 24lc16b.c 25lc040a.h 25lc040a.c delay.h delay.c
 
 	Compile: Set the user include path to the include directory.
 	
-	Problems: None.
+	Problems: I forgot to connect WP on the 24lc16b to ground and proceeded to debug this
+	for two hours, only to find out the software was correct.
 
-	Comments: PD0 is data and PD1 is clock.
+	Comments: Very helpful lab.
 
 	Enhancements: None.
  */

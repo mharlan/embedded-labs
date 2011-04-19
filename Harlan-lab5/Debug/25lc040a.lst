@@ -1,4 +1,4 @@
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   1
 
 
 PC     Object              I  Line    Source 
@@ -53,354 +53,334 @@ PC     Object              I  Line    Source
                            A    49    
                            A    50    
                            A    51    .endfunc "init_25lc040a",20,"_init_25lc040a"
-                           A    52    	SEGMENT ROM_TEXT
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   2
+                           A    52    ;   21	
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   2
 
 
 PC     Object              I  Line    Source 25lc040a.src
-00000000                   A    53    L__2:
-00000000 2D2D2D63          A    54    	DB	"---ctrl:0x%.2X"
-00000004 74726C3A 
-00000008 3078252E 3258 
-0000000E 0A00              A    55    	DB	10,0
-                           A    56    	SEGMENT CODE
-                           A    57    ;   21	
-                           A    58    ;   22	void _25lc040a_write_bytes_addr(long int addr, int length)
-                           A    59    ;   23	{
-0000000A                   A    60    __25lc040a_write_bytes_addr:
-                           A    61    .define "__25lc040a_write_bytes_addr"
-                           A    62    .value __25lc040a_write_bytes_addr
-                           A    63    .class 2
-                           A    64    .type 65
-                           A    65    .type 0
-                           A    66    .endef
-                           A    67    .begfunc "_25lc040a_write_bytes_addr",23,"__25lc040a_write_bytes_addr"
-0000000A 080D              A    68    	LINK	#13
-                           A    69    .line 23
-0000000C 5BC1              A    70    	LD	-4(R14),R1
-                           A    71    .define "addr"
-                           A    72    .class 9
-                           A    73    .value -4
-                           A    74    .type 5
-                           A    75    .type 0
-                           A    76    .endef
-0000000E 5B82              A    77    	LD	-8(R14),R2
-                           A    78    .define "length"
-                           A    79    .class 9
-                           A    80    .value -8
-                           A    81    .type 5
-                           A    82    .type 0
-                           A    83    .endef
-                           A    84    .define "ctrl"
-                           A    85    .class 1
-                           A    86    .value -9
-                           A    87    .type 12
-                           A    88    .type 0
-                           A    89    .endef
-                           A    90    .define "i"
-                           A    91    .class 1
-                           A    92    .value -13
-                           A    93    .type 5
-                           A    94    .type 0
-                           A    95    .endef
-00000010 C005              A    96    	JP	_2_L_1
-                           A    97    ;   24		unsigned char ctrl;
-                           A    98    ;   25		int i;
-                           A    99    ;   26		
-                           A   100    ;   27		for(i = 0; i < length; ++i) {
-00000012                   A   101    _2_L_2:
-                           A   102    .line 27
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   3
+                           A    53    ;   22	void _25lc040a_write_bytes_addr(long int addr, int length)
+                           A    54    ;   23	{
+0000000A                   A    55    __25lc040a_write_bytes_addr:
+                           A    56    .define "__25lc040a_write_bytes_addr"
+                           A    57    .value __25lc040a_write_bytes_addr
+                           A    58    .class 2
+                           A    59    .type 65
+                           A    60    .type 0
+                           A    61    .endef
+                           A    62    .begfunc "_25lc040a_write_bytes_addr",23,"__25lc040a_write_bytes_addr"
+0000000A 080D              A    63    	LINK	#13
+                           A    64    .line 23
+0000000C 5BC1              A    65    	LD	-4(R14),R1
+                           A    66    .define "addr"
+                           A    67    .class 9
+                           A    68    .value -4
+                           A    69    .type 5
+                           A    70    .type 0
+                           A    71    .endef
+0000000E 5B82              A    72    	LD	-8(R14),R2
+                           A    73    .define "length"
+                           A    74    .class 9
+                           A    75    .value -8
+                           A    76    .type 5
+                           A    77    .type 0
+                           A    78    .endef
+                           A    79    .define "ctrl"
+                           A    80    .class 1
+                           A    81    .value -9
+                           A    82    .type 12
+                           A    83    .type 0
+                           A    84    .endef
+                           A    85    .define "i"
+                           A    86    .class 1
+                           A    87    .value -13
+                           A    88    .type 5
+                           A    89    .type 0
+                           A    90    .endef
+00000010 C005              A    91    	JP	_2_L_1
+                           A    92    ;   24		unsigned char ctrl;
+                           A    93    ;   25		int i;
+                           A    94    ;   26		
+                           A    95    ;   27		for(i = 0; i < length; ++i) {
+00000012                   A    96    _2_L_2:
+                           A    97    .line 27
+00000012 5F80              A    98    	LD	R0,-8(R14)
+00000014 7D0E FFF3         A    99    	CP	-13(R14),R0
+00000018 E1 04             A   100    	JP	LT,_2_L_4
+0000001A C025              A   101    	JP	_2_L_5
+0000001C                   A   102    _2_L_1:
+0000001C ADCE BFF3         A   103    	CLR	-13(R14)
+00000020 CFF8              A   104    	JP	_2_L_2
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   3
 
 
 PC     Object              I  Line    Source 25lc040a.src
-00000012 5F80              A   103    	LD	R0,-8(R14)
-00000014 7D0E FFF3         A   104    	CP	-13(R14),R0
-00000018 E1 04             A   105    	JP	LT,_2_L_4
-0000001A C02C              A   106    	JP	_2_L_5
-0000001C                   A   107    _2_L_1:
-0000001C ADCE BFF3         A   108    	CLR	-13(R14)
-00000020 CFF8              A   109    	JP	_2_L_2
-00000022                   A   110    _2_L_4:
-                           A   111    ;   28			spi_enable();
-                           A   112    .line 28
-00000022 F1 FFFFED         A   113    	CALL	_spi_enable
-                           A   114    ;   29			spi_transfer(WREN);
-                           A   115    .line 29
-00000026 3106              A   116    	LD	R1,#6
-00000028 F1 FFFFEA         A   117    	CALL	_spi_transfer
-                           A   118    ;   30			spi_disable();
-                           A   119    .line 30
-0000002C F1 FFFFE8         A   120    	CALL	_spi_disable
-                           A   121    ;   31	
-                           A   122    ;   32			ctrl = (addr & ADDR_MSB) >> 5;
-                           A   123    .line 32
-00000030 5FC0              A   124    	LD	R0,-4(R14)
-00000032 B850              A   125    	SRA	R0,#5
-00000034 AA20 0008         A   126    	AND	R0,#8
-00000038 5370              A   127    	LD.B	-9(R14),R0
-                           A   128    ;   33			ctrl |= WRITE;
-                           A   129    .line 33
-0000003A 3002              A   130    	LD	R0,#2
-0000003C 7B0E BFF7         A   131    	OR.B	-9(R14),R0
-                           A   132    ;   34	
-                           A   133    ;   35			uart_printf("---ctrl:0x%.2X\n", ctrl);
-                           A   134    .line 35
-00000040 6370              A   135    	LD.UB	R0,-9(R14)
-00000042 100F              A   136    	PUSH	R0
-00000044 098F 0000         A   137    	PUSH.W	#L__2
-00000048 F1 FFFFDA         A   138    	CALL	_uart_printf
-0000004C 8F06              A   139    	ADD	R15,#6
-                           A   140    ;   36	
-                           A   141    ;   37			spi_enable();
-                           A   142    .line 37
-0000004E F1 FFFFD7         A   143    	CALL	_spi_enable
-                           A   144    ;   38			spi_transfer(ctrl);
-                           A   145    .line 38
-00000052 6B71              A   146    	LD.SB	R1,-9(R14)
-00000054 F1 FFFFD4         A   147    	CALL	_spi_transfer
-                           A   148    ;   39			spi_write((unsigned char)addr, (unsigned char)i);
-                           A   149    .line 39
-00000058 6B62              A   150    	LD.SB	R2,-10(R14)
-0000005A 6BF1              A   151    	LD.SB	R1,-1(R14)
-0000005C F1 FFFFD0         A   152    	CALL	_spi_write
-                           A   153    ;   40			spi_disable();
-                           A   154    .line 40
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   4
+00000022                   A   105    _2_L_4:
+                           A   106    ;   28			spi_enable();
+                           A   107    .line 28
+00000022 F1 FFFFED         A   108    	CALL	_spi_enable
+                           A   109    ;   29			spi_transfer(WREN);
+                           A   110    .line 29
+00000026 3106              A   111    	LD	R1,#6
+00000028 F1 FFFFEA         A   112    	CALL	_spi_transfer
+                           A   113    ;   30			spi_disable();
+                           A   114    .line 30
+0000002C F1 FFFFE8         A   115    	CALL	_spi_disable
+                           A   116    ;   31	
+                           A   117    ;   32			ctrl = (addr & ADDR_MSB) >> 5;
+                           A   118    .line 32
+00000030 5FC0              A   119    	LD	R0,-4(R14)
+00000032 B850              A   120    	SRA	R0,#5
+00000034 AA20 0008         A   121    	AND	R0,#8
+00000038 5370              A   122    	LD.B	-9(R14),R0
+                           A   123    ;   33			ctrl |= WRITE;
+                           A   124    .line 33
+0000003A 3002              A   125    	LD	R0,#2
+0000003C 7B0E BFF7         A   126    	OR.B	-9(R14),R0
+                           A   127    ;   34	
+                           A   128    ;   35			spi_enable();
+                           A   129    .line 35
+00000040 F1 FFFFDE         A   130    	CALL	_spi_enable
+                           A   131    ;   36			spi_transfer(ctrl);
+                           A   132    .line 36
+00000044 6B71              A   133    	LD.SB	R1,-9(R14)
+00000046 F1 FFFFDB         A   134    	CALL	_spi_transfer
+                           A   135    ;   37			spi_write((unsigned char)addr, (unsigned char)i);
+                           A   136    .line 37
+0000004A 6B62              A   137    	LD.SB	R2,-10(R14)
+0000004C 6BF1              A   138    	LD.SB	R1,-1(R14)
+0000004E F1 FFFFD7         A   139    	CALL	_spi_write
+                           A   140    ;   38			spi_disable();
+                           A   141    .line 38
+00000052 F1 FFFFD5         A   142    	CALL	_spi_disable
+                           A   143    ;   39	
+                           A   144    ;   40			delay_ms(5);
+                           A   145    .line 40
+00000056 3105              A   146    	LD	R1,#5
+00000058 F1 FFFFD2         A   147    	CALL	_delay_ms
+                           A   148    ;   41	
+                           A   149    ;   42			++addr;
+                           A   150    .line 42
+0000005C ADEE BFFC         A   151    	INC	-4(R14)
+                           A   152    ;   43		}
+                           A   153    .line 43
+00000060 ADEE BFF3         A   154    	INC	-13(R14)
+00000064 CFD6              A   155    	JP	_2_L_2
+                           A   156    ;   44	}
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   4
 
 
 PC     Object              I  Line    Source 25lc040a.src
-00000060 F1 FFFFCE         A   155    	CALL	_spi_disable
-                           A   156    ;   41	
-                           A   157    ;   42			delay_ms(5);
-                           A   158    .line 42
-00000064 3105              A   159    	LD	R1,#5
-00000066 F1 FFFFCB         A   160    	CALL	_delay_ms
-                           A   161    ;   43	
-                           A   162    ;   44			++addr;
-                           A   163    .line 44
-0000006A ADEE BFFC         A   164    	INC	-4(R14)
-                           A   165    ;   45		}
-                           A   166    .line 45
-0000006E ADEE BFF3         A   167    	INC	-13(R14)
-00000072 CFCF              A   168    	JP	_2_L_2
-                           A   169    ;   46	}
-00000074                   A   170    _2_L_5:
-                           A   171    .line 46
-00000074 0001              A   172    	UNLINK	
-00000076 FFFC              A   173    	RET	
+00000066                   A   157    _2_L_5:
+                           A   158    .line 44
+00000066 0001              A   159    	UNLINK	
+00000068 FFFC              A   160    	RET	
+                           A   161    
+                           A   162    
+                           A   163    ;**************************** __25lc040a_write_bytes_addr ***************************
+                           A   164    ;Name                         Addr/Register   Size   Type
+                           A   165    ;_delay_ms                           IMPORT  -----   function
+                           A   166    ;_spi_write                          IMPORT  -----   function
+                           A   167    ;_spi_disable                        IMPORT  -----   function
+                           A   168    ;_spi_transfer                       IMPORT  -----   function
+                           A   169    ;_spi_enable                         IMPORT  -----   function
+                           A   170    ;i                                   R14-13      4   variable
+                           A   171    ;ctrl                                 R14-9      1   variable
+                           A   172    ;length                               R14-8      4   parameter
+                           A   173    ;addr                                 R14-4      4   parameter
                            A   174    
                            A   175    
-                           A   176    ;**************************** __25lc040a_write_bytes_addr ***************************
-                           A   177    ;Name                         Addr/Register   Size   Type
-                           A   178    ;_delay_ms                           IMPORT  -----   function
-                           A   179    ;_spi_write                          IMPORT  -----   function
-                           A   180    ;_uart_printf                        IMPORT  -----   function
-                           A   181    ;_spi_disable                        IMPORT  -----   function
-                           A   182    ;_spi_transfer                       IMPORT  -----   function
-                           A   183    ;_spi_enable                         IMPORT  -----   function
-                           A   184    ;i                                   R14-13      4   variable
-                           A   185    ;ctrl                                 R14-9      1   variable
-                           A   186    ;length                               R14-8      4   parameter
-                           A   187    ;addr                                 R14-4      4   parameter
-                           A   188    
-                           A   189    
-                           A   190    ; Aggregate Stack Size: -13 (words)
-                           A   191    
-                           A   192    
-                           A   193    .endfunc "_25lc040a_write_bytes_addr",46,"__25lc040a_write_bytes_addr"
-                           A   194    	SEGMENT ROM_TEXT
-00000010                   A   195    L__6:
-00000010 0A                A   196    	DB	10
-00000011 252E3458 202D20   A   197    	DB	"%.4X - "
-00000018 00                A   198    	DB	0
-00000019                   A   199    L__7:
-00000019 252E3258 20       A   200    	DB	"%.2X "
-0000001E 00                A   201    	DB	0
-                           A   202    	SEGMENT CODE
-                           A   203    ;   47	
-                           A   204    ;   48	void _25lc040a_read_bytes_hex_dump(long int addr, int length)
-                           A   205    ;   49	{
-00000078                   A   206    __25lc040a_read_bytes_hex_dump:
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   5
+                           A   176    ; Aggregate Stack Size: -13 (words)
+                           A   177    
+                           A   178    
+                           A   179    .endfunc "_25lc040a_write_bytes_addr",44,"__25lc040a_write_bytes_addr"
+                           A   180    	SEGMENT ROM_TEXT
+00000000                   A   181    L__5:
+00000000 0A                A   182    	DB	10
+00000001 252E3458 202D20   A   183    	DB	"%.4X - "
+00000008 00                A   184    	DB	0
+00000009                   A   185    L__6:
+00000009 252E3258 20       A   186    	DB	"%.2X "
+0000000E 00                A   187    	DB	0
+                           A   188    	SEGMENT CODE
+                           A   189    ;   45	
+                           A   190    ;   46	void _25lc040a_read_bytes_hex_dump(long int addr, int length)
+                           A   191    ;   47	{
+0000006A                   A   192    __25lc040a_read_bytes_hex_dump:
+                           A   193    .define "__25lc040a_read_bytes_hex_dump"
+                           A   194    .value __25lc040a_read_bytes_hex_dump
+                           A   195    .class 2
+                           A   196    .type 65
+                           A   197    .type 0
+                           A   198    .endef
+                           A   199    .begfunc "_25lc040a_read_bytes_hex_dump",47,"__25lc040a_read_bytes_hex_dump"
+0000006A 080E              A   200    	LINK	#14
+                           A   201    .line 47
+0000006C 5BC1              A   202    	LD	-4(R14),R1
+                           A   203    .define "addr"
+                           A   204    .class 9
+                           A   205    .value -4
+                           A   206    .type 5
+                           A   207    .type 0
+                           A   208    .endef
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   5
 
 
 PC     Object              I  Line    Source 25lc040a.src
-                           A   207    .define "__25lc040a_read_bytes_hex_dump"
-                           A   208    .value __25lc040a_read_bytes_hex_dump
-                           A   209    .class 2
-                           A   210    .type 65
-                           A   211    .type 0
-                           A   212    .endef
-                           A   213    .begfunc "_25lc040a_read_bytes_hex_dump",49,"__25lc040a_read_bytes_hex_dump"
-00000078 080E              A   214    	LINK	#14
-                           A   215    .line 49
-0000007A 5BC1              A   216    	LD	-4(R14),R1
-                           A   217    .define "addr"
-                           A   218    .class 9
-                           A   219    .value -4
-                           A   220    .type 5
-                           A   221    .type 0
-                           A   222    .endef
-0000007C 5B82              A   223    	LD	-8(R14),R2
-                           A   224    .define "length"
-                           A   225    .class 9
-                           A   226    .value -8
-                           A   227    .type 5
-                           A   228    .type 0
-                           A   229    .endef
-                           A   230    .define "ctrl"
-                           A   231    .class 1
-                           A   232    .value -9
-                           A   233    .type 12
-                           A   234    .type 0
-                           A   235    .endef
-                           A   236    .define "data"
-                           A   237    .class 1
-                           A   238    .value -10
-                           A   239    .type 12
-                           A   240    .type 0
-                           A   241    .endef
-                           A   242    .define "i"
-                           A   243    .class 1
-                           A   244    .value -14
-                           A   245    .type 5
-                           A   246    .type 0
-                           A   247    .endef
-0000007E C005              A   248    	JP	_3_L_8
-                           A   249    ;   50		unsigned char ctrl;
-                           A   250    ;   51		unsigned char data;
-                           A   251    ;   52		int i;
-                           A   252    ;   53		
-                           A   253    ;   54		for(i = 0; i < length; ++i) {
-00000080                   A   254    _3_L_9:
-                           A   255    .line 54
-00000080 5F80              A   256    	LD	R0,-8(R14)
-00000082 7D0E FFF2         A   257    	CP	-14(R14),R0
-00000086 E1 04             A   258    	JP	LT,_3_L_11
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   6
+0000006E 5B82              A   209    	LD	-8(R14),R2
+                           A   210    .define "length"
+                           A   211    .class 9
+                           A   212    .value -8
+                           A   213    .type 5
+                           A   214    .type 0
+                           A   215    .endef
+                           A   216    .define "ctrl"
+                           A   217    .class 1
+                           A   218    .value -9
+                           A   219    .type 12
+                           A   220    .type 0
+                           A   221    .endef
+                           A   222    .define "data"
+                           A   223    .class 1
+                           A   224    .value -10
+                           A   225    .type 12
+                           A   226    .type 0
+                           A   227    .endef
+                           A   228    .define "i"
+                           A   229    .class 1
+                           A   230    .value -14
+                           A   231    .type 5
+                           A   232    .type 0
+                           A   233    .endef
+00000070 C005              A   234    	JP	_3_L_8
+                           A   235    ;   48		unsigned char ctrl;
+                           A   236    ;   49		unsigned char data;
+                           A   237    ;   50		int i;
+                           A   238    ;   51		
+                           A   239    ;   52		for(i = 0; i < length; ++i) {
+00000072                   A   240    _3_L_9:
+                           A   241    .line 52
+00000072 5F80              A   242    	LD	R0,-8(R14)
+00000074 7D0E FFF2         A   243    	CP	-14(R14),R0
+00000078 E1 04             A   244    	JP	LT,_3_L_11
+0000007A C02E              A   245    	JP	_3_L_12
+0000007C                   A   246    _3_L_8:
+0000007C ADCE BFF2         A   247    	CLR	-14(R14)
+00000080 CFF8              A   248    	JP	_3_L_9
+00000082                   A   249    _3_L_11:
+                           A   250    ;   53			if((i % 8) == 0) {
+                           A   251    .line 53
+00000082 3008              A   252    	LD	R0,#8
+00000084 5F21              A   253    	LD	R1,-14(R14)
+00000086 AF01              A   254    	SDIV	R1,R0
+00000088 9000              A   255    	CP	R0,#0
+0000008A EE 07             A   256    	JP	NE,_3_L_7
+                           A   257    ;   54				uart_printf("\n%.4X - ", addr);
+                           A   258    .line 54
+0000008C 5FC0              A   259    	LD	R0,-4(R14)
+0000008E 100F              A   260    	PUSH	R0
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   6
 
 
 PC     Object              I  Line    Source 25lc040a.src
-00000088 C02E              A   259    	JP	_3_L_12
-0000008A                   A   260    _3_L_8:
-0000008A ADCE BFF2         A   261    	CLR	-14(R14)
-0000008E CFF8              A   262    	JP	_3_L_9
-00000090                   A   263    _3_L_11:
-                           A   264    ;   55			if((i % 8) == 0) {
-                           A   265    .line 55
-00000090 3008              A   266    	LD	R0,#8
-00000092 5F21              A   267    	LD	R1,-14(R14)
-00000094 AF01              A   268    	SDIV	R1,R0
-00000096 9000              A   269    	CP	R0,#0
-00000098 EE 07             A   270    	JP	NE,_3_L_7
-                           A   271    ;   56				uart_printf("\n%.4X - ", addr);
-                           A   272    .line 56
-0000009A 5FC0              A   273    	LD	R0,-4(R14)
-0000009C 100F              A   274    	PUSH	R0
-0000009E 098F 0010         A   275    	PUSH.W	#L__6
-000000A2 F1 FFFFAD         A   276    	CALL	_uart_printf
-000000A6 8F06              A   277    	ADD	R15,#6
-                           A   278    ;   57			}
-000000A8                   A   279    _3_L_7:
-                           A   280    .line 57
-                           A   281    ;   58	
-                           A   282    ;   59			ctrl = (addr & ADDR_MSB) >> 5;
-                           A   283    .line 59
-000000A8 5FC0              A   284    	LD	R0,-4(R14)
-000000AA B850              A   285    	SRA	R0,#5
-000000AC AA20 0008         A   286    	AND	R0,#8
-000000B0 5370              A   287    	LD.B	-9(R14),R0
-                           A   288    ;   60			ctrl |= READ;
-                           A   289    .line 60
-000000B2 3003              A   290    	LD	R0,#3
-000000B4 7B0E BFF7         A   291    	OR.B	-9(R14),R0
-                           A   292    ;   61	
-                           A   293    ;   62			spi_enable();
-                           A   294    .line 62
-000000B8 F1 FFFFA2         A   295    	CALL	_spi_enable
-                           A   296    ;   63			spi_transfer(ctrl);
-                           A   297    .line 63
-000000BC 6B71              A   298    	LD.SB	R1,-9(R14)
-000000BE F1 FFFF9F         A   299    	CALL	_spi_transfer
-                           A   300    ;   64			data = spi_read((unsigned char)addr);
-                           A   301    .line 64
-000000C2 6BF1              A   302    	LD.SB	R1,-1(R14)
-000000C4 F1 FFFF9C         A   303    	CALL	_spi_read
-000000C8 5360              A   304    	LD.B	-10(R14),R0
-                           A   305    ;   65			spi_disable();
-                           A   306    .line 65
-000000CA F1 FFFF99         A   307    	CALL	_spi_disable
-                           A   308    ;   66	
-                           A   309    ;   67			++addr;
-                           A   310    .line 67
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   7
+00000090 098F 0000         A   261    	PUSH.W	#L__5
+00000094 F1 FFFFB4         A   262    	CALL	_uart_printf
+00000098 8F06              A   263    	ADD	R15,#6
+                           A   264    ;   55			}
+0000009A                   A   265    _3_L_7:
+                           A   266    .line 55
+                           A   267    ;   56	
+                           A   268    ;   57			ctrl = (addr & ADDR_MSB) >> 5;
+                           A   269    .line 57
+0000009A 5FC0              A   270    	LD	R0,-4(R14)
+0000009C B850              A   271    	SRA	R0,#5
+0000009E AA20 0008         A   272    	AND	R0,#8
+000000A2 5370              A   273    	LD.B	-9(R14),R0
+                           A   274    ;   58			ctrl |= READ;
+                           A   275    .line 58
+000000A4 3003              A   276    	LD	R0,#3
+000000A6 7B0E BFF7         A   277    	OR.B	-9(R14),R0
+                           A   278    ;   59	
+                           A   279    ;   60			spi_enable();
+                           A   280    .line 60
+000000AA F1 FFFFA9         A   281    	CALL	_spi_enable
+                           A   282    ;   61			spi_transfer(ctrl);
+                           A   283    .line 61
+000000AE 6B71              A   284    	LD.SB	R1,-9(R14)
+000000B0 F1 FFFFA6         A   285    	CALL	_spi_transfer
+                           A   286    ;   62			data = spi_read((unsigned char)addr);
+                           A   287    .line 62
+000000B4 6BF1              A   288    	LD.SB	R1,-1(R14)
+000000B6 F1 FFFFA3         A   289    	CALL	_spi_read
+000000BA 5360              A   290    	LD.B	-10(R14),R0
+                           A   291    ;   63			spi_disable();
+                           A   292    .line 63
+000000BC F1 FFFFA0         A   293    	CALL	_spi_disable
+                           A   294    ;   64	
+                           A   295    ;   65			++addr;
+                           A   296    .line 65
+000000C0 ADEE BFFC         A   297    	INC	-4(R14)
+                           A   298    ;   66	
+                           A   299    ;   67			uart_printf("%.2X ", data);
+                           A   300    .line 67
+000000C4 6360              A   301    	LD.UB	R0,-10(R14)
+000000C6 100F              A   302    	PUSH	R0
+000000C8 098F 0009         A   303    	PUSH.W	#L__6
+000000CC F1 FFFF98         A   304    	CALL	_uart_printf
+000000D0 8F06              A   305    	ADD	R15,#6
+                           A   306    ;   68		}
+                           A   307    .line 68
+000000D2 ADEE BFF2         A   308    	INC	-14(R14)
+000000D6 CFCD              A   309    	JP	_3_L_9
+000000D8                   A   310    _3_L_12:
+                           A   311    ;   69	
+                           A   312    ;   70		uart_putchar('\n');
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   7
 
 
 PC     Object              I  Line    Source 25lc040a.src
-000000CE ADEE BFFC         A   311    	INC	-4(R14)
-                           A   312    ;   68	
-                           A   313    ;   69			uart_printf("%.2X ", data);
-                           A   314    .line 69
-000000D2 6360              A   315    	LD.UB	R0,-10(R14)
-000000D4 100F              A   316    	PUSH	R0
-000000D6 098F 0019         A   317    	PUSH.W	#L__7
-000000DA F1 FFFF91         A   318    	CALL	_uart_printf
-000000DE 8F06              A   319    	ADD	R15,#6
-                           A   320    ;   70		}
-                           A   321    .line 70
-000000E0 ADEE BFF2         A   322    	INC	-14(R14)
-000000E4 CFCD              A   323    	JP	_3_L_9
-000000E6                   A   324    _3_L_12:
-                           A   325    ;   71	
-                           A   326    ;   72		uart_putchar('\n');
-                           A   327    .line 72
-000000E6 310A              A   328    	LD	R1,#10
-000000E8 F1 FFFF8A         A   329    	CALL	_uart_putchar
-                           A   330    ;   73	}
-                           A   331    .line 73
-000000EC 0001              A   332    	UNLINK	
-000000EE FFFC              A   333    	RET	
-                           A   334    
+                           A   313    .line 70
+000000D8 310A              A   314    	LD	R1,#10
+000000DA F1 FFFF91         A   315    	CALL	_uart_putchar
+                           A   316    ;   71	}
+                           A   317    .line 71
+000000DE 0001              A   318    	UNLINK	
+000000E0 FFFC              A   319    	RET	
+                           A   320    
+                           A   321    
+                           A   322    ;**************************** __25lc040a_read_bytes_hex_dump ***************************
+                           A   323    ;Name                         Addr/Register   Size   Type
+                           A   324    ;_uart_putchar                       IMPORT  -----   function
+                           A   325    ;_spi_disable                        IMPORT  -----   function
+                           A   326    ;_spi_read                           IMPORT  -----   function
+                           A   327    ;_spi_transfer                       IMPORT  -----   function
+                           A   328    ;_spi_enable                         IMPORT  -----   function
+                           A   329    ;_uart_printf                        IMPORT  -----   function
+                           A   330    ;i                                   R14-14      4   variable
+                           A   331    ;data                                R14-10      1   variable
+                           A   332    ;ctrl                                 R14-9      1   variable
+                           A   333    ;length                               R14-8      4   parameter
+                           A   334    ;addr                                 R14-4      4   parameter
                            A   335    
-                           A   336    ;**************************** __25lc040a_read_bytes_hex_dump ***************************
-                           A   337    ;Name                         Addr/Register   Size   Type
-                           A   338    ;_uart_putchar                       IMPORT  -----   function
-                           A   339    ;_spi_disable                        IMPORT  -----   function
-                           A   340    ;_spi_read                           IMPORT  -----   function
-                           A   341    ;_spi_transfer                       IMPORT  -----   function
-                           A   342    ;_spi_enable                         IMPORT  -----   function
-                           A   343    ;_uart_printf                        IMPORT  -----   function
-                           A   344    ;i                                   R14-14      4   variable
-                           A   345    ;data                                R14-10      1   variable
-                           A   346    ;ctrl                                 R14-9      1   variable
-                           A   347    ;length                               R14-8      4   parameter
-                           A   348    ;addr                                 R14-4      4   parameter
-                           A   349    
-                           A   350    
-                           A   351    ; Aggregate Stack Size: -14 (words)
-                           A   352    
-                           A   353    
-                           A   354    .endfunc "_25lc040a_read_bytes_hex_dump",73,"__25lc040a_read_bytes_hex_dump"
-                           A   355    	XREF _delay_ms:EROM
-                           A   356    	XREF _uart_printf:EROM
-                           A   357    	XREF _uart_putchar:EROM
-                           A   358    	XREF _spi_read:EROM
-                           A   359    	XREF _spi_write:EROM
-                           A   360    	XREF _spi_transfer:EROM
-                           A   361    	XREF _spi_disable:EROM
-                           A   362    	XREF _spi_enable:EROM
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   8
-
-
-PC     Object              I  Line    Source 25lc040a.src
-                           A   363    	XREF _init_spi:EROM
-                           A   364    	XDEF __25lc040a_read_bytes_hex_dump
-                           A   365    	XDEF __25lc040a_write_bytes_addr
-                           A   366    	XDEF _init_25lc040a
-                           A   367    	END
+                           A   336    
+                           A   337    ; Aggregate Stack Size: -14 (words)
+                           A   338    
+                           A   339    
+                           A   340    .endfunc "_25lc040a_read_bytes_hex_dump",71,"__25lc040a_read_bytes_hex_dump"
+                           A   341    	XREF _delay_ms:EROM
+                           A   342    	XREF _uart_printf:EROM
+                           A   343    	XREF _uart_putchar:EROM
+                           A   344    	XREF _spi_read:EROM
+                           A   345    	XREF _spi_write:EROM
+                           A   346    	XREF _spi_transfer:EROM
+                           A   347    	XREF _spi_disable:EROM
+                           A   348    	XREF _spi_enable:EROM
+                           A   349    	XREF _init_spi:EROM
+                           A   350    	XDEF __25lc040a_read_bytes_hex_dump
+                           A   351    	XDEF __25lc040a_write_bytes_addr
+                           A   352    	XDEF _init_25lc040a
+                           A   353    	END
 
 
 Errors: 0
 Warnings: 0
-Lines Assembled: 368
+Lines Assembled: 354

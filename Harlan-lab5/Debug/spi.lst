@@ -1,4 +1,4 @@
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   1
 
 
 PC     Object              I  Line    Source 
@@ -54,7 +54,7 @@ PC     Object              I  Line    Source
                            A    50    ;   16	
                            A    51    ;   17	#include <zneo.h>
                            A    52    ;   18	#include <stdlib.h>
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   2
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   2
 
 
 PC     Object              I  Line    Source spi.src
@@ -110,7 +110,7 @@ PC     Object              I  Line    Source spi.src
                            A   102    .endef
                            A   103    .begfunc "init_spi",61,"_init_spi"
 00000000 0800              A   104    	LINK	#0
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   3
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   3
 
 
 PC     Object              I  Line    Source spi.src
@@ -166,7 +166,7 @@ PC     Object              I  Line    Source spi.src
                            A   154    .endef
 00000026 0800              A   155    	LINK	#0
                            A   156    .begfunc "spi_wait_TDRE",76,"_spi_wait_TDRE"
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   4
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   4
 
 
 PC     Object              I  Line    Source spi.src
@@ -222,7 +222,7 @@ PC     Object              I  Line    Source spi.src
                            A   206    ; Aggregate Stack Size: 0 (words)
                            A   207    
                            A   208    
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   5
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   5
 
 
 PC     Object              I  Line    Source spi.src
@@ -278,7 +278,7 @@ PC     Object              I  Line    Source spi.src
                            A   258    ;   94	}
                            A   259    .line 94
 0000005A 0001              A   260    	UNLINK	
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   6
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   6
 
 
 PC     Object              I  Line    Source spi.src
@@ -334,7 +334,7 @@ PC     Object              I  Line    Source spi.src
                            A   310    .type 0
                            A   311    .endef
                            A   312    .begfunc "spi_transfer",102,"_spi_transfer"
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   7
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   7
 
 
 PC     Object              I  Line    Source spi.src
@@ -390,7 +390,7 @@ PC     Object              I  Line    Source spi.src
                            A   362    
                            A   363    
                            A   364    .endfunc "spi_transfer",112,"_spi_transfer"
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   8
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   8
 
 
 PC     Object              I  Line    Source spi.src
@@ -446,7 +446,7 @@ PC     Object              I  Line    Source spi.src
                            A   414    
                            A   415    
                            A   416    .endfunc "spi_write",118,"_spi_write"
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:   9
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:   9
 
 
 PC     Object              I  Line    Source spi.src
@@ -502,7 +502,7 @@ PC     Object              I  Line    Source spi.src
                            A   466    ;  133	    ESPITDCR &= 0xFE;             // Clear SS 
                            A   467    .line 133
 000000AE 4500 00FE         A   468    	LD	R0,#254
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:21     page:  10
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:38     page:  10
 
 
 PC     Object              I  Line    Source spi.src

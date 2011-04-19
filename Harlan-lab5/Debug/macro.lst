@@ -1,4 +1,4 @@
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   1
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   1
 
 
 PC     Object              I  Line    Source 
@@ -54,7 +54,7 @@ PC     Object              I  Line    Source
                            A    50    ;    5	#include <string.h>
                            A    51    ;    6	
                            A    52    ;    7	#define MACRO_SIZE_MAX 128
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   2
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   2
 
 
 PC     Object              I  Line    Source macro.src
@@ -110,7 +110,7 @@ PC     Object              I  Line    Source macro.src
                            A   102    .begfunc "macro_set",20,"_macro_set"
 00000012 080A              A   103    	LINK	#10
                            A   104    .line 20
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   3
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   3
 
 
 PC     Object              I  Line    Source macro.src
@@ -166,7 +166,7 @@ PC     Object              I  Line    Source macro.src
 0000003E 5B60              A   154    	LD	-10(R14),R0
                            A   155    ;   31		if(macro_len > MACRO_SIZE_MAX) {
                            A   156    .line 31
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   4
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   4
 
 
 PC     Object              I  Line    Source macro.src
@@ -222,7 +222,7 @@ PC     Object              I  Line    Source macro.src
 0000008A 80FE              A   206    	ADD	R0,#-2
 0000008C 7810 6000         A   207    	ADD.SW	R0,(R1)
 00000090 09C0 000A         A   208    	LD.B	(R0),#10
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   5
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   5
 
 
 PC     Object              I  Line    Source macro.src
@@ -278,7 +278,7 @@ PC     Object              I  Line    Source macro.src
 000000AE 5BC1              A   258    	LD	-4(R14),R1
                            A   259    .define "n"
                            A   260    .class 9
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   6
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   6
 
 
 PC     Object              I  Line    Source macro.src
@@ -334,7 +334,7 @@ PC     Object              I  Line    Source macro.src
 000000CE 5FC0              A   310    	LD	R0,-4(R14)
 000000D0 BC10              A   311    	SLL	R0,#1
 000000D2 A010              A   312    	ADD	R0,R1
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   7
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   7
 
 
 PC     Object              I  Line    Source macro.src
@@ -390,7 +390,7 @@ PC     Object              I  Line    Source macro.src
                            A   362    ; Aggregate Stack Size: -14 (words)
                            A   363    
                            A   364    
-ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     21:55:20     page:   8
+ZiLOG ZNEO Macro Assembler Version 1.10 (07022203)                                               29-Mar-11     22:45:37     page:   8
 
 
 PC     Object              I  Line    Source macro.src
